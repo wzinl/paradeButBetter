@@ -1,0 +1,40 @@
+import java.util.ArrayList;
+
+public class PlayerHand {
+    private ArrayList<Card> cardList;
+    //to double check
+    public static final MAXHANDCOUNT = 5;
+
+    public PlayerHand(ArrayList<Card> cardList, int maxHandCount){
+        this.cardList = cardList;
+    }
+
+    //from the board
+    public Card drawCard (Deck deck){
+        //first, check if drawing a card is possible
+        if (deck.isDeckEmpty()) {
+            System.out.println("Cannot draw, deck empty");
+            return null;
+        } else {
+            // if not, draw from the to
+            Card drawnCard = deck.getDeck().remove(deck.getDeckSize() - 1); 
+            return drawnCard;
+        }
+    }
+
+    //  Remove a certain card from hand 
+    public void removeCardFromHand(Card card){
+        cardList.remove(card);
+    }
+
+    //  Place a card from hand to the end of the parade 
+    public void playCardFromHand (Card card , ParadeBoard parade) {
+        removeCardFromHand(card);   
+        parade.addToBoard(card);    
+    }
+
+    public ArrayList<Card> displayHand(){
+        return cardList;
+    }
+
+}
