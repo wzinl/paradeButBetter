@@ -1,3 +1,5 @@
+package main.models;
+
 import java.util.ArrayList;
 
 public class PlayerHand {
@@ -5,7 +7,7 @@ public class PlayerHand {
     //to double check
     public static final MAXHANDCOUNT = 5;
 
-    public PlayerHand(ArrayList<Card> cardList, int maxHandCount){
+    public PlayerHand(ArrayList<Card> cardList){
         this.cardList = cardList;
     }
 

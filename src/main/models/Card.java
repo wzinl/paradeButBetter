@@ -1,3 +1,5 @@
+package main.models;
+
 
 public class Card{
     private int value;

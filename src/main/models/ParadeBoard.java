@@ -1,3 +1,5 @@
+package main.models;
+
 import java.util.*;
 
 public class ParadeBoard {
