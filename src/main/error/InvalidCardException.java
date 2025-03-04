@@ -1,6 +1,6 @@
 package main.error;
 
-public class InvalidCardException extends xcpeption {
+public class InvalidCardException extends Exception {
     public InvalidCardException(String message) {
         super(message);
     }
