@@ -1,9 +1,9 @@
 package main.models;
 
 
-public class Card{
-    private int value;
-    private String color;
+public class Card {
+    private final int value;
+    private final String color;
     private boolean isFaceUp;
     
     public Card(int value, String color, boolean isFaceUp) {
@@ -42,8 +42,5 @@ public class Card{
     }
     
     
-    
-    
-
     
 }

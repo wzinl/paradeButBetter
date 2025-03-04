@@ -6,7 +6,8 @@ public class Game {
 
     public Game() {
         gsm = new GameStateManager();
-        gsm.changeState(new MainGameState(gsm)); // Start with Main Game State
+        gsm.setState(new InitState(gsm)); // Start with Main Game State
+        
     }
 
     public void run() {

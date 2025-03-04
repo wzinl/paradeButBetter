@@ -1,4 +1,4 @@
-package gameStates;
+package main.gameStates;
 
 interface GameState {
     void enter();    // Called when the state is entered

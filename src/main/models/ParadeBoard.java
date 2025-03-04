@@ -4,11 +4,17 @@ import java.util.*;
 
 public class ParadeBoard {
     private ArrayList<Card> parade;
-    private int numOfCards;
+    private int numOfCards; // what is this for? we have getNumberOfCards 
 
-    public ParadeBoard(ArrayList<Card> parade) {
-        // to-do
+
+ //makes the board on its own using the deck and drawing the top 5 cards
+    public ParadeBoard(ArrayList<Card> deck){
+        this.parade = new ArrayList<>();                       
+        for(int i = 0; i < 5; i++){
+            parade.add(deck.drawCard());
+        }
     }
+
 
     public int getNumberOfCards() {
         return parade.size();
@@ -51,11 +57,19 @@ public class ParadeBoard {
         }
 
         // upadte the parade after removal
-        parade = remainingParade;
+        this.parade = remainingParade;
         return selectedcards;
     }
 
-    public ArrayList<Card> displayParade() {
+    public ArrayList<Card> getParade(){
         return parade;
+    }
+    // display the parade for debugging
+    public void displayParade() {
+        System.out.println("Current Parade:");
+        for (Card card: parade){
+            System.out.println("card");
+        }
+        
     }
 }

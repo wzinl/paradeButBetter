@@ -29,19 +29,23 @@ public class PlayerBoard {
 
     // get how many cards of a certain color a player has. if a player has 3 black
     // cards, return 3 when black is put in
-    public int howManyColor(String color) {
+    public int getCardNumberByColor(String color) {
         return playerBoard.get(color).size();
     }
 
-    public void sortByQuantity() {
-    }
+    // public void sortByQuantity() {
+    // }
 
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, ArrayList<Card>> entry : playerBoard.entrySet()) {
-            String key = entry.getKey();
-            ArrayList<Card> cards = entry.getValue();
-            System.out.println("Color: " + color + ",Cards: " + cards);
+            String key = entry.getKey(); // colour of the cards
+            ArrayList<Card> cards = entry.getValue(); // List of cards of that colour 
+            sb.append("Color:").append(key).append(", Cards: ").append("\n");
+            
         }
+
+        return sb.toString();
     }
 }

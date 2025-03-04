@@ -3,13 +3,13 @@ package main.models;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Deck {
-    private ArrayList<Card> deck;
+public final class Deck {
+    private final ArrayList<Card> deck;  // unmodifiable after initialisation    
 
     public Deck() {
-        this.deck = new ArrayList<Card>();
-        initialiseDeck();
-        
+        this.deck = new ArrayList<>();
+        initialiseDeck();   // initialise the deck of cards
+        shuffle();  // shuffle the cards 
     }
 
     //initialising the deck with 66 cards
@@ -22,12 +22,14 @@ public class Deck {
             }
         }
     }
+
     //shuffle
     public void shuffle() {
         Collections.shuffle(deck);
     }
 
-    public boolean isDeckEmpty () {
+    //check for isEmpty => true, Last Round
+    public boolean isDeckEmpty() {
         return deck.isEmpty();
     }
 
@@ -35,12 +37,14 @@ public class Deck {
         return deck.size();
     }
 
-    public ArrayList<Card> getDeck() { 
+    public ArrayList<Card> getDeck() {
         return deck;
     }
+
     public Card drawCard() {
         return deck.isEmpty() ? null : deck.remove(deck.size() - 1);
     }
+
     @Override
     public String toString() {
         return deck.toString();

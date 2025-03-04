@@ -1,0 +1,9 @@
+package main.error;
+
+public class InvalidCardException extends xcpeption {
+    public InvalidCardException(String message) {
+        super(message);
+    }
+}
+
+// when the card played does not meet the conditions
