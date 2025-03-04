@@ -2,7 +2,7 @@ package main.models;
 
 
 public class Card {
-    private final double value;
+    private final int value;
     private final String color;
     private boolean isFaceUp;
     
