@@ -35,5 +35,31 @@ public class Player {
         return playerBoard;
     }
 
-    
+    public int calculateScore() { //calculates and sets player score
+
+        if (playerBoard == null || playerBoard.getPlayerBoard() == null) {
+            return 0; // No board means no score
+        }
+        
+        playerScore = 0;//so that playerScore does not add up if calculateScore is called multiple times
+        //check through each value per color
+
+        //loop to iterate through each Arraylist of cards in playerBoard hashmap
+        for (ArrayList<Card> playerCards : playerBoard.getPlayerBoard().values()) {
+            if (playerCards == null) {
+                continue; //skip through (if any) null values
+            }
+            //loop to iterate through each card in the arraylist of cards
+            for (Card card : playerCards) {
+                if (card.getIsFaceUp()) { //adds direct value of card if card is face up
+                    playerScore += card.getValue();
+                } else { //if card is face down, just add one score instead
+                    playerScore += 1;
+                }
+            }
+        }
+
+        return playerScore;
+
+    }
 }
