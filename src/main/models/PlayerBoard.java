@@ -48,4 +48,9 @@ public class PlayerBoard {
 
         return sb.toString();
     }
+
+    
+    public HashMap<String, ArrayList<Card>> getPlayerBoard() {
+        return playerBoard;
+    }
 }
