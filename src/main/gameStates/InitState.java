@@ -11,7 +11,7 @@ public class InitState implements GameState{
     private GameStateManager gsm;
     private GameContext context;
 
-    private InitState(GameStateManager gsm, GameContext context) {
+    public InitState(GameStateManager gsm, GameContext context) {
         System.out.println("Game initialized");
         this.gsm = gsm;
         this.context = context;
@@ -32,6 +32,7 @@ public class InitState implements GameState{
                 String playerName = scannerObj.nextLine();
                 nameList.add(playerName);
                 
+                // havent create player objects
             }
         }
     }
