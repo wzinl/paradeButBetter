@@ -54,11 +54,11 @@ public class GameContext {
 
     public void nextTurn(){
         this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size(); // circular queue
-        changeState(new TurnState());
+        changeState(new TurnState(gsm, this));
     }
 
     public ArrayList<Player> getPlayerList() {
-        return playerList;
+        return this.playerList;
     }
 
     public ParadeBoard getParadeBoard(){
@@ -66,7 +66,7 @@ public class GameContext {
     }
 
     public Deck getDeck(){
-        return deck;
+        return this.deck;
     }
 }
 

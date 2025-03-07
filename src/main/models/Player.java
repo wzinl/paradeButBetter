@@ -62,4 +62,14 @@ public class Player {
         return playerScore;
 
     }
+
+    // check if player has collect all 6 colors
+    public boolean hasCollectedAllColours(){
+        int numOfColours = playerBoard.getPlayerBoard().keySet().size();
+
+        if (numOfColours == 6){
+            return true;
+        }
+        return false;
+    }
 }
