@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import main.error.InvalidCardException;
 
-public class PlayerHand implements CardCollection {
+public class PlayerHand {
     private ArrayList<Card> cardList;
     //to double check
     public static final int MAXHANDCOUNT = 5; 
@@ -13,8 +13,7 @@ public class PlayerHand implements CardCollection {
         this.cardList = new ArrayList<>();  // in GameManager class need to draw card from the deck and add cards to empty hand
     }
 
-    // Implements addCard from CardCollection interface
-    @Override
+    // this method not needed right...
     public void addCard(Card card){
         if (cardList.size() < MAXHANDCOUNT){
             cardList.add(card);
@@ -24,7 +23,7 @@ public class PlayerHand implements CardCollection {
     }
 
     // Implements removeCard from CardCollection interface
-    @Override
+    
     public void removeCard(Card card) throws InvalidCardException{
         // If hand does not have that card
         if (!cardList.contains(card)){

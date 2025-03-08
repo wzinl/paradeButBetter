@@ -6,6 +6,7 @@ import java.error.*;
 import java.time.chrono.ThaiBuddhistChronology;
 import java.time.chrono.ThaiBuddhistEra;
 import main.context.GameContext;
+import main.error.BadInput;
 
 public class InitState implements GameState{
     private GameStateManager gsm;

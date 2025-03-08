@@ -10,17 +10,21 @@ import main.gameStates.TurnState;
 public class GameContext {
     // ensure that only one instance of the game context
     private static GameContext instance;
-
+    private int finalRoundTriggerPlayerIndex; // index of player who triggered the final round
     private GameState currentState;
     private GameStateManager gsm;
     private ArrayList<Player> playerList;
+    private Player currentPlayer;
     private int currentPlayerIndex;
     private Deck deck;
     private ParadeBoard paradeBoard;
+    private boolean isInFinalRound;
 
     // constructor for game context
     public GameContext(){
         this.currentPlayerIndex = 0;
+        isInFinalRound = false;
+        this.finalRoundTriggerPlayerIndex = -1;
 
     }
 
@@ -42,16 +46,34 @@ public class GameContext {
         gsm.setState(currentState); // calls enter() for the InitState
     }
 
-    // Manage game state transition
+    // Manage game state transition --> delegate state transition to game state manager
     public void changeState(GameState newState){
-        this.currentState = newState; // update current state
-        newState.enter();
+        gsm.setState(newState);
+    }
+
+    public void setFinalRoundTriggerPlayerIndex(int index){
+        this.finalRoundTriggerPlayerIndex = index;
+    }
+
+    public void setInFinalRound(boolean isInFinalRound){
+        this.isInFinalRound = isInFinalRound;
+    }
+
+    public int getFinalRoundTriggerPlayerIndex(){
+        return this.finalRoundTriggerPlayerIndex;
+    }
+
+    public boolean isInFinalRound(){
+        return isInFinalRound;
+    }
+
+    public int getCurrentPlayerIndex(){
+        return currentPlayerIndex;
     }
 
     public Player getCurrentPlayer(){
         return playerList.get(currentPlayerIndex);
     }
-
     public void nextTurn(){
         this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size(); // circular queue
         changeState(new TurnState(gsm, this));
