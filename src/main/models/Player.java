@@ -7,16 +7,16 @@ public class Player {
     private String playerName;
     private int playerID;
     private int playerScore;
-    private List<Card> playerCards;
+    private PlayerHand playerhand;
     private PlayerBoard playerBoard;
+    
     // HashMap<Character, ArrayList<Card>> playerCollectedCards; // ????? 
 
     public Player (String playerName, int playerID) {
         this.playerName = playerName;
-        this.playerCards = new ArrayList<>();
         this.playerID = playerID;
-        
-        
+        this.playerhand = new PlayerHand();
+    
     }
 
     public String getPlayerName () {
@@ -27,8 +27,8 @@ public class Player {
         return playerScore;
     }
 
-    public List<Card> getPlayerCards() {
-        return playerCards;
+    public PlayerHand getPlayerHand() { 
+        return playerhand;
     }
 
     public PlayerBoard getPlayerBoard() {

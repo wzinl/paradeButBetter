@@ -3,7 +3,7 @@ package main.models;
 import java.util.HashMap;
 import java.util.*;
 
-public class PlayerBoard {
+public class PlayerBoard implements CardCollection{
     HashMap<String, ArrayList<Card>> playerBoard;
 
     public PlayerBoard() {
@@ -12,7 +12,8 @@ public class PlayerBoard {
     }
 
     // From parade board add to playerboard
-    public void addToBoard(ArrayList<Card> cardsToAdd) {
+    @Override
+    public void addCards(ArrayList<Card> cardsToAdd){
         for (int i = 0; i < cardsToAdd.size(); i++) {
 
             Card curCard = cardsToAdd.get(i);
