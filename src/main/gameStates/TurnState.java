@@ -66,6 +66,7 @@ public class TurnState implements GameState{
                 System.out.println("Error playing the card"); // if card not in hand, clarify!!!
             }
         }
+        scanner.close();
 
         // check if the player has collected all 6 colors or if the draw pie is exhausted
         if (currentplayer.hasCollectedAllColours() || deck.isDeckEmpty() ){
@@ -138,6 +139,7 @@ public class TurnState implements GameState{
                 System.out.println("Error playing the card"); // if card not in hand, clarify!!!
             }
         }
+        scanner.close();
 
     }
 
