@@ -1,7 +1,6 @@
 package main.models;
 
 import java.util.ArrayList;
-
 import main.error.InvalidCardException;
 
 public class PlayerHand {
@@ -57,8 +56,8 @@ public class PlayerHand {
         parade.addToBoard(card);    
     }
 
-    public ArrayList<Card> displayHand(){
+    public ArrayList<Card> getCardList(){
         return cardList;
-    }
 
+    }
 }

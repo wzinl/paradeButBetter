@@ -28,13 +28,6 @@ public class Card {
         this.isFaceUp = isFaceUp;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
 
     @Override
     public String toString() {

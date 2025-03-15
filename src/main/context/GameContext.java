@@ -1,31 +1,48 @@
 package main.context;
 
 import java.util.ArrayList;
-import main.models.*;
+import java.util.concurrent.ThreadLocalRandom;
 import main.gameStates.GameState;
-import main.gameStates.GameStateManager;
-import main.gameStates.InitState;
-import main.gameStates.TurnState;
+import main.models.*;
+
+
+
+
 
 public class GameContext {
     // ensure that only one instance of the game context
     private static GameContext instance;
     private int finalRoundTriggerPlayerIndex; // index of player who triggered the final round
     private GameState currentState;
-    private GameStateManager gsm;
     private ArrayList<Player> playerList;
-    private Player currentPlayer;
     private int currentPlayerIndex;
     private Deck deck;
     private ParadeBoard paradeBoard;
     private boolean isInFinalRound;
 
+
+
     // constructor for game context
     public GameContext(){
-        this.currentPlayerIndex = 0;
-        isInFinalRound = false;
-        this.finalRoundTriggerPlayerIndex = -1;
 
+    }
+
+    //creating Game Context from Init
+    public GameContext(ArrayList<String> nameList, GameState currentState){
+        this();
+        
+        playerList = new ArrayList<Player>();
+        for(String name : nameList){
+            playerList.add(new Player(name));
+        }
+        int startingIndex = ThreadLocalRandom.current().nextInt(0, nameList.size());
+        this.currentPlayerIndex = startingIndex;
+        this.currentState = currentState;
+        this.deck = new Deck();
+        this.paradeBoard = new ParadeBoard(deck);
+        this.isInFinalRound = false;
+        this.finalRoundTriggerPlayerIndex = -1;
+        System.out.println("GameContext constructed!");
     }
 
     // public access to game context instance 
@@ -36,19 +53,9 @@ public class GameContext {
         return instance;
     }
 
-    // Initialise game components
-    public void initialiseGame(ArrayList<Player> players, Deck deck){
-        this.playerList = players;
-        this.deck = deck;
-        this.paradeBoard = new ParadeBoard(deck);
-        this.currentState = new InitState(null, this); // set initial state *might need change parameter*
-        this.gsm = new GameStateManager(currentState); // initialise gsm with current state
-        gsm.setState(currentState); // calls enter() for the InitState
-    }
-
     // Manage game state transition --> delegate state transition to game state manager
-    public void changeState(GameState newState){
-        gsm.setState(newState);
+    public void setCurrentState(GameState newState){
+        this.currentState = newState;
     }
 
     public void setFinalRoundTriggerPlayerIndex(int index){
@@ -58,6 +65,15 @@ public class GameContext {
     public void setInFinalRound(boolean isInFinalRound){
         this.isInFinalRound = isInFinalRound;
     }
+
+    public GameState setCurrentState(){
+        return this.currentState;
+    }
+
+    public GameState getCurrentState(){
+        return this.currentState;
+    }
+
 
     public int getFinalRoundTriggerPlayerIndex(){
         return this.finalRoundTriggerPlayerIndex;
@@ -74,10 +90,12 @@ public class GameContext {
     public Player getCurrentPlayer(){
         return playerList.get(currentPlayerIndex);
     }
-    public void nextTurn(){
-        this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size(); // circular queue
-        changeState(new TurnState(gsm, this));
-    }
+
+    // not for gamecontext to handle
+    // public void nextTurn(){
+    //     this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size(); // circular queue
+    //     changeState(new TurnState(gsm, this));
+    // }
 
     public ArrayList<Player> getPlayerList() {
         return this.playerList;

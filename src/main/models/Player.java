@@ -1,9 +1,9 @@
 package main.models;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Player {
+    static int current_id = 0;
     private String playerName;
     private int playerID;
     private int playerScore;
@@ -12,11 +12,11 @@ public class Player {
     
     // HashMap<Character, ArrayList<Card>> playerCollectedCards; // ????? 
 
-    public Player (String playerName, int playerID) {
+    public Player (String playerName) {
         this.playerName = playerName;
-        this.playerID = playerID;
+        this.playerID = current_id;
+        current_id++;
         this.playerhand = new PlayerHand();
-    
     }
 
     public String getPlayerName () {

@@ -1,7 +1,8 @@
 package main.models;
 
-import java.util.HashMap;
 import java.util.*;
+
+import main.error.InvalidCardException;
 
 public class PlayerBoard implements CardCollection{
     HashMap<String, ArrayList<Card>> playerBoard;
@@ -28,6 +29,12 @@ public class PlayerBoard implements CardCollection{
         }
     }
 
+    @Override
+    public void removeCard(Card card) throws InvalidCardException{
+        
+    }
+
+
     // get how many cards of a certain color a player has. if a player has 3 black
     // cards, return 3 when black is put in
     public int getCardNumberByColor(String color) {
@@ -36,6 +43,9 @@ public class PlayerBoard implements CardCollection{
 
     // public void sortByQuantity() {
     // }
+
+
+
 
     @Override
     public String toString() {
