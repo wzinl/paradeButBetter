@@ -139,18 +139,18 @@ public class TurnState implements GameState {
         paradeBoard.addToBoard(chosenCard);
         System.out.println();
     }
+
     public String getDisplay(Player currentPlayer) {
         String result = "";
 
         // Display the parade board
         result += "Parade Board:\n";
-        result += paradeBoard + "\n".repeat(3);
+        result += paradeBoard + "\n\n";
 
         result += "Here is your board:\n";
         result += getPlayerBoardDisplay(currentPlayer.getPlayerBoard());
         result += "Here is your hand:\n";
         result += getHandDisplay(currentPlayer.getPlayerHand());
-        result += "\n";
         return result;
     }
 
@@ -168,7 +168,6 @@ public class TurnState implements GameState {
                 result += curr.getPlayerName() + "'s hand\n";
                 result += getHandDisplay(curr.getPlayerHand());
             }
-
         }  
 
         result += "\n";
@@ -178,7 +177,7 @@ public class TurnState implements GameState {
     public String getHandDisplay(PlayerHand playerHand) {
         String result = "";
         
-        result += playerHand + "\n".repeat(3);
+        result += playerHand + "\n";
         return result;
     }
 
@@ -186,13 +185,13 @@ public class TurnState implements GameState {
         String result = "";
         if(currentplayerBoard.isEmpty()){
             System.out.println();
-            result += "Your playerboard is empty.\n";
+            result += "Playerboard is empty.\n\n";
         }else{
-            result += currentplayerBoard + "\n";
+            result += currentplayerBoard + "\n\n";
         }
         return result;
     }
-    
+
     public void finalRound() {
         System.out.println("Each player gets one final turn! No more cards will be drawn!");
 

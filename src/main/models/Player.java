@@ -52,7 +52,6 @@ public class Player {
             }
             //loop to iterate through each card in the arraylist of cards
             for (Card card : playerCards) {
-                System.out.println(card);
                 if (card.getIsFaceUp()) { //adds direct value of card if card is face up
                     playerScore += card.getValue();
                 } else { //if card is face down, just add one score instead

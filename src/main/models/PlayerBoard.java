@@ -26,8 +26,9 @@ public class PlayerBoard implements CardCollection{
             playerBoard.get(curCardColor).add(curCard);
         }
     }
-    public void addCard(Card cardToAdd){
 
+    @Override
+    public void addCard(Card cardToAdd){
         String cardToAddColor = cardToAdd.getColor();
 
         // if player doesn't currently have this color, create new (key, value) map of
@@ -37,8 +38,6 @@ public class PlayerBoard implements CardCollection{
         // puts the new card into the arraylist with specified color
         playerBoard.get(cardToAddColor).add(cardToAdd);
     }
-
-    
 
     @Override
     public void removeCard(Card card) throws InvalidCardException{

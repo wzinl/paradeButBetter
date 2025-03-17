@@ -85,7 +85,6 @@ public class ParadeBoard {
         }
         for (i = 0; i < cardList.size() - safeCardCount; i++) {
             Card card = cardList.get(i);
-            // System.out.println(card);
             String blank = "";
             for(int j = 0; j < card.toString().length(); j++){
                 blank += " ";
