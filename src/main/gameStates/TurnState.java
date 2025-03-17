@@ -174,30 +174,4 @@ public class TurnState implements GameState {
         // enter the endgame
         // TODO
     }
-
-    // public void playFinalTurn(Player currentPlayer) {
-
-    //     System.out.println(currentPlayer.getPlayerName() + "'s final turn!");
-    //     while (true) {
-    //         try {
-    //             int chosenIndex = InputValidator.getIntInRange("Choose a card to display on parade board, pick a card from range (0-4): ",0, 4);
-    //             Card chosenCard = currentPlayer.getPlayerHand().getCardList().get(chosenIndex);
-    //             currentPlayer.getPlayerHand().playCardFromHand(chosenCard, context.getParadeBoard());
-    //             // player select the removal cards from parade board
-    //               ArrayList<Card> cardsToAdd = context.getParadeBoard().playCard(chosenCard);
-
-    //             // add the list of "removal" cards to player board
-    //                 currentPlayer.getPlayerBoard().addCards(cardsToAdd);
-    //         } catch (IndexOutOfBoundsException e) {
-    //             System.out.println("Invalid Card Index! Pick a card from range (0-4)");
-    //         } 
-    //         //TODO
-    //         // get player to pick one of the 5 cards in their hand
-
-    //     }
-
-    // }
 }
-
-// game end is triggered when either the last card is taken from the draw deck,
-// or one player collects at least one card in each of the 6 colors
