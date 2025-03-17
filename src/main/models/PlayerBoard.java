@@ -1,7 +1,6 @@
 package main.models;
 
 import java.util.*;
-
 import main.error.InvalidCardException;
 
 public class PlayerBoard implements CardCollection{
@@ -9,7 +8,6 @@ public class PlayerBoard implements CardCollection{
 
     public PlayerBoard() {
         this.playerBoard = new HashMap<>();
-
     }
 
     // From parade board add to playerboard
@@ -28,10 +26,23 @@ public class PlayerBoard implements CardCollection{
             playerBoard.get(curCardColor).add(curCard);
         }
     }
+    public void addCard(Card cardToAdd){
+
+        String cardToAddColor = cardToAdd.getColor();
+
+        // if player doesn't currently have this color, create new (key, value) map of
+        // said color
+        playerBoard.putIfAbsent(cardToAddColor, new ArrayList<>());
+
+        // puts the new card into the arraylist with specified color
+        playerBoard.get(cardToAddColor).add(cardToAdd);
+    }
+
+    
 
     @Override
     public void removeCard(Card card) throws InvalidCardException{
-        
+        //TODO
     }
 
 
@@ -44,20 +55,45 @@ public class PlayerBoard implements CardCollection{
     // public void sortByQuantity() {
     // }
 
-
+    public boolean isEmpty(){
+        return playerBoard.isEmpty();
+    }
 
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, ArrayList<Card>> entry : playerBoard.entrySet()) {
-            String key = entry.getKey(); // colour of the cards
-            ArrayList<Card> cards = entry.getValue(); // List of cards of that colour 
-            sb.append("Color:").append(key).append(", Cards: ").append("\n");
-            
+        List<String> colors = new ArrayList<>(playerBoard.keySet());
+        colors.sort(Comparator.naturalOrder());
+        
+        Map<String, List<Integer>> colorValues = new HashMap<>();
+        int maxRows = 0;
+        for (String color : colors) {
+            List<Integer> values = playerBoard.get(color).stream()
+                    .map(c -> c.getValue())
+                    .sorted()
+                    .toList();
+            colorValues.put(color, values);
+            maxRows = Math.max(maxRows, values.size());
         }
 
-        return sb.toString();
+        List<Integer> colWidths = colors.stream().map(String::length).toList();
+        StringBuilder output = new StringBuilder();
+
+        // Header
+        for (int i = 0; i < colors.size(); i++) 
+                output.append(String.format("%-" + colWidths.get(i) + "s  ", colors.get(i)));
+            output.append("\n");
+        
+        // Values
+        for (int row = 0; row < maxRows; row++) {
+            for (int i = 0; i < colors.size(); i++) {
+                List<Integer> values = colorValues.get(colors.get(i));
+                String num = row < values.size() ? values.get(row) + "" : "";
+                output.append(String.format("%-" + colWidths.get(i) + "s  ", num));
+            }
+            output.append("\n");
+        }
+        return output.toString();
     }
 
     

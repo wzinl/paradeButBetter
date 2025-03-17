@@ -10,9 +10,15 @@ public class GameStateManager {
         if (currentState != null) {
             currentState.exit();
         }
+
         currentState = newState;
-        // System.out.println("newstate");
         currentState.enter();
+
+        if(currentState instanceof InitState){
+            InitState currentInitState = (InitState)currentState;
+            this.currentContext = currentInitState.createGameContext();
+        }
+        // System.out.println("newstate");
     }
 
     public void closeGame() {
@@ -24,13 +30,14 @@ public class GameStateManager {
 
     public void nextState() {
         if(currentState instanceof InitState){
-            // setState(new TurnState(this, currentContext));
             System.out.println("moving to turnstate");
+            setState(new TurnState(this, currentContext));
         }
 
-        // if(currentState instanceof TurnState){
-        //     setState(new GameEndState(this, currentContext));
-        // }
+        if(currentState instanceof TurnState){
+            // setState(new GameEndState(this, currentContext));
+            System.out.println("Exiting turnstate");
+        }
 
         if(currentState instanceof GameEndState){
             closeGame();

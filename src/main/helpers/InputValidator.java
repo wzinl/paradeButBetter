@@ -8,7 +8,7 @@ public class InputValidator {
     public static int getInt(String prompt) {
         while (true) {
             try {
-                System.out.print(prompt);
+                System.out.println(prompt);
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a valid integer.");
@@ -30,7 +30,7 @@ public class InputValidator {
 
     public static String getString(String prompt) {
         while (true) {
-            System.out.print(prompt);
+            System.out.println(prompt);
             String input = scanner.nextLine().trim();
             if (!input.isEmpty()) {
                 return input;
@@ -42,7 +42,7 @@ public class InputValidator {
 
     public static boolean getYesNo(String prompt) {
         while (true) {
-            System.out.print(prompt + " (y/n): ");
+            System.out.println(prompt + " (y/n): ");
             String input = scanner.nextLine().trim().toLowerCase();
             if (input.equals("y")) return true;
             if (input.equals("n")) return false;

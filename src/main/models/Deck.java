@@ -29,7 +29,7 @@ public final class Deck {
     }
 
     //check for isEmpty => true, Last Round
-    public boolean isDeckEmpty() {
+    public boolean isEmpty() {
         return deck.isEmpty();
     }
 

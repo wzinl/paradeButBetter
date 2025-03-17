@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Player {
     static int current_id = 0;
     private String playerName;
-    private int playerID;
+    private int playerID = 1;
     private int playerScore;
     private PlayerHand playerhand;
     private PlayerBoard playerBoard;
@@ -14,9 +14,10 @@ public class Player {
 
     public Player (String playerName) {
         this.playerName = playerName;
-        this.playerID = current_id;
+        this.playerID = playerID++;
         current_id++;
         this.playerhand = new PlayerHand();
+        this.playerBoard = new PlayerBoard();
     }
 
     public String getPlayerName () {
@@ -64,12 +65,8 @@ public class Player {
     }
 
     // check if player has collect all 6 colors
-    public boolean hasCollectedAllColours(){
-        int numOfColours = playerBoard.getPlayerBoard().keySet().size();
+    public boolean hasCollectedAllColours() {
+    return playerBoard.getPlayerBoard().keySet().size() == 6;
+}
 
-        if (numOfColours == 6){
-            return true;
-        }
-        return false;
-    }
 }

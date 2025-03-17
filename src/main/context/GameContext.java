@@ -1,7 +1,6 @@
 package main.context;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 import main.gameStates.GameState;
 import main.models.*;
 
@@ -10,8 +9,7 @@ import main.models.*;
 
 
 public class GameContext {
-    // ensure that only one instance of the game context
-    private static GameContext instance;
+
     private int finalRoundTriggerPlayerIndex; // index of player who triggered the final round
     private GameState currentState;
     private ArrayList<Player> playerList;
@@ -28,29 +26,21 @@ public class GameContext {
     }
 
     //creating Game Context from Init
-    public GameContext(ArrayList<String> nameList, GameState currentState){
+    public GameContext(ArrayList<Player> playerList, GameState currentState, int currentPlayerIndex, Deck deck, ParadeBoard paradeBoard){
         this();
-        
-        playerList = new ArrayList<Player>();
-        for(String name : nameList){
-            playerList.add(new Player(name));
-        }
-        int startingIndex = ThreadLocalRandom.current().nextInt(0, nameList.size());
-        this.currentPlayerIndex = startingIndex;
+        this.currentPlayerIndex = currentPlayerIndex;
         this.currentState = currentState;
-        this.deck = new Deck();
-        this.paradeBoard = new ParadeBoard(deck);
+        this.deck = deck;
+        this.paradeBoard = paradeBoard;
         this.isInFinalRound = false;
         this.finalRoundTriggerPlayerIndex = -1;
+        this.playerList = playerList;
         System.out.println("GameContext constructed!");
     }
 
     // public access to game context instance 
-    public static GameContext getInstance() {
-        if (instance == null) {
-            instance = new GameContext();
-        }
-        return instance;
+    public GameContext getInstance() {
+        return this;
     }
 
     // Manage game state transition --> delegate state transition to game state manager
@@ -79,11 +69,12 @@ public class GameContext {
         return this.finalRoundTriggerPlayerIndex;
     }
 
-    public boolean isInFinalRound(){
+    public boolean getIsInFinalRound(){
         return isInFinalRound;
     }
 
     public int getCurrentPlayerIndex(){
+        
         return currentPlayerIndex;
     }
 
@@ -98,6 +89,7 @@ public class GameContext {
     // }
 
     public ArrayList<Player> getPlayerList() {
+
         return this.playerList;
     }
 

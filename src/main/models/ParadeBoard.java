@@ -3,41 +3,46 @@ package main.models;
 import java.util.*;
 
 public class ParadeBoard {
-    private ArrayList<Card> parade;
+    private ArrayList<Card> cardList;
 
  //makes the board on its own using the deck and drawing the top 5 cards
     public ParadeBoard(Deck deck){
-        this.parade = new ArrayList<>();                       
+        this.cardList = new ArrayList<>();                       
         for(int i = 0; i < 5; i++){
-            parade.add(deck.drawCard());
+            cardList.add(deck.drawCard());
         }
     }
 
-
     public int getNumberOfCards() {
-        return parade.size();
+        return cardList.size();
     }
 
     public void addToBoard(Card card) {
-        parade.add(card);
+        cardList.add(card);
     }
 
+    public void remove(Card card) {
+        cardList.remove(card);
+    }
+
+
+
     //to check
-    public ArrayList<Card> removefromBoard(Card card) {
+    public ArrayList<Card> playCard(Card card) {
         ArrayList<Card> selectedcards = new ArrayList<>();
         // check if cards value is greater than board size
-        if (card.getValue() > parade.size()) {
+        if (card.getValue() > cardList.size()) {
             return selectedcards;
         }
         // Cards beyond playedCard's value index enter "removal mode"
-        int removalStartIndex = parade.size() - card.getValue() - 1;    
+        int removalStartIndex = cardList.size() - card.getValue() - 1;    
                 
         // "removal mode" cards
         ArrayList<Card> remainingParade = new ArrayList<>();
 
         // if not, the removal pile is no.of cards in board - card val
-        for (int i = parade.size()-1; i >= 0 ; i--) {
-            Card currentCard = parade.get(i);
+        for (int i = cardList.size()-1; i >= 0 ; i--) {
+            Card currentCard = cardList.get(i);
             
             if (i >= removalStartIndex) {
                 // Remove if same colour or value less than or equal to the value of played card
@@ -46,7 +51,6 @@ public class ParadeBoard {
                 } else {
                     remainingParade.add(currentCard);
                 }
-
             } 
             // even if not in "removal mode", add to remaining parade
             else {
@@ -55,19 +59,59 @@ public class ParadeBoard {
         }
 
         // update the parade after removal
-        this.parade = remainingParade;
+        this.cardList = remainingParade;
         return selectedcards;
     }
 
-    public ArrayList<Card> getParade(){
-        return parade;
+    public ArrayList<Card> getCardList(){
+        return cardList;
     }
-    // display the parade for debugging
-    public void displayParade() {
-        System.out.println("Current Parade:");
-        for (Card card: parade){
-            System.out.println("card");
+
+
+    @Override
+    public String toString() {
+        String result = "";
+        for (Card card : cardList) {
+            result += card + "  ";
         }
-        
+        return result.trim();
     }
+
+    // used in player turn when you want to display the cards that will be removed from the parade board
+    public String toString(ArrayList<Card> toRemove, int safeCardCount, Card chosenCard) {
+        String firstLine = "";
+        String secondLine = "";
+        int i;
+        if(chosenCard.getValue() >= cardList.size()){
+            return this.toString() + "  " + chosenCard;
+        }
+        for (i = 0; i < cardList.size() - safeCardCount; i++) {
+            Card card = cardList.get(i);
+            // System.out.println(card);
+            String blank = "";
+            for(int j = 0; j < card.toString().length(); j++){
+                blank += " ";
+            }
+            if (toRemove.contains(card)){
+                firstLine += card + "  ";
+                secondLine += blank + "  ";
+            }else{
+                firstLine += blank + "  ";
+                secondLine += card + "  ";
+            }
+        }
+        if(i < cardList.size()){
+            secondLine += "  |  ";
+        }
+
+        while(i < cardList.size()) {
+            Card card = cardList.get(i);
+            secondLine += card + "  ";
+            i++;
+        }
+        secondLine += chosenCard;
+        // right trim both lines and combine
+        return firstLine.replaceAll("\\s+$", "") + "\n" + secondLine.replaceAll("\\s+$", "");
+    }
+
 }

@@ -6,13 +6,18 @@ public class Game {
 
     public Game() {
         System.out.println("Welcome to Parade.");
-        gsm = new GameStateManager();
-        gsm.setState(new InitState(gsm)); // Start with Main Game State
+
+        //creating new game state manager, 
+        gsm = new GameStateManager(); 
+        
         
     }
 
     public void run() {
-        
+        //
+        // InitState init = new InitState(gsm);
+        gsm.setState(new InitState(gsm)); 
+        gsm.nextState();
     }
 
     public static void main(String[] args) {
