@@ -25,8 +25,6 @@ public class ParadeBoard {
         cardList.remove(card);
     }
 
-
-
     //to check
     public ArrayList<Card> playCard(Card card) {
         ArrayList<Card> selectedcards = new ArrayList<>();

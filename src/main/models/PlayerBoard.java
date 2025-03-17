@@ -49,7 +49,13 @@ public class PlayerBoard implements CardCollection{
     // get how many cards of a certain color a player has. if a player has 3 black
     // cards, return 3 when black is put in
     public int getCardNumberByColor(String color) {
-        return playerBoard.get(color).size();
+        ArrayList<Card> value = playerBoard.get(color);
+        if (value == null) {
+            return 0;
+        } else {
+            return value.size();
+        }
+        
     }
 
     // public void sortByQuantity() {
@@ -83,7 +89,7 @@ public class PlayerBoard implements CardCollection{
         for (int i = 0; i < colors.size(); i++) 
                 output.append(String.format("%-" + colWidths.get(i) + "s  ", colors.get(i)));
             output.append("\n");
-        
+    
         // Values
         for (int row = 0; row < maxRows; row++) {
             for (int i = 0; i < colors.size(); i++) {
@@ -97,7 +103,7 @@ public class PlayerBoard implements CardCollection{
     }
 
     
-    public HashMap<String, ArrayList<Card>> getPlayerBoard() {
+    public HashMap<String, ArrayList<Card>> getPlayerBoardHash() {
         return playerBoard;
     }
 }

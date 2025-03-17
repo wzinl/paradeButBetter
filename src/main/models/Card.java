@@ -9,7 +9,7 @@ public class Card {
     public Card(int value, String color, boolean isFaceUp) {
         this.value = value;
         this.color = color;
-        this.isFaceUp = isFaceUp;
+        this.isFaceUp = true;
     }
 
     public String getColor() {

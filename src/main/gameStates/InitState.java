@@ -34,8 +34,7 @@ public class InitState implements GameState{
             Player thisPlayer = new Player(playerName);
             thisPlayer.getPlayerHand().initHand(deck);
             playerList.add(thisPlayer);
-            //TODO let the players draw the cards..
-            // STORE IN GAME CONTEXT
+            
         }
     
         this.startingIndex = ThreadLocalRandom.current().nextInt(0, playerList.size());

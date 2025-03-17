@@ -5,6 +5,7 @@ import java.util.Collections;
 
 public final class Deck {
     private final ArrayList<Card> deck;  // unmodifiable after initialisation    
+    public static final String[] colours = {"Green", "Purple", "Red", "Blue", "Orange", "Grey"};
 
     public Deck() {
         this.deck = new ArrayList<>();
@@ -14,8 +15,7 @@ public final class Deck {
 
     //initialising the deck with 66 cards
     private void initialiseDeck() {
-        String[] colors = {"Green", "Purple", "Red", "Blue", "Orange", "Grey"};
-        for (String color : colors) {
+        for (String color : colours) {
             for (int value = 0; value <= 10; value++) {
                 Card card = new Card(value, color, false);
                 deck.add(card);

@@ -35,8 +35,7 @@ public class GameStateManager {
         }
 
         if(currentState instanceof TurnState){
-            // setState(new GameEndState(this, currentContext));
-            System.out.println("Exiting turnstate");
+            setState(new GameEndState(this, currentContext));
         }
 
         if(currentState instanceof GameEndState){
