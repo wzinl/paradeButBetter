@@ -1,154 +1,203 @@
-// package main.gameStates;
+package main.gameStates;
 
-// import java.util.ArrayList;
-// import main.context.GameContext;
-// import main.error.InvalidCardException;
-// import main.helpers.InputValidator;
-// import main.models.*;
+import java.util.ArrayList;
+import main.context.GameContext;
+import main.error.InvalidCardException;
+import main.helpers.InputValidator;
+import main.models.*;
 
+public class TurnState implements GameState {
 
+    private final GameStateManager gsm;
+    private final GameContext context;
+    private final ArrayList<Player> playerList;
+    private int currentPlayerIndex;
+    private ParadeBoard paradeBoard;
+    private Deck deck;
+    private boolean isInFinalRound;
 
-// public class TurnState implements GameState{
+    public TurnState(GameStateManager gsm, GameContext context) {
+        this.gsm = gsm;
+        this.context = context;
+        this.playerList = context.getPlayerList();
+        this.currentPlayerIndex = context.getCurrentPlayerIndex();
+        this.paradeBoard = context.getParadeBoard();
+        this.deck = context.getDeck();
+        this.isInFinalRound = context.getIsInFinalRound();
+    }
 
-//     private final GameStateManager gsm;
-//     private final GameContext context;
-//     private final ArrayList<Player> playerList;
-    
-//     public TurnState(GameStateManager gsm, GameContext context){
-//         this.gsm = gsm;
-//         this.context = context;
-//         this.playerList = context.getPlayerList();
-//     }
+    // Method to check if the game reached its final round conditions
+    // 1. When a player has collected all 6 colors
+    // 2. The draw pile is exhausted
+    // Final Round: Play one more turn (without drawing a card from draw pile) -->
+    // everyone should 4 cards left in hand
+    @Override
+    public void enter() {
+        System.out.println("Entering TurnState");
+        while (!isInFinalRound) {
+            // get current player
+            Player currentPlayer = playerList.get(currentPlayerIndex);
+            // call playturn(currentplayer)
+            playTurn(currentPlayer, false);
 
-//     // Method to check if the game reached its final round conditions
-//     // 1. When a player has collected all 6 colors
-//     // 2. The draw pile is exhausted
-//     // Final Round: Play one more turn (without drawing a card from draw pile) --> everyone should 4 cards left in hand
-//     @Override
-//     public void enter(){
-//         Player currentplayer = playerList.get(context.getCurrentPlayerIndex());
-//         Deck deck = context.getDeck(); 
-//         ParadeBoard paradeBoard = context.getParadeBoard();
+            // draw card from deck
+            PlayerHand playerHand = currentPlayer.getPlayerHand();
 
-//         // Player plays their normal turn
-//         System.out.println(currentplayer.getPlayerName() + "'s turn!");
+            // check if deck size is 0, or if playerboard has all 6 colors. if so, set
+            // isInFinalRound to true
+            // update setFinalRoundTriggerPlayerIndex to the currentPlayerIndex
 
-//         // Display player's hand
-//         System.out.println("Your current hand: ");
-//         System.out.println(currentplayer.getPlayerHand().getCardList());
+            if (currentPlayer.hasCollectedAllColours()) {
+                context.setInFinalRound(true);
+                isInFinalRound = true;
+                System.out.println("You have collected all 6 colors! Moving on to the final round!");
+                // this setter is to know where to stop at when this player has played his last
+                // card
+                context.setFinalRoundTriggerPlayerIndex(currentPlayerIndex);
+            } else {
+                if (deck.isEmpty()) {
+                    context.setInFinalRound(true);
+                    isInFinalRound = true;
+                    System.out.println("The deck is empty! Moving on to the final round!");
+                    // this setter is to know where to stop at when this player has played his last
+                    // card
+                    context.setFinalRoundTriggerPlayerIndex(currentPlayerIndex);
+                }
+            }
+        //     // move to the next player if the final round is not triggered
+        this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
+        }
+        finalRound();
+    }
 
-//         // Choose a card from hand to add to board
-//         // Prompt the player to choose a card o display on board
-//         boolean validInput = false;
+    @Override
+    public void exit() {
+        System.out.println("Exiting TurnState.");
+    }
 
-//         while (!validInput){
-//             int chosenIndex = InputValidator.getIntInRange("Choose a card to display on parade board (pick 0-4): ", 0, 4);            
-            
-//             try {
-//                 Card chosenCard = currentplayer.getPlayerHand().getCardList().get(chosenIndex);
-//                 currentplayer.getPlayerHand().playCardFromHand(chosenCard, paradeBoard);
-//                 System.out.println(currentplayer.getPlayerName() + "played" + chosenCard);
-//                 validInput = true; // if no exception occur
+    public void playTurn(Player current,Boolean isFinalTurn) {
+        System.out.println(current.getPlayerName() + "'s turn.");
+        PlayerHand currentHand = current.getPlayerHand();
+        PlayerBoard currentplayerBoard = current.getPlayerBoard();
+        // Display the parade board
+        System.out.println("Parade Board:");
+        System.out.println(paradeBoard);
+        System.out.println();
+        System.out.println();
 
-//                 // player select the removal cards from parade board
-//                 ArrayList<Card> cardsToAdd = paradeBoard.removefromBoard(chosenCard);
+        // Display player hand
+        System.out.println("Here is your hand:");
+        System.out.println(currentHand);
+        System.out.println();
 
-//                 // add the list of "removal" cards to player board
-//                 currentplayer.getPlayerBoard().addCards(cardsToAdd);
+        if(currentplayerBoard.isEmpty()){
+            System.out.println("Your playerboard is empty.");
+        }else{
+            System.out.println("Here is your board:");
+            System.out.println(currentplayerBoard);
+        }
 
-//                 // player draw card
-//                 currentplayer.getPlayerHand().drawCard(deck);
+        System.out.println();
+        // Keep in loop and only break once valid card is specified
+        while (true) {
+            try {
+                int playIndex = InputValidator.getIntInRange(String.format("Which card would you like to play?(%d to %d): ",
+                                 1, currentHand.getCardList().size()),
+                                1, currentHand.getCardList().size()) - 1;
+                Card chosenCard = currentHand.getCardList().get(playIndex) ;
 
-//             } catch (IndexOutOfBoundsException e){
-//                 System.out.println("Invalid card index! Try again.");
-//             } catch (InvalidCardException e){
-//                 System.out.println("Error playing the card"); // if card not in hand, clarify!!!
-//             }
-//         }
+                System.out.println("You have played: ");
+                System.out.println(chosenCard);
+                System.out.println();
 
-//         // check if the player has collected all 6 colors or if the draw pie is exhausted
-//         if (currentplayer.hasCollectedAllColours() || deck.isDeckEmpty() ){
-//             // set the "trigger last round player index"
-//             context.setFinalRoundTriggerPlayerIndex(context.getCurrentPlayerIndex());
+                playCard(chosenCard, currentplayerBoard);
+                currentHand.removeCard(chosenCard);
 
-//             // Start last round 
-//             startFinalRound();
+                if(!isFinalTurn){
+                    currentHand.drawCard(deck);
+                }
+                break;
+            } catch (InvalidCardException e) {
+                System.out.println("Invalid card. Please enter a valid card.");
+            }
+        }
+        // look at face value of card placed onto the end of the board. count that many
+        // cards from the end.
 
-//         } 
-//         // else continue with normal turn
-//         // Move to next player for the next turn
-//         context.nextTurn();
-//     }
+        // from the remaining cards, select any cards equal to or less than the card
+        // that was played, as well as any cards of the same color
+        // these cards are removed from paradeBoard and added to player's playerboard
+        // remove cards from paradeBoard; playCard();
 
+    }
 
-//     // Method for starting the last round
-//     private void startFinalRound(){
-//         System.out.println("Each player gets one final turn! No more cards will be drawn.");
+    public void playCard(Card chosenCard, PlayerBoard currentPlayerBoard) {
+        int chosenValue = chosenCard.getValue();
+        ArrayList<Card> removedCards = new ArrayList<>();
 
-//         // Mark the game as in final round mode
-//         context.setInFinalRound(true);
+        for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
+            Card currentParadeCard = paradeBoard.getCardList().get(i);
+            if (currentParadeCard.getValue() <= chosenValue
+                    || currentParadeCard.getColor().equals(chosenCard.getColor())) {
+                removedCards.add(currentParadeCard);
+            }
+        }
+        System.out.println("Turn Summary:");
+        System.out.println(paradeBoard.toString(removedCards, chosenValue, chosenCard));
+        System.out.println();
 
-//         // Get the player who triggered the last round
-//         int finalRoundTriggerPlayerIndex = context.getFinalRoundTriggerPlayerIndex();
-//         int numberOfPlayers = playerList.size();
+        for (int i = 0; i < removedCards.size(); i++) {
+            Card currentParadeCard = removedCards.get(i);
+            paradeBoard.remove(currentParadeCard);
+            currentPlayerBoard.addCard(currentParadeCard);
+        }
         
-//         // Start the loop from the next player after the trigger player
-//         int currentIndex = (finalRoundTriggerPlayerIndex + 1)% numberOfPlayers;
+        paradeBoard.addToBoard(chosenCard);
+        System.out.println();
+    }
 
-//         // Loop until it reaches the triger player, including the trigger player should play last round
-//         do {
-//             Player currentPlayer = playerList.get(currentIndex);
-//             playFinalTurn(currentPlayer);
-//         } while (currentIndex != finalRoundTriggerPlayerIndex); // stop when we reach the trigger player
-        
-//         // after loop ends, its the trigger player's turn to play their final turn
-//         playFinalTurn(playerList.get(finalRoundTriggerPlayerIndex));
+    public void finalRound() {
+        System.out.println("Each player gets one final turn! No more cards will be drawn!");
 
-//         endGame(); // end the game after all the players have has their final round
-//     }
+        // so we know who to stop at
+        int finalPlayerIndex = context.getFinalRoundTriggerPlayerIndex();
+        // Loop until it reaches the trigger player, everyone including the trigger
+        // player should play the last round
+        while (currentPlayerIndex != finalPlayerIndex) {
+            Player currentPlayer = playerList.get(currentPlayerIndex);
+            playTurn(currentPlayer, true);
+            this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
+        }
+        // after loop ends, its the trigger player's turn to play their final turn
+        playTurn(playerList.get(finalPlayerIndex), true);
 
-//     // Method for players final turn without drawing a card
-//     private void playFinalTurn(Player player){
-//         System.out.println(player.getPlayerName() + "'s final turn!");
+        // enter the endgame
+        // TODO
+    }
 
-//         // Play a card from player hand to board
-//         boolean validInput = false;
+    // public void playFinalTurn(Player currentPlayer) {
 
-//         while (!validInput){
+    //     System.out.println(currentPlayer.getPlayerName() + "'s final turn!");
+    //     while (true) {
+    //         try {
+    //             int chosenIndex = InputValidator.getIntInRange("Choose a card to display on parade board, pick a card from range (0-4): ",0, 4);
+    //             Card chosenCard = currentPlayer.getPlayerHand().getCardList().get(chosenIndex);
+    //             currentPlayer.getPlayerHand().playCardFromHand(chosenCard, context.getParadeBoard());
+    //             // player select the removal cards from parade board
+    //               ArrayList<Card> cardsToAdd = context.getParadeBoard().playCard(chosenCard);
 
-//             // total 5 cards in hand
-//             int chosenIndex = InputValidator.getIntInRange("Choose a card to display on parade board (pick 0-4): ", 0, 4);            
-            
-//             try {
-//                 Card chosenCard = player.getPlayerHand().getCardList().get(chosenIndex);
-//                 player.getPlayerHand().playCardFromHand(chosenCard, context.getParadeBoard());
-//                 System.out.println(player.getPlayerName() + "played" + chosenCard);
-//                 validInput = true; // if no exception occur
+    //             // add the list of "removal" cards to player board
+    //                 currentPlayer.getPlayerBoard().addCards(cardsToAdd);
+    //         } catch (IndexOutOfBoundsException e) {
+    //             System.out.println("Invalid Card Index! Pick a card from range (0-4)");
+    //         } 
+    //         //TODO
+    //         // get player to pick one of the 5 cards in their hand
 
-//                 // player select the removal cards from parade board
-//                 ArrayList<Card> cardsToAdd = context.getParadeBoard().removefromBoard(chosenCard);
+    //     }
 
-//                 // add the list of "removal" cards to player board
-//                 player.getPlayerBoard().addCards(cardsToAdd);
+    // }
+}
 
-//             } catch (IndexOutOfBoundsException e){
-//                 System.out.println("Invalid card index! Try again.");
-//             } catch (InvalidCardException e){
-//                 System.out.println("Error playing the card"); // if card not in hand, clarify!!!
-//             }
-//         }
-//     }
-
-// // End the game after the last round
-//     private void endGame() {
-//         System.out.println("Game over! The last round has concluded.");
-
-//         // Logic to determine the winner can go here (e.g., based on scores or number of cards remaining)
-//     }
-
-
-//     @Override
-//     public void exit() {
-//         System.out.println("Exiting TurnState.");
-//     }
-// }
+// game end is triggered when either the last card is taken from the draw deck,
+// or one player collects at least one card in each of the 6 colors

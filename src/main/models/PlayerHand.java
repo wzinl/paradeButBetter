@@ -38,7 +38,7 @@ public class PlayerHand {
     // can do custom error to make it final round if deck is empty?
     public void drawCard (Deck deck){
         //first, check if drawing a card is possible
-        if (deck.isDeckEmpty()) {
+        if (deck.isEmpty()) {
             System.out.println("Cannot draw, deck empty");
             
         } else {
@@ -50,14 +50,30 @@ public class PlayerHand {
         }
     }
 
-    //  Place a card from hand to the end of the parade 
-    public void playCardFromHand (Card card , ParadeBoard parade) throws InvalidCardException{
-        removeCard(card);   
-        parade.addToBoard(card);    
+    public void initHand(Deck deck){
+        for(int i = 0; i < 5; i++){
+            drawCard(deck);
+        }
     }
+
+
+
+    public void playCardFromHand(Card card, ParadeBoard paradeBoard) {
+        //TODO WHY IS THIS NOT DONE
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        for (Card card : cardList) {
+            result  += card + "  ";
+        }
+        return result.trim();
+    }
+
+
 
     public ArrayList<Card> getCardList(){
         return cardList;
-
     }
 }
