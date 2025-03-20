@@ -6,23 +6,12 @@ import main.error.InvalidCardException;
 import main.helpers.InputValidator;
 import main.models.*;
 
-public class TurnState implements GameState {
+public class TurnState extends GameState {
 
-    private final GameStateManager gsm;
-    private final GameContext context;
-    private final ArrayList<Player> playerList;
-    private int currentPlayerIndex;
-    private ParadeBoard paradeBoard;
-    private Deck deck;
     private boolean isInFinalRound;
 
     public TurnState(GameStateManager gsm, GameContext context) {
-        this.gsm = gsm;
-        this.context = context;
-        this.playerList = context.getPlayerList();
-        this.currentPlayerIndex = context.getCurrentPlayerIndex();
-        this.paradeBoard = context.getParadeBoard();
-        this.deck = context.getDeck();
+        super(gsm, context);
         this.isInFinalRound = context.getIsInFinalRound();
     }
 
@@ -140,57 +129,6 @@ public class TurnState implements GameState {
         System.out.println();
     }
 
-    public String getDisplay(Player currentPlayer) {
-        String result = "";
-
-        // Display the parade board
-        result += "Parade Board:\n";
-        result += paradeBoard + "\n\n";
-
-        result += "Here is your board:\n";
-        result += getPlayerBoardDisplay(currentPlayer.getPlayerBoard());
-        result += "Here is your hand:\n";
-        result += getHandDisplay(currentPlayer.getPlayerHand());
-        return result;
-    }
-
-    public String getDisplay() {
-        String result = "";
-
-        // Display the parade board
-        result += "Parade Board:\n";
-        result += paradeBoard + "\n".repeat(3);
-
-        for(Player curr : playerList){
-            result += curr.getPlayerName() + "'s board\n";
-            result += getPlayerBoardDisplay(curr.getPlayerBoard());
-            if(!curr.getPlayerHand().getCardList().isEmpty()){
-                result += curr.getPlayerName() + "'s hand\n";
-                result += getHandDisplay(curr.getPlayerHand());
-            }
-        }  
-
-        result += "\n";
-        return result;
-    }
-
-    public String getHandDisplay(PlayerHand playerHand) {
-        String result = "";
-        
-        result += playerHand + "\n";
-        return result;
-    }
-
-    public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
-        String result = "";
-        if(currentplayerBoard.isEmpty()){
-            System.out.println();
-            result += "Playerboard is empty.\n\n";
-        }else{
-            result += currentplayerBoard + "\n\n";
-        }
-        return result;
-    }
 
     public void finalRound() {
         System.out.println("Each player gets one final turn! No more cards will be drawn!");

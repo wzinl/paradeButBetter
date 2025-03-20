@@ -8,24 +8,11 @@ import main.error.InvalidCardException;
 import main.helpers.InputValidator;
 import main.models.*;
 
-public class GameEndState implements GameState {
-    private GameStateManager gsm;
-    private GameContext context;
-    private final ArrayList<Player> playerList;
-    private int currentPlayerIndex;
-    private ParadeBoard paradeBoard;
-    private Deck deck;
-
+public class GameEndState extends GameState {
+    
     public GameEndState(GameStateManager gsm, GameContext context) {
-        this.gsm = gsm;
-        this.context = context;
-        this.playerList = context.getPlayerList();
-        this.currentPlayerIndex = context.getCurrentPlayerIndex();
-        this.paradeBoard = context.getParadeBoard();
-        this.deck = context.getDeck();
-
+        super(gsm, context);
     }
-
     // take in arrayist of players first
     // for each player get playeyrBoard
     // find who has the most cards per color

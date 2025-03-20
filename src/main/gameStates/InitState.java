@@ -6,22 +6,17 @@ import main.context.GameContext;
 import main.helpers.InputValidator;
 import main.models.*;
 
-public class InitState implements GameState{
-    private GameStateManager gsm;
+public class InitState extends GameState {
 
     private int startingIndex;
-    private ArrayList<Player> playerList;
-    private Deck deck;
-    private ParadeBoard paradeBoard;
-
+    
     public InitState(GameStateManager gsm) {
+        super(gsm);
         System.out.println("Game initialized");
-        this.gsm = gsm;
         this.deck = new Deck();
         this.paradeBoard = new ParadeBoard(deck);
     }
 
-    @Override
     public void enter(){
         System.out.println("Game setup will now take place.");
     
@@ -38,9 +33,14 @@ public class InitState implements GameState{
         }
     
         this.startingIndex = ThreadLocalRandom.current().nextInt(0, playerList.size());
+
+        // create context
+        GameContext context = createGameContext();
+        setContext(context);
+
+        // Set the context in the current state
+        this.context = context;
         this.playerList = playerList;
-
-
         //call exit and enter turn state
         // exit();
     }
@@ -49,7 +49,7 @@ public class InitState implements GameState{
         return new GameContext(playerList, this, startingIndex, deck, paradeBoard);
     }
 
-    @Override
+
     public void exit() {
         //exiting InitState
         System.out.println("Exiting " + this.getClass().getSimpleName());
