@@ -17,7 +17,7 @@ public final class Deck {
     private void initialiseDeck() {
         for (String color : colours) {
             for (int value = 0; value <= 10; value++) {
-                Card card = new Card(value, color, false);
+                Card card = new Card(value, color, true);
                 deck.add(card);
             }
         }

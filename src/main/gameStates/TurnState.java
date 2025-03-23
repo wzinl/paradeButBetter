@@ -64,8 +64,8 @@ public class TurnState implements GameState {
                     context.setFinalRoundTriggerPlayerIndex(currentPlayerIndex);
                 }
             }
-        //   move to the next player if the final round is not triggered
-        this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
+            // move to the next player if the final round is not triggered
+            this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         }
         finalRound();
     }
@@ -75,7 +75,7 @@ public class TurnState implements GameState {
         System.out.println("Exiting TurnState.");
     }
 
-    public void playTurn(Player current,Boolean isFinalTurn) {
+    public void playTurn(Player current, Boolean isFinalTurn) {
         System.out.println(current.getPlayerName() + "'s turn.");
         PlayerHand currentHand = current.getPlayerHand();
         PlayerBoard currentplayerBoard = current.getPlayerBoard();
@@ -85,10 +85,11 @@ public class TurnState implements GameState {
         // Keep in loop and only break once valid card is specified
         while (true) {
             try {
-                int playIndex = InputValidator.getIntInRange(String.format("Which card would you like to play?(%d to %d): ",
-                                 1, currentHand.getCardList().size()),
-                                1, currentHand.getCardList().size()) - 1;
-                Card chosenCard = currentHand.getCardList().get(playIndex) ;
+                int playIndex = InputValidator.getIntInRange(
+                        String.format("Which card would you like to play?(%d to %d): ",
+                                1, currentHand.getCardList().size()),
+                        1, currentHand.getCardList().size()) - 1;
+                Card chosenCard = currentHand.getCardList().get(playIndex);
 
                 System.out.println("You have played: ");
                 System.out.println(chosenCard);
@@ -97,7 +98,7 @@ public class TurnState implements GameState {
                 playCard(chosenCard, currentplayerBoard);
                 currentHand.removeCard(chosenCard);
 
-                if(!isFinalTurn){
+                if (!isFinalTurn) {
                     currentHand.drawCard(deck);
                 }
                 break;
@@ -135,24 +136,27 @@ public class TurnState implements GameState {
             paradeBoard.remove(currentParadeCard);
             currentPlayerBoard.addCard(currentParadeCard);
         }
-        
+
         paradeBoard.addToBoard(chosenCard);
         System.out.println();
     }
 
     public String getDisplay(Player currentPlayer) {
-        String result = "";
+    StringBuilder result = new StringBuilder();
+    result.append("\u001B[0m"); // triggers ANSI processing
 
-        // Display the parade board
-        result += "Parade Board:\n";
-        result += paradeBoard + "\n\n";
+    result.append("Parade Board:\n");
+    result.append(paradeBoard.toString()).append("\n\n");
 
-        result += "Here is your board:\n";
-        result += getPlayerBoardDisplay(currentPlayer.getPlayerBoard());
-        result += "Here is your hand:\n";
-        result += getHandDisplay(currentPlayer.getPlayerHand());
-        return result;
-    }
+    result.append("Here is your board:\n");
+    result.append(getPlayerBoardDisplay(currentPlayer.getPlayerBoard()));
+
+    result.append("Here is your hand:\n");
+    result.append("\n"); // Insert extra newline to ensure the hand starts on a fresh line
+    result.append(getHandDisplay(currentPlayer.getPlayerHand()));
+
+    return result.toString();
+}
 
     public String getDisplay() {
         String result = "";
@@ -161,14 +165,14 @@ public class TurnState implements GameState {
         result += "Parade Board:\n";
         result += paradeBoard + "\n".repeat(3);
 
-        for(Player curr : playerList){
+        for (Player curr : playerList) {
             result += curr.getPlayerName() + "'s board\n";
             result += getPlayerBoardDisplay(curr.getPlayerBoard());
-            if(!curr.getPlayerHand().getCardList().isEmpty()){
+            if (!curr.getPlayerHand().getCardList().isEmpty()) {
                 result += curr.getPlayerName() + "'s hand\n";
                 result += getHandDisplay(curr.getPlayerHand());
             }
-        }  
+        }
 
         result += "\n";
         return result;
@@ -176,17 +180,17 @@ public class TurnState implements GameState {
 
     public String getHandDisplay(PlayerHand playerHand) {
         String result = "";
-        
+
         result += playerHand + "\n";
         return result;
     }
 
     public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
         String result = "";
-        if(currentplayerBoard.isEmpty()){
+        if (currentplayerBoard.isEmpty()) {
             System.out.println();
             result += "Playerboard is empty.\n\n";
-        }else{
+        } else {
             result += currentplayerBoard + "\n\n";
         }
         return result;
@@ -209,6 +213,6 @@ public class TurnState implements GameState {
 
         this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         // enter the endgame
-        
+
     }
 }

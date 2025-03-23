@@ -85,9 +85,14 @@ public class PlayerBoard implements CardCollection{
         StringBuilder output = new StringBuilder();
 
         // Header
-        for (int i = 0; i < colors.size(); i++) 
-                output.append(String.format("%-" + colWidths.get(i) + "s  ", colors.get(i)));
-            output.append("\n");
+        for (int i = 0; i < colors.size(); i++) {
+            String colorName = colors.get(i);
+            String code = getAnsiColorCode(colorName);
+            String coloredHeader = code + colorName + "\u001B[0m"; //default col code for terminal to reset the colours used
+        
+            output.append(String.format("%-" + colWidths.get(i) + "s  ", coloredHeader));
+        }
+        output.append("\n");
     
         // Values
         for (int row = 0; row < maxRows; row++) {
@@ -104,5 +109,17 @@ public class PlayerBoard implements CardCollection{
     
     public HashMap<String, ArrayList<Card>> getPlayerBoardHash() {
         return playerBoard;
+    }
+
+    private String getAnsiColorCode(String color) {
+        switch (color) {
+            case "Green": return "\u001B[38;5;46m";  
+            case "Purple": return "\u001B[38;5;129m";  
+            case "Red": return "\u001B[38;5;196m";  
+            case "Blue": return "\u001B[38;5;39m";  
+            case "Orange": return "\u001B[38;5;208m";  
+            case "Grey": return "\u001B[38;5;245m";  
+            default: return "\u001B[0m";        
+        }
     }
 }
