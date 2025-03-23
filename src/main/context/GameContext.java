@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import main.gameStates.GameState;
 import main.models.*;
 
-
-
-
-
 public class GameContext {
 
+    //declaration of variables
     private int finalRoundTriggerPlayerIndex; // index of player who triggered the final round
     private GameState currentState;
     private ArrayList<Player> playerList;
@@ -24,8 +21,10 @@ public class GameContext {
     public GameContext(){
 
     }
-
-    //creating Game Context from Init
+    /*
+    creating Game Context from Init, populates all the necessary
+    fields to start the game
+     */
     public GameContext(ArrayList<Player> playerList, GameState currentState, int currentPlayerIndex, Deck deck, ParadeBoard paradeBoard){
         this();
         this.currentPlayerIndex = currentPlayerIndex;
@@ -48,9 +47,12 @@ public class GameContext {
         this.currentState = newState;
     }
 
+    //The player who triggered the final round
     public void setFinalRoundTriggerPlayerIndex(int index){
         this.finalRoundTriggerPlayerIndex = index;
     }
+
+    //Relevant Setters and Getters
 
     public void setInFinalRound(boolean isInFinalRound){
         this.isInFinalRound = isInFinalRound;
@@ -81,12 +83,6 @@ public class GameContext {
     public Player getCurrentPlayer(){
         return playerList.get(currentPlayerIndex);
     }
-
-    // not for gamecontext to handle
-    // public void nextTurn(){
-    //     this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size(); // circular queue
-    //     changeState(new TurnState(gsm, this));
-    // }
 
     public ArrayList<Player> getPlayerList() {
 

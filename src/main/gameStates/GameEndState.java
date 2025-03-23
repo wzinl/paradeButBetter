@@ -26,7 +26,7 @@ public class GameEndState implements GameState {
 
     }
 
-    // take in arrayist of players first
+    // take in arrayList of players first
     // for each player get playeyrBoard
     // find who has the most cards per color
     // change value of isFlipped to true for each one
@@ -36,16 +36,11 @@ public class GameEndState implements GameState {
     public void enter() {
         try {
             System.out.println("Game End State entering");
-
-            // display the 4 cards in the players hand
-            // then we go auto adding the
-
-            // Player turn, add/discard 2 cards
+            //Each player takes their final turn in the Game End State
             for (Player player : playerList) {
 
 
                 PlayerHand currentHand = player.getPlayerHand();
-                PlayerBoard currentPlayerBoard = player.getPlayerBoard();
                 System.out.println(player.getPlayerName() + "'s turn");
                 System.out.println("Current Game State");
                 getDisplay(player);
@@ -128,7 +123,6 @@ public class GameEndState implements GameState {
 
     }
 
-    //Add in separate calculation scoring for 2 player game mode and >2 Players
 
     @Override
     public void exit() {

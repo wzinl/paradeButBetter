@@ -16,6 +16,7 @@ public class InitState implements GameState{
 
     public InitState(GameStateManager gsm) {
         System.out.println("Game initialized");
+        //Initialising Deck, Parade Board and GameStateManager
         this.gsm = gsm;
         this.deck = new Deck();
         this.paradeBoard = new ParadeBoard(deck);
@@ -28,6 +29,10 @@ public class InitState implements GameState{
         // Get valid number of players
         int numPlayers = InputValidator.getIntInRange("Enter number of players: ", 1, 6);
 
+        /*
+        Prompting user for players names, and adding them into an ArrayList
+        - Additional logic for bots will probably be here
+        */
         ArrayList<Player> playerList = new ArrayList<>();
         for (int i = 1; i <= numPlayers; i++) {
             String playerName = InputValidator.getString("Enter name of Player " + i + ": ");
@@ -36,16 +41,21 @@ public class InitState implements GameState{
             playerList.add(thisPlayer);
             
         }
-    
+        
+        //Completely randomise the order of the players
         this.startingIndex = ThreadLocalRandom.current().nextInt(0, playerList.size());
+
+        //Update playerList variable
         this.playerList = playerList;
-
-
-        //call exit and enter turn state
-        // exit();
     }
 
     public GameContext createGameContext() {
+        /*
+         * called from setState in GameStateManager, populates the GameContext
+         * Game context's purpose is to store all the necessary info
+         * relevant to the game for easy retrieval and access from different
+         * players during their turns.
+         */
         return new GameContext(playerList, this, startingIndex, deck, paradeBoard);
     }
 
