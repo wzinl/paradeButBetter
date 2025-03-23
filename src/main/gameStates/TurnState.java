@@ -76,9 +76,9 @@ public class TurnState implements GameState {
     }
 
     public void playTurn(Player current, Boolean isFinalTurn) {
-        System.out.println(current.getPlayerName() + "'s turn.");
-        PlayerHand currentHand = current.getPlayerHand();
-        PlayerBoard currentplayerBoard = current.getPlayerBoard();
+        System.out.println(current.getPlayerName() + "'s turn.");  
+        PlayerHand currentHand = current.getPlayerHand();   //  cards in the hand of current player
+        PlayerBoard currentplayerBoard = current.getPlayerBoard();  //  card in the board of the current player 
 
         System.out.println(getDisplay(current));
 
@@ -117,8 +117,8 @@ public class TurnState implements GameState {
     }
 
     public void playCard(Card chosenCard, PlayerBoard currentPlayerBoard) {
-        int chosenValue = chosenCard.getValue();
-        ArrayList<Card> removedCards = new ArrayList<>();
+        int chosenValue = chosenCard.getValue();    
+        ArrayList<Card> removedCards = new ArrayList<>();   //  ArrayList of cards to be removed depending on the value n colour of chosen card to be played
 
         for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
             Card currentParadeCard = paradeBoard.getCardList().get(i);
@@ -179,10 +179,36 @@ public class TurnState implements GameState {
     }
 
     public String getHandDisplay(PlayerHand playerHand) {
-        String result = "";
+        ArrayList<Card> cardsList = playerHand.getCardList();   //  ArrayList of the cards on the player's hand
 
-        result += playerHand + "\n";
-        return result;
+        StringBuilder handList = new StringBuilder();   //  first line displays the cards in player's hand
+        handList.append(playerHand);
+
+        StringBuilder index = new StringBuilder();  //  second line displays the indexes of each cards 
+        
+        for (int i = 1; i <= 5; i++) {
+            Card currentCard = cardsList.get(i - 1);  //  index (for users) start from 1, readjust by 1
+            String cardDescription = currentCard.toString();
+
+            int cardLength = cardDescription.length();
+            int indexLength = 3;    //  length of index is 3
+
+            int leftPadding = ((cardLength - indexLength) / 2) + 2;   //  calculate the number of spaces to add infront
+            int rightPadding = ((cardLength - indexLength) / 2) + 2;
+            
+
+            if (cardLength % 2 == 0) {  //  adjust the padding if it is of even length
+                rightPadding += 1;
+            }
+
+            index.append(" ".repeat(leftPadding));
+            index.append("{" + i + "}");           
+            index.append(" ".repeat(rightPadding));
+        }
+
+        handList.append("\n").append(index);
+
+        return handList.toString();
     }
 
     public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {

@@ -76,4 +76,5 @@ public class PlayerHand {
     public ArrayList<Card> getCardList() {
         return cardList;
     }
+
 }

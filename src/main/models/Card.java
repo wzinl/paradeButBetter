@@ -46,6 +46,6 @@ public class Card {
 
         String reset = "\u001B[0m"; // store the default terminal color code in a string to use 
 
-        return getAnsiColorCode() + "(" + color + ": " + value + ")" + reset;
+        return getAnsiColorCode() + "[" + color + ": " + value + "]" + reset;
     }
 }
