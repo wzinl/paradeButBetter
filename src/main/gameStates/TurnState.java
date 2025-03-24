@@ -8,7 +8,6 @@ import main.models.*;
 
 public class TurnState implements GameState {
 
-    private final GameStateManager gsm;
     private final GameContext context;
     private final ArrayList<Player> playerList;
     private int currentPlayerIndex;
@@ -17,7 +16,10 @@ public class TurnState implements GameState {
     private boolean isInFinalRound;
 
     public TurnState(GameStateManager gsm, GameContext context) {
-        this.gsm = gsm;
+
+        /*
+         * grabbing all the necessary information from Game Context
+         */
         this.context = context;
         this.playerList = context.getPlayerList();
         this.currentPlayerIndex = context.getCurrentPlayerIndex();
@@ -40,186 +42,118 @@ public class TurnState implements GameState {
             // call playturn(currentplayer)
             playTurn(currentPlayer, false);
 
-            // draw card from deck
-            PlayerHand playerHand = currentPlayer.getPlayerHand();
-
-            // check if deck size is 0, or if playerboard has all 6 colors. if so, set
-            // isInFinalRound to true
-            // update setFinalRoundTriggerPlayerIndex to the currentPlayerIndex
-
+            /*
+               after player has played their turn,
+               check if deck size is 0, or if playerboard has all 6 colors. if so, set
+               isInFinalRound to true and update 
+               setFinalRoundTriggerPlayerIndex to the currentPlayerIndex so we
+               can go one final round and stop after that exact player has ended their turn
+             */
             if (currentPlayer.hasCollectedAllColours()) {
                 context.setInFinalRound(true);
                 isInFinalRound = true;
                 System.out.println("You have collected all 6 colors! Moving on to the final round!");
-                // this setter is to know where to stop at when this player has played his last
-                // card
                 context.setFinalRoundTriggerPlayerIndex(currentPlayerIndex);
             } else {
                 if (deck.isEmpty()) {
                     context.setInFinalRound(true);
                     isInFinalRound = true;
                     System.out.println("The deck is empty! Moving on to the final round!");
-                    // this setter is to know where to stop at when this player has played his last
-                    // card
                     context.setFinalRoundTriggerPlayerIndex(currentPlayerIndex);
                 }
             }
+
+
             // move to the next player if the final round is not triggered
             this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         }
+        /*
+         * Once we reach here, we know that the conditions for the final round has
+         * been triggered, so we move into the final round.
+         */
         finalRound();
     }
 
-    @Override
-    public void exit() {
-        System.out.println("Exiting TurnState.");
-    }
-
     public void playTurn(Player current, Boolean isFinalTurn) {
-        System.out.println(current.getPlayerName() + "'s turn.");  
+        //Get current players hand and their board
+        System.out.println(current.getPlayerName() + "'s turn.");
         PlayerHand currentHand = current.getPlayerHand();   //  cards in the hand of current player
         PlayerBoard currentplayerBoard = current.getPlayerBoard();  //  card in the board of the current player 
 
         System.out.println(getDisplay(current));
 
-        // Keep in loop and only break once valid card is specified
+        // Keep in loop and only break once the valid card is specified
         while (true) {
             try {
+
+                //Obtain the index of the card the user wants to play
                 int playIndex = InputValidator.getIntInRange(
                         String.format("Which card would you like to play?(%d to %d): ",
                                 1, currentHand.getCardList().size()),
                         1, currentHand.getCardList().size()) - 1;
                 Card chosenCard = currentHand.getCardList().get(playIndex);
 
+                //Display to user which card they played
                 System.out.println("You have played: ");
                 System.out.println(chosenCard);
                 System.out.println();
 
+                /*
+                 * play the chosen Card
+                 */
                 playCard(chosenCard, currentplayerBoard);
                 currentHand.removeCard(chosenCard);
 
+                //huh isnt this redundant since u are always passing in false
                 if (!isFinalTurn) {
                     currentHand.drawCard(deck);
                 }
+                
                 break;
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
             }
         }
-        // look at face value of card placed onto the end of the board. count that many
-        // cards from the end.
-
-        // from the remaining cards, select any cards equal to or less than the card
-        // that was played, as well as any cards of the same color
-        // these cards are removed from paradeBoard and added to player's playerboard
-        // remove cards from paradeBoard; playCard();
-
     }
 
     public void playCard(Card chosenCard, PlayerBoard currentPlayerBoard) {
-        int chosenValue = chosenCard.getValue();    
-        ArrayList<Card> removedCards = new ArrayList<>();   //  ArrayList of cards to be removed depending on the value n colour of chosen card to be played
+        // Get the numerical value of the chosen card 
+        int chosenValue = chosenCard.getValue();
 
+        // Create a list to keep track of cards that will be removed from the parade
+        ArrayList<Card> removedCards = new ArrayList<>();
+
+         /*
+         * Iterate through the parade board, excluding the last 'chosenValue' cards.
+         * These excluded cards are 'safe' and not eligible for removal this turn.
+         */
         for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
             Card currentParadeCard = paradeBoard.getCardList().get(i);
+
+            // Condition for removal:
+            // Remove the card if it has equal or lower value than the chosen card,
+            // OR if it shares the same color
             if (currentParadeCard.getValue() <= chosenValue
                     || currentParadeCard.getColor().equals(chosenCard.getColor())) {
                 removedCards.add(currentParadeCard);
             }
         }
+
+        // Display summary of turn: show the chosen card, removed cards, and remaining parade
         System.out.println("Turn Summary:");
         System.out.println(paradeBoard.toString(removedCards, chosenValue, chosenCard));
         System.out.println();
 
+        //Move removed cards from ParadeBoard to PlayerBoard
         for (int i = 0; i < removedCards.size(); i++) {
             Card currentParadeCard = removedCards.get(i);
             paradeBoard.remove(currentParadeCard);
             currentPlayerBoard.addCard(currentParadeCard);
         }
 
+        //Add the chosen card to the end of the parade board
         paradeBoard.addToBoard(chosenCard);
         System.out.println();
-    }
-
-    public String getDisplay(Player currentPlayer) {
-    StringBuilder result = new StringBuilder();
-    result.append("\u001B[0m"); // triggers ANSI processing
-
-    result.append("Parade Board:\n");
-    result.append(paradeBoard.toString()).append("\n\n");
-
-    result.append("Here is your board:\n");
-    result.append(getPlayerBoardDisplay(currentPlayer.getPlayerBoard()));
-
-    result.append("Here is your hand:\n");
-    result.append("\n"); // Insert extra newline to ensure the hand starts on a fresh line
-    result.append(getHandDisplay(currentPlayer.getPlayerHand()));
-
-    return result.toString();
-}
-
-    public String getDisplay() {
-        String result = "";
-
-        // Display the parade board
-        result += "Parade Board:\n";
-        result += paradeBoard + "\n".repeat(3);
-
-        for (Player curr : playerList) {
-            result += curr.getPlayerName() + "'s board\n";
-            result += getPlayerBoardDisplay(curr.getPlayerBoard());
-            if (!curr.getPlayerHand().getCardList().isEmpty()) {
-                result += curr.getPlayerName() + "'s hand\n";
-                result += getHandDisplay(curr.getPlayerHand());
-            }
-        }
-
-        result += "\n";
-        return result;
-    }
-
-    public String getHandDisplay(PlayerHand playerHand) {
-        ArrayList<Card> cardsList = playerHand.getCardList();   //  ArrayList of the cards on the player's hand
-
-        StringBuilder handList = new StringBuilder();   //  first line displays the cards in player's hand
-        handList.append(playerHand);
-
-        StringBuilder index = new StringBuilder();  //  second line displays the indexes of each cards 
-        
-        for (int i = 1; i <= 5; i++) {
-            Card currentCard = cardsList.get(i - 1);  //  index (for users) start from 1, readjust by 1
-            String cardDescription = "" + "[" +currentCard.getColor()+ ": " + currentCard.getValue() + "]"; //  Card toString method has additional characters due to color coding  
-
-            
-            int cardLength = cardDescription.length();
-            int indexLength = 3;    //  length of index is 3
-
-            int leftPadding = ((cardLength - indexLength) / 2) + 1;   //  calculate the number of spaces to add infront
-            int rightPadding = ((cardLength - indexLength) / 2) + 1;
-
-            if (cardLength % 2 == 0) {  //  adjust the padding if it is of even length
-                rightPadding += 1;
-            }
-
-            index.append(" ".repeat(leftPadding));
-            index.append("{" + i + "}");           
-            index.append(" ".repeat(rightPadding));
-        }
-
-        handList.append("\n").append(index);
-
-        return handList.toString();
-    }
-
-    public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
-        String result = "";
-        if (currentplayerBoard.isEmpty()) {
-            System.out.println();
-            result += "Playerboard is empty.\n\n";
-        } else {
-            result += currentplayerBoard + "\n\n";
-        }
-        return result;
     }
 
     public void finalRound() {
@@ -239,6 +173,70 @@ public class TurnState implements GameState {
 
         this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         // enter the endgame
-
     }
+
+    //huh. this is not implemented properly
+    @Override
+    public void exit() {
+        System.out.println("Exiting TurnState.");
+    }
+
+
+    //Below are all the relevant display functions
+    public String getDisplay(Player currentPlayer) {
+        StringBuilder result = new StringBuilder();
+        result.append("\u001B[0m"); // triggers ANSI processing
+    
+        result.append("Parade Board:\n");
+        result.append(paradeBoard.toString()).append("\n\n");
+    
+        result.append("Here is your board:\n");
+        result.append(getPlayerBoardDisplay(currentPlayer.getPlayerBoard()));
+    
+        result.append("Here is your hand:\n");
+        result.append("\n"); // Insert extra newline to ensure the hand starts on a fresh line
+        result.append(getHandDisplay(currentPlayer.getPlayerHand()));
+    
+        return result.toString();
+    }
+    
+        public String getDisplay() {
+            String result = "";
+    
+            // Display the parade board
+            result += "Parade Board:\n";
+            result += paradeBoard + "\n".repeat(3);
+    
+            for (Player curr : playerList) {
+                result += curr.getPlayerName() + "'s board\n";
+                result += getPlayerBoardDisplay(curr.getPlayerBoard());
+                if (!curr.getPlayerHand().getCardList().isEmpty()) {
+                    result += curr.getPlayerName() + "'s hand\n";
+                    result += getHandDisplay(curr.getPlayerHand());
+                }
+            }
+    
+            result += "\n";
+            return result;
+        }
+    
+        public String getHandDisplay(PlayerHand playerHand) {
+            String result = "";
+    
+            result += playerHand + "\n";
+            return result;
+        }
+    
+        public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
+            String result = "";
+            if (currentplayerBoard.isEmpty()) {
+                System.out.println();
+                result += "Playerboard is empty.\n\n";
+            } else {
+                result += currentplayerBoard + "\n\n";
+            }
+            return result;
+        }
+
+    
 }

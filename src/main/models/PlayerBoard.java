@@ -56,7 +56,10 @@ public class PlayerBoard implements CardCollection{
         }
         
     }
-
+        
+    public HashMap<String, ArrayList<Card>> getPlayerBoardHash() {
+        return playerBoard;
+    }
     // public void sortByQuantity() {
     // }
 
@@ -104,11 +107,6 @@ public class PlayerBoard implements CardCollection{
             output.append("\n");
         }
         return output.toString();
-    }
-
-    
-    public HashMap<String, ArrayList<Card>> getPlayerBoardHash() {
-        return playerBoard;
     }
 
     private String getAnsiColorCode(String color) {

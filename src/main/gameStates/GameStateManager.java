@@ -7,30 +7,31 @@ public class GameStateManager {
     private GameContext currentContext;
     
     public void setState(GameState newState) {
+        //huh
         if (currentState != null) {
             currentState.exit();
-        }
-
+        } 
+        //Set the new current state, then enter the next state of the game
         currentState = newState;
         currentState.enter();
 
+        //When the current state is InitState, we create the game context
         if(currentState instanceof InitState){
             InitState currentInitState = (InitState)currentState;
             this.currentContext = currentInitState.createGameContext();
         }
-        // System.out.println("newstate");
     }
-
+    //when the game is done
     public void closeGame() {
         if (currentState != null) {
             currentState.exit();
         }
 
     }
-
+    //for transition into the next Game State
     public void nextState() {
         if(currentState instanceof InitState){
-            System.out.println("moving to turnstate");
+            System.out.println("Moving to Turnstate");
             setState(new TurnState(this, currentContext));
         }
 
@@ -43,7 +44,4 @@ public class GameStateManager {
         }
     }
 
-    public GameState getState() {
-        return currentState;
-    }
 }
