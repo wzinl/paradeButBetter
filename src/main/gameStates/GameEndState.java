@@ -8,17 +8,13 @@ import main.error.InvalidCardException;
 import main.helpers.InputValidator;
 import main.models.*;
 
-public class GameEndState implements GameState {
-    private final ArrayList<Player> playerList;
-    private final ParadeBoard paradeBoard;
-    private int finalPlayerIndex;
+public class GameEndState extends GameState {
+
 
     // Constructor that initializes player list and parade board from shared game
     // context
     public GameEndState(GameStateManager gsm, GameContext context) {
-        this.playerList = context.getPlayerList();
-        this.paradeBoard = context.getParadeBoard();
-        this.finalPlayerIndex = context.getFinalRoundTriggerPlayerIndex();
+        super(gsm, context);
     }
 
     /**
@@ -154,57 +150,57 @@ public class GameEndState implements GameState {
 
     }
 
-    public String getDisplay(Player currentPlayer) {
-        String result = "";
+    // public String getDisplay(Player currentPlayer) {
+    //     String result = "";
 
-        // Display the parade board
-        result += "Parade Board:\n";
-        result += paradeBoard + "\n".repeat(3);
+    //     // Display the parade board
+    //     result += "Parade Board:\n";
+    //     result += paradeBoard + "\n".repeat(3);
 
-        result += "Here is your board:\n";
-        result += getPlayerBoardDisplay(currentPlayer.getPlayerBoard());
-        result += "Here is your hand:\n";
-        result += getHandDisplay(currentPlayer.getPlayerHand());
-        result += "\n";
-        return result;
-    }
+    //     result += "Here is your board:\n";
+    //     result += getPlayerBoardDisplay(currentPlayer.getPlayerBoard());
+    //     result += "Here is your hand:\n";
+    //     result += getHandDisplay(currentPlayer.getPlayerHand());
+    //     result += "\n";
+    //     return result;
+    // }
 
-    public String getDisplay() {
-        String result = "";
+    // public String getDisplay() {
+    //     String result = "";
 
-        // Display the parade board
-        result += "Parade Board:\n";
-        result += paradeBoard + "\n".repeat(3);
+    //     // Display the parade board
+    //     result += "Parade Board:\n";
+    //     result += paradeBoard + "\n".repeat(3);
 
-        for (Player curr : playerList) {
-            result += curr.getPlayerName() + "'s board\n";
-            result += getPlayerBoardDisplay(curr.getPlayerBoard());
-            if (!curr.getPlayerHand().getCardList().isEmpty()) {
-                result += curr.getPlayerName() + "'s hand\n";
-                result += getHandDisplay(curr.getPlayerHand());
-            }
+    //     for (Player curr : playerList) {
+    //         result += curr.getPlayerName() + "'s board\n";
+    //         result += getPlayerBoardDisplay(curr.getPlayerBoard());
+    //         if (!curr.getPlayerHand().getCardList().isEmpty()) {
+    //             result += curr.getPlayerName() + "'s hand\n";
+    //             result += getHandDisplay(curr.getPlayerHand());
+    //         }
 
-        }
+    //     }
 
-        result += "\n";
-        return result;
-    }
+    //     result += "\n";
+    //     return result;
+    // }
 
-    public String getHandDisplay(PlayerHand playerHand) {
-        String result = "";
+    // public String getHandDisplay(PlayerHand playerHand) {
+    //     String result = "";
 
-        result += playerHand + "\n".repeat(3);
-        return result;
-    }
+    //     result += playerHand + "\n".repeat(3);
+    //     return result;
+    // }
 
-    public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
-        String result = "";
-        if (currentplayerBoard.isEmpty()) {
-            System.out.println();
-            result += "Your playerboard is empty.\n";
-        } else {
-            result += currentplayerBoard + "\n";
-        }
-        return result;
-    }
+    // public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
+    //     String result = "";
+    //     if (currentplayerBoard.isEmpty()) {
+    //         System.out.println();
+    //         result += "Your playerboard is empty.\n";
+    //     } else {
+    //         result += currentplayerBoard + "\n";
+    //     }
+    //     return result;
+    // }
 }

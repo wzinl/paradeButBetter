@@ -66,6 +66,7 @@ public class Player {
 
     // check if player has collect all 6 colors
     public boolean hasCollectedAllColours() {
+    System.out.println("Hash collected all?: " + (playerBoard.getPlayerBoardHash().keySet().size()));
     return playerBoard.getPlayerBoardHash().keySet().size() == 6;
 }
 

@@ -6,25 +6,15 @@ import main.error.InvalidCardException;
 import main.helpers.InputValidator;
 import main.models.*;
 
-public class TurnState implements GameState {
+public class TurnState extends GameState {
 
-    private final GameContext context;
-    private final ArrayList<Player> playerList;
-    private int currentPlayerIndex;
-    private ParadeBoard paradeBoard;
-    private Deck deck;
     private boolean isInFinalRound;
 
     public TurnState(GameStateManager gsm, GameContext context) {
-
         /*
          * grabbing all the necessary information from Game Context
          */
-        this.context = context;
-        this.playerList = context.getPlayerList();
-        this.currentPlayerIndex = context.getCurrentPlayerIndex();
-        this.paradeBoard = context.getParadeBoard();
-        this.deck = context.getDeck();
+        super(gsm, context);
         this.isInFinalRound = context.getIsInFinalRound();
     }
 
@@ -51,19 +41,15 @@ public class TurnState implements GameState {
                setFinalRoundTriggerPlayerIndex to the currentPlayerIndex so we
                can go one final round and stop after that exact player has ended their turn
              */
-            if (currentPlayer.hasCollectedAllColours()) {
+            if (currentPlayer.hasCollectedAllColours() || deck.isEmpty()) {
                 context.setInFinalRound(true);
                 isInFinalRound = true;
                 System.out.println("You have collected all 6 colors! Moving on to the final round!");
                 context.setFinalRoundTriggerPlayerIndex(currentPlayerIndex);
-            } else {
-                if (deck.isEmpty()) {
-                    context.setInFinalRound(true);
-                    isInFinalRound = true;
-                    System.out.println("The deck is empty! Moving on to the final round!");
-                    context.setFinalRoundTriggerPlayerIndex(currentPlayerIndex);
-                }
-            }
+                this.finalPlayerIndex = currentPlayerIndex;
+
+            } 
+
             // move to the next player if the final round is not triggered
             this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         }
@@ -173,10 +159,12 @@ public class TurnState implements GameState {
         System.out.println("Each player gets one final turn! No more cards will be drawn!");
 
         // so we know who to stop at
-        int finalPlayerIndex = context.getFinalRoundTriggerPlayerIndex();
         // Loop until it reaches the trigger player, everyone including the trigger
         // player should play the last round
         while (currentPlayerIndex != finalPlayerIndex) {
+            System.out.println("finalPlayerIndex" + finalPlayerIndex);
+
+            System.out.println("currentPlayerIndex" + currentPlayerIndex);
             Player currentPlayer = playerList.get(currentPlayerIndex);
             playTurn(currentPlayer, true);
             this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
@@ -193,63 +181,5 @@ public class TurnState implements GameState {
     public void exit() {
         System.out.println("Exiting TurnState.");
     }
-
-
-    //Below are all the relevant display functions
-    public String getDisplay(Player currentPlayer) {
-        StringBuilder result = new StringBuilder();
-        result.append("\u001B[0m"); // triggers ANSI processing
-    
-        result.append("Parade Board:\n");
-        result.append(paradeBoard.toString()).append("\n\n");
-    
-        result.append("Here is your board:\n");
-        result.append(getPlayerBoardDisplay(currentPlayer.getPlayerBoard()));
-    
-        result.append("Here is your hand:\n");
-        result.append("\n"); // Insert extra newline to ensure the hand starts on a fresh line
-        result.append(getHandDisplay(currentPlayer.getPlayerHand()));
-    
-        return result.toString();
-    }
-    
-        public String getDisplay() {
-            String result = "";
-    
-            // Display the parade board
-            result += "Parade Board:\n";
-            result += paradeBoard + "\n".repeat(3);
-    
-            for (Player curr : playerList) {
-                result += curr.getPlayerName() + "'s board\n";
-                result += getPlayerBoardDisplay(curr.getPlayerBoard());
-                if (!curr.getPlayerHand().getCardList().isEmpty()) {
-                    result += curr.getPlayerName() + "'s hand\n";
-                    result += getHandDisplay(curr.getPlayerHand());
-                }
-            }
-    
-            result += "\n";
-            return result;
-        }
-    
-        public String getHandDisplay(PlayerHand playerHand) {
-            String result = "";
-    
-            result += playerHand + "\n";
-            return result;
-        }
-    
-        public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
-            String result = "";
-            if (currentplayerBoard.isEmpty()) {
-                System.out.println();
-                result += "Playerboard is empty.\n\n";
-            } else {
-                result += currentplayerBoard + "\n\n";
-            }
-            return result;
-        }
-
     
 }

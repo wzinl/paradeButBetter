@@ -6,18 +6,13 @@ import main.context.GameContext;
 import main.helpers.InputValidator;
 import main.models.*;
 
-public class InitState implements GameState{
-    private GameStateManager gsm;
-
+public class InitState extends GameState{
     private int startingIndex;
-    private ArrayList<Player> playerList;
-    private Deck deck;
-    private ParadeBoard paradeBoard;
 
     public InitState(GameStateManager gsm) {
+        super(gsm);
         System.out.println("Game initialized");
-        //Initialising Deck, Parade Board and GameStateManager
-        this.gsm = gsm;
+        //Initialising Deck and Parade Board 
         this.deck = new Deck();
         this.paradeBoard = new ParadeBoard(deck);
     }
@@ -64,6 +59,12 @@ public class InitState implements GameState{
         this.startingIndex = ThreadLocalRandom.current().nextInt(0, playerList.size());
 
         //Update playerList variable
+
+        GameContext context = createGameContext();
+        setContext(context);
+
+        // Set the context in the current state
+        this.context = context;
         this.playerList = playerList;
     }
 
