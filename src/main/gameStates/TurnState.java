@@ -75,8 +75,8 @@ public class TurnState implements GameState {
     public void playTurn(Player current, Boolean isFinalTurn) {
         //Get current players hand and their board
         System.out.println(current.getPlayerName() + "'s turn.");
-        PlayerHand currentHand = current.getPlayerHand();
-        PlayerBoard currentplayerBoard = current.getPlayerBoard();
+        PlayerHand currentHand = current.getPlayerHand();   //  cards in the hand of current player
+        PlayerBoard currentplayerBoard = current.getPlayerBoard();  //  card in the board of the current player 
 
         System.out.println(getDisplay(current));
 
