@@ -25,22 +25,40 @@ public class InitState implements GameState{
     @Override
     public void enter(){
         System.out.println("Game setup will now take place.");
+        System.out.println();
     
+        System.out.println("\033c");
         // Get valid number of players
-        int numPlayers = InputValidator.getIntInRange("Enter number of players: ", 1, 6);
+        int numPlayers = InputValidator.getIntInRange("Enter number of players: ", 2, 6);
         
         /*
         Prompting user for players names, and adding them into an ArrayList
         - Additional logic for bots will probably be here
         */
         ArrayList<Player> playerList = new ArrayList<>();
+
+        try {
+            Thread.sleep(500); 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\033c");
+
         for (int i = 1; i <= numPlayers; i++) {
             String playerName = InputValidator.getString("Enter name of Player " + i + ": ");
             Player thisPlayer = new Player(playerName);
             thisPlayer.getPlayerHand().initHand(deck);
             playerList.add(thisPlayer);
+            System.out.println("\033c");
             
         }
+
+        try {
+            Thread.sleep(1500); 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\033c");
         
         //Completely randomise the order of the players
         this.startingIndex = ThreadLocalRandom.current().nextInt(0, playerList.size());

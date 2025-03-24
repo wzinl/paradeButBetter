@@ -29,6 +29,8 @@ public class GameEndState implements GameState {
     public void enter() {
         try {
             System.out.println("Game End State entering");
+            System.out.println("\033c");
+
             // Each player takes turns to discard 2 cards and adds the rest to their board
             // Start from finalPlayerIndex and loop through all players in turn order
             for (int i = 0; i < playerList.size(); i++) {
@@ -74,6 +76,25 @@ public class GameEndState implements GameState {
                 }
             }
 
+            System.out.print("Calculating score");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            for(int i = 2; i >=0; i--){
+                System.out.print(".");
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println();
+            
+          
+
             ArrayList<Player> winners = new ArrayList<>(playerList);
             // sort by descending order so that the winner with the highest score comes
             // first
@@ -83,6 +104,9 @@ public class GameEndState implements GameState {
             for (Player player : winners) {
                 System.out.println(player.getPlayerName() + " has scored: " + player.getPlayerScore());
             }
+
+            System.out.println();
+            System.out.println(winners.get(0).getPlayerName() + " wins!");
         } catch (InvalidCardException e) {
             System.out.println(e.getMessage());
         }
@@ -94,7 +118,7 @@ public class GameEndState implements GameState {
         PlayerBoard currentBoard = player.getPlayerBoard();
 
         System.out.println(player.getPlayerName() + "'s turn");
-        System.out.println("Current Game State");
+        // System.out.println("Current Game State");
         getDisplay(player);
         System.out.println("Discard 2 cards from hand.\n");
 
@@ -121,6 +145,8 @@ public class GameEndState implements GameState {
 
         // Clear the hand
         currentHand.getCardList().clear();
+        System.out.println("\033c");
+
     }
 
     @Override

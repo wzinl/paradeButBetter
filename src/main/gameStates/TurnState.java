@@ -36,6 +36,8 @@ public class TurnState implements GameState {
     @Override
     public void enter() {
         System.out.println("Entering TurnState");
+        System.out.println("\033c");
+        
         while (!isInFinalRound) {
             // get current player
             Player currentPlayer = playerList.get(currentPlayerIndex);
@@ -90,18 +92,21 @@ public class TurnState implements GameState {
                                 1, currentHand.getCardList().size()),
                         1, currentHand.getCardList().size()) - 1;
                 Card chosenCard = currentHand.getCardList().get(playIndex);
+                System.out.println();
 
                 //Display to user which card they played
                 System.out.println("You have played: ");
                 System.out.println(chosenCard);
                 System.out.println();
-
                 /*
                  * play the chosen Card
                  */
                 playCard(chosenCard, currentplayerBoard);
                 currentHand.removeCard(chosenCard);
                 currentHand.drawCard(deck);
+
+                System.out.println("\033c");
+
                 break;
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
@@ -132,10 +137,23 @@ public class TurnState implements GameState {
             }
         }
 
+        try {
+            Thread.sleep(500); 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Display summary of turn: show the chosen card, removed cards, and remaining parade
         System.out.println("Turn Summary:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();
+
+        try {
+            Thread.sleep(2000); 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\033c");
 
         //Move removed cards from ParadeBoard to PlayerBoard
         for (int i = 0; i < removedCards.size(); i++) {

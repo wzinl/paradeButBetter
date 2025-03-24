@@ -18,6 +18,7 @@ public class InputValidator {
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a valid integer.");
+                System.out.println();
             } 
         }
     }
@@ -33,6 +34,7 @@ public class InputValidator {
                 return value;
             }
             System.out.println("Input out of range. Please enter a number between " + min + " and " + max + ".");
+            System.out.println();
         }
     }
 

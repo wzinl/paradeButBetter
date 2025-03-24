@@ -44,7 +44,7 @@ public class Player {
         
         playerScore = 0;//so that playerScore does not add up if calculateScore is called multiple times
         //check through each value per color
-        System.out.println(playerBoard);
+        // System.out.println(playerBoard);
         //loop to iterate through each Arraylist of cards in playerBoard hashmap
         for (ArrayList<Card> playerCards : playerBoard.getPlayerBoardHash().values()) {
             if (playerCards == null) {
