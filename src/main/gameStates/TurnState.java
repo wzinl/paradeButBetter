@@ -188,14 +188,14 @@ public class TurnState implements GameState {
         
         for (int i = 1; i <= 5; i++) {
             Card currentCard = cardsList.get(i - 1);  //  index (for users) start from 1, readjust by 1
-            String cardDescription = currentCard.toString();
+            String cardDescription = "" + "[" +currentCard.getColor()+ ": " + currentCard.getValue() + "]"; //  Card toString method has additional characters due to color coding  
 
+            
             int cardLength = cardDescription.length();
             int indexLength = 3;    //  length of index is 3
 
-            int leftPadding = ((cardLength - indexLength) / 2) + 2;   //  calculate the number of spaces to add infront
-            int rightPadding = ((cardLength - indexLength) / 2) + 2;
-            
+            int leftPadding = ((cardLength - indexLength) / 2) + 1;   //  calculate the number of spaces to add infront
+            int rightPadding = ((cardLength - indexLength) / 2) + 1;
 
             if (cardLength % 2 == 0) {  //  adjust the padding if it is of even length
                 rightPadding += 1;
