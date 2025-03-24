@@ -62,8 +62,6 @@ public class TurnState implements GameState {
                     context.setFinalRoundTriggerPlayerIndex(currentPlayerIndex);
                 }
             }
-
-
             // move to the next player if the final round is not triggered
             this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         }
@@ -103,12 +101,7 @@ public class TurnState implements GameState {
                  */
                 playCard(chosenCard, currentplayerBoard);
                 currentHand.removeCard(chosenCard);
-
-                //huh isnt this redundant since u are always passing in false
-                if (!isFinalTurn) {
-                    currentHand.drawCard(deck);
-                }
-                
+                currentHand.drawCard(deck);
                 break;
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
@@ -141,7 +134,7 @@ public class TurnState implements GameState {
 
         // Display summary of turn: show the chosen card, removed cards, and remaining parade
         System.out.println("Turn Summary:");
-        System.out.println(paradeBoard.toString(removedCards, chosenValue, chosenCard));
+        System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();
 
         //Move removed cards from ParadeBoard to PlayerBoard
@@ -153,6 +146,8 @@ public class TurnState implements GameState {
 
         //Add the chosen card to the end of the parade board
         paradeBoard.addToBoard(chosenCard);
+        
+        
         System.out.println();
     }
 

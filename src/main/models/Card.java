@@ -29,15 +29,15 @@ public class Card {
     }
 
     private String getAnsiColorCode() {
-        switch (color) {
-            case "Green": return "\u001B[38;5;46m";  
-            case "Purple": return "\u001B[38;5;129m";  
-            case "Red": return "\u001B[38;5;196m";  
-            case "Blue": return "\u001B[38;5;39m";  
-            case "Orange": return "\u001B[38;5;208m";  
-            case "Grey": return "\u001B[38;5;245m";  
-            default: return "\u001B[0m";        
-        }
+        return switch (color) {
+            case "Green" -> "\u001B[38;5;46m";
+            case "Purple" -> "\u001B[38;5;129m";
+            case "Red" -> "\u001B[38;5;196m";
+            case "Blue" -> "\u001B[38;5;39m";
+            case "Orange" -> "\u001B[38;5;208m";
+            case "Grey" -> "\u001B[38;5;245m";
+            default -> "\u001B[0m";
+        };
     }
 
 
@@ -47,5 +47,10 @@ public class Card {
         String reset = "\u001B[0m"; // store the default terminal color code in a string to use 
 
         return getAnsiColorCode() + "(" + color + ": " + value + ")" + reset;
+    }
+
+
+    public int length() {
+        return ("(" + color + ": " + value + ")").length();
     }
 }

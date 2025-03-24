@@ -7,7 +7,7 @@ public class GameStateManager {
     private GameContext currentContext;
     
     public void setState(GameState newState) {
-        //huh
+        //exit the turn state 
         if (currentState != null) {
             currentState.exit();
         } 

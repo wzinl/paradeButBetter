@@ -79,19 +79,18 @@ public class ParadeBoard {
 
     // used in player turn when you want to display the cards that will be removed
     // from the parade board
-    public String toString(ArrayList<Card> toRemove, int safeCardCount, Card chosenCard) {
+    public String toString(ArrayList<Card> toRemove, Card chosenCard) {
         String firstLine = "";
         String secondLine = "";
         int i;
+        int safeCardCount = chosenCard.getValue();
         if (chosenCard.getValue() >= cardList.size()) {
-            return this.toString() + "  " + chosenCard;
+            return this.toString() + "|  " + chosenCard;
         }
         for (i = 0; i < cardList.size() - safeCardCount; i++) {
             Card card = cardList.get(i);
-            String blank = "";
-            for (int j = 0; j < card.toString().length(); j++) {
-                blank += " ";
-            }
+            String blank = " ".repeat(card.length());
+
             if (toRemove.contains(card)) {
                 firstLine += card + "  ";
                 secondLine += blank + "  ";
@@ -99,9 +98,10 @@ public class ParadeBoard {
                 firstLine += blank + "  ";
                 secondLine += card + "  ";
             }
+
         }
-        if (i < cardList.size()) {
-            secondLine += "  |  ";
+        if (i < cardList.size()){
+            secondLine += ":  ";
         }
 
         while (i < cardList.size()) {
@@ -109,9 +109,14 @@ public class ParadeBoard {
             secondLine += card + "  ";
             i++;
         }
+        secondLine += "|  ";
         secondLine += chosenCard;
+
+        firstLine = firstLine.replaceAll("\\s+$", "");
+        secondLine = secondLine.replaceAll("\\s+$", "");
+
         // right trim both lines and combine
-        return firstLine.replaceAll("\\s+$", "") + "\n" + secondLine.replaceAll("\\s+$", "");
+        return firstLine + "\n" + secondLine;
     }
 
 }
