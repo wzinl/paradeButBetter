@@ -28,7 +28,7 @@ public class InitState implements GameState{
     
         // Get valid number of players
         int numPlayers = InputValidator.getIntInRange("Enter number of players: ", 1, 6);
-
+        
         /*
         Prompting user for players names, and adding them into an ArrayList
         - Additional logic for bots will probably be here

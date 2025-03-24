@@ -1,3 +1,5 @@
+package main.helpers;
+
 import java.util.Scanner;
 
 public class InputValidator {

@@ -9,120 +9,119 @@ import main.helpers.InputValidator;
 import main.models.*;
 
 public class GameEndState implements GameState {
-    private GameStateManager gsm;
-    private GameContext context;
     private final ArrayList<Player> playerList;
-    private int currentPlayerIndex;
-    private ParadeBoard paradeBoard;
-    private Deck deck;
+    private final ParadeBoard paradeBoard;
+    private int finalPlayerIndex;
 
+    // Constructor that initializes player list and parade board from shared game
+    // context
     public GameEndState(GameStateManager gsm, GameContext context) {
-        this.gsm = gsm;
-        this.context = context;
         this.playerList = context.getPlayerList();
-        this.currentPlayerIndex = context.getCurrentPlayerIndex();
         this.paradeBoard = context.getParadeBoard();
-        this.deck = context.getDeck();
-
+        this.finalPlayerIndex = context.getFinalRoundTriggerPlayerIndex();
     }
 
-    // take in arrayList of players first
-    // for each player get playeyrBoard
-    // find who has the most cards per color
-    // change value of isFlipped to true for each one
-    // calculate score afterwards, flipped cards = 1 point each.
-
+    /**
+     * Main entry point of the GameEndState.
+     * Handles the final card discarding, card flipping, and scoring logic.
+     */
     @Override
     public void enter() {
         try {
             System.out.println("Game End State entering");
-            //Each player takes their final turn in the Game End State
-            for (Player player : playerList) {
-
-
-                PlayerHand currentHand = player.getPlayerHand();
-                System.out.println(player.getPlayerName() + "'s turn");
-                System.out.println("Current Game State");
-                getDisplay(player);
-                System.out.println("Discard 2 cards from hand.");
-                System.out.println();
-
-                System.out.println(currentHand); // display the current hand
-                System.out.println();
-
-                int discardCardIndex1 = InputValidator.getIntInRange(String.format("Select first card to discard: "),
-                                1, currentHand.getCardList().size()) - 1;
-                
-                Card removeCard1 = currentHand.getCardList().get(discardCardIndex1);
-                currentHand.removeCard(removeCard1);
-
-                System.out.println(currentHand);
-                System.out.println();
-                int discardCardIndex2 = InputValidator.getIntInRange(String.format("Select second card to discard: "),
-                                1, currentHand.getCardList().size()) -1;
-                Card removeCard2 = currentHand.getCardList().get(discardCardIndex2);
-                currentHand.removeCard(removeCard2);
-
-
-                for (Card card : currentHand.getCardList()) {
-                    player.getPlayerBoard().addCard(card);
-
-                }
-                currentHand.getCardList().clear();
-            
+            // Each player takes turns to discard 2 cards and adds the rest to their board
+            // Start from finalPlayerIndex and loop through all players in turn order
+            for (int i = 0; i < playerList.size(); i++) {
+                int index = (finalPlayerIndex + i) % playerList.size();
+                Player player = playerList.get(index);
+                performDiscardPhase(player);
             }
-            
-            // if there are more than 2 players
+
+            // Handling card flipping logic
             for (String color : Deck.colours) { // looping through each color
                 int highestColor = -1;
-    
-            if(playerList.size() > 2){
-                    // get players with the highest cards per color
+
+                // more than 2 players
+                if (playerList.size() > 2) {
+                    // get player with the highest cards per color
                     for (Player player : playerList) {
                         int playerColor = player.getPlayerBoard().getCardNumberByColor(color);
                         highestColor = Math.max(highestColor, playerColor);
                     }
-                    // flip cards of players with highest cards per color
+                    // flip face down all cards of players who have the highest count for this color
                     for (Player player : playerList) {
-                            if (player.getPlayerBoard().getCardNumberByColor(color) == highestColor) {
-                                for (Card card : player.getPlayerBoard().getPlayerBoardHash().get(color)) {
-                                    card.setIsFaceUp(false);
-                                }
+                        if (player.getPlayerBoard().getCardNumberByColor(color) == highestColor) {
+                            for (Card card : player.getPlayerBoard().getPlayerBoardHash().get(color)) {
+                                card.setIsFaceUp(false);
                             }
+                        }
                     }
-                } else{
+                    // 2 player logic: flip cards if color count difference is >= 2
+                } else {
                     Player player1 = playerList.get(0);
                     Player player2 = playerList.get(1);
                     int player1Count = player1.getPlayerBoard().getCardNumberByColor(color);
                     int player2Count = player2.getPlayerBoard().getCardNumberByColor(color);
 
                     if (Math.abs(player1Count - player2Count) >= 2) {
-                        PlayerBoard currentBoard = player1Count > player2Count ? player1.getPlayerBoard() : player2.getPlayerBoard();
+                        PlayerBoard currentBoard = player1Count > player2Count ? player1.getPlayerBoard()
+                                : player2.getPlayerBoard();
                         for (Card card : currentBoard.getPlayerBoardHash().get(color)) {
-                            card.setIsFaceUp(false);
+                            card.setIsFaceUp(false); // will not be counted in scoring
                         }
                     }
 
                 }
-            } 
-            
-            ArrayList<Player> winners = new ArrayList<>(playerList);
-                // sort by descending order so that the winner with the highest score comes
-                // first
-                Collections.sort(winners, Comparator.comparing(Player::calculateScore)); //lowest score is in first place
-                // undecided what to do with winners yet
+            }
 
+            ArrayList<Player> winners = new ArrayList<>(playerList);
+            // sort by descending order so that the winner with the highest score comes
+            // first
+            Collections.sort(winners, Comparator.comparing(Player::calculateScore)); // lowest score is in first place
 
             System.out.println(getDisplay());
             for (Player player : winners) {
-                    System.out.println(player.getPlayerName() + " has scored: " + player.getPlayerScore());
-                }
+                System.out.println(player.getPlayerName() + " has scored: " + player.getPlayerScore());
+            }
         } catch (InvalidCardException e) {
             System.out.println(e.getMessage());
         }
 
     }
 
+    private void performDiscardPhase(Player player) throws InvalidCardException {
+        PlayerHand currentHand = player.getPlayerHand();
+        PlayerBoard currentBoard = player.getPlayerBoard();
+
+        System.out.println(player.getPlayerName() + "'s turn");
+        System.out.println("Current Game State");
+        getDisplay(player);
+        System.out.println("Discard 2 cards from hand.\n");
+
+        System.out.println(currentHand); // Show full hand
+
+        // Discard first card
+        int discardIndex1 = InputValidator.getIntInRange("Select first card to discard: ",
+                1, currentHand.getCardList().size()) - 1;
+        Card discardCard1 = currentHand.getCardList().get(discardIndex1);
+        currentHand.removeCard(discardCard1);
+
+        System.out.println(currentHand); // Show updated hand
+
+        // Discard second card
+        int discardIndex2 = InputValidator.getIntInRange("Select second card to discard: ",
+                1, currentHand.getCardList().size()) - 1;
+        Card discardCard2 = currentHand.getCardList().get(discardIndex2);
+        currentHand.removeCard(discardCard2);
+
+        // Add any remaining cards to the player’s board
+        for (Card card : currentHand.getCardList()) {
+            currentBoard.addCard(card);
+        }
+
+        // Clear the hand
+        currentHand.getCardList().clear();
+    }
 
     @Override
     public void exit() {
@@ -151,15 +150,15 @@ public class GameEndState implements GameState {
         result += "Parade Board:\n";
         result += paradeBoard + "\n".repeat(3);
 
-        for(Player curr : playerList){
+        for (Player curr : playerList) {
             result += curr.getPlayerName() + "'s board\n";
             result += getPlayerBoardDisplay(curr.getPlayerBoard());
-            if(!curr.getPlayerHand().getCardList().isEmpty()){
+            if (!curr.getPlayerHand().getCardList().isEmpty()) {
                 result += curr.getPlayerName() + "'s hand\n";
                 result += getHandDisplay(curr.getPlayerHand());
             }
 
-        }  
+        }
 
         result += "\n";
         return result;
@@ -167,20 +166,19 @@ public class GameEndState implements GameState {
 
     public String getHandDisplay(PlayerHand playerHand) {
         String result = "";
-        
+
         result += playerHand + "\n".repeat(3);
         return result;
     }
 
     public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
         String result = "";
-        if(currentplayerBoard.isEmpty()){
+        if (currentplayerBoard.isEmpty()) {
             System.out.println();
             result += "Your playerboard is empty.\n";
-        }else{
+        } else {
             result += currentplayerBoard + "\n";
         }
         return result;
     }
 }
-
