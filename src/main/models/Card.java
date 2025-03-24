@@ -53,4 +53,9 @@ public class Card {
     public int length() {
         return ("(" + color + ": " + value + ")").length();
     }
+
+
+    public int length() {
+        return ("(" + color + ": " + value + ")").length();
+    }
 }
