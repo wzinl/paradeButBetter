@@ -66,12 +66,11 @@ public class TurnState extends GameState {
         PlayerHand currentHand = current.getPlayerHand();   //  cards in the hand of current player
         PlayerBoard currentplayerBoard = current.getPlayerBoard();  //  card in the board of the current player 
 
-        System.out.println(getDisplay(current));
+        System.out.println(getDisplay(current) + "\n");
 
         // Keep in loop and only break once the valid card is specified
         while (true) {
             try {
-
                 //Obtain the index of the card the user wants to play
                 int playIndex = InputValidator.getIntInRange(
                         String.format("Which card would you like to play?(%d to %d): ",

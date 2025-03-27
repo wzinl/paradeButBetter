@@ -57,9 +57,6 @@ public class PlayerHand {
         }
     }
 
-    public void playCardFromHand(Card card, ParadeBoard paradeBoard) {
-        // TODO WHY IS THIS NOT DONE
-    }
 
     @Override
     public String toString() {
@@ -76,5 +73,7 @@ public class PlayerHand {
     public ArrayList<Card> getCardList() {
         return cardList;
     }
+
+
 
 }

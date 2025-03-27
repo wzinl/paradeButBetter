@@ -16,8 +16,7 @@ public class GameStateManager {
         currentState.enter();
 
         //When the current state is InitState, we create the game context
-        if(currentState instanceof InitState){
-            InitState currentInitState = (InitState)currentState;
+        if(currentState instanceof InitState currentInitState){
             this.currentContext = currentInitState.createGameContext();
         }
     }
