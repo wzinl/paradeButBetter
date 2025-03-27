@@ -71,6 +71,17 @@ public class InputValidator {
         }
     }
 
+    public static String getDifficulty(String prompt){
+        while (true) {
+            System.out.println(prompt);
+            String input = scanner.nextLine().trim();
+            if (!input.isEmpty()) {
+                return input;
+            }
+            System.out.println("Input cannot be empty. Please enter a valid string.");
+        }
+    }
+
     /**
      * Closes the scanner instance.
      * Should only be called once at the very end of the program.
