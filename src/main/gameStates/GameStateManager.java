@@ -1,10 +1,16 @@
 package main.gameStates;
 
+import java.util.UUID;
 import main.context.GameContext;
 
 public class GameStateManager {
+    private final String gameStateID;
     private GameState currentState;
     private GameContext currentContext;
+    
+    public GameStateManager(){
+        gameStateID = UUID.randomUUID().toString();
+    }
     
     public void setState(GameState newState) {
         //exit the turn state 
@@ -41,6 +47,10 @@ public class GameStateManager {
         if(currentState instanceof GameEndState){
             closeGame();
         }
+    }
+    
+    public String getGameStateID() {
+        return gameStateID;
     }
 
 }

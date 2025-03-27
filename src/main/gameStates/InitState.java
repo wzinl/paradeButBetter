@@ -40,6 +40,7 @@ public class InitState extends GameState{
         System.out.println("\033c");
 
         for (int i = 1; i <= numPlayers; i++) {
+            // String playerName = InputValidator.getString("Enter name of Player " + i + ": ");
             String playerName = InputValidator.getString("Enter name of Player " + i + ": ");
             Player thisPlayer = new Player(playerName);
             thisPlayer.getPlayerHand().initHand(deck);

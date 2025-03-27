@@ -72,11 +72,14 @@ public class TurnState extends GameState {
         while (true) {
             try {
                 //Obtain the index of the card the user wants to play
-                int playIndex = InputValidator.getIntInRange(
-                        String.format("Which card would you like to play?(%d to %d): ",
-                                1, currentHand.getCardList().size()),
-                        1, currentHand.getCardList().size()) - 1;
-                Card chosenCard = currentHand.getCardList().get(playIndex);
+
+                ArrayList<Card> currentCards = currentHand.getCardList();
+                int numCardInHands = currentCards.size();
+                String playPrompt= String.format("Which card would you like to play?(%d to %d): ", 1, numCardInHands);
+                int playIndex = InputValidator.getIntInRange(playPrompt,1, numCardInHands) - 1;
+
+                        
+                Card chosenCard = currentCards.get(playIndex);
                 System.out.println();
 
                 //Display to user which card they played

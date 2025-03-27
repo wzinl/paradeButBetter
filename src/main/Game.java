@@ -19,7 +19,6 @@ public class Game {
          * 3. GameEndState(GameStateManager gsm) - the final actions and the calculation of player scores
          */
 
-
         gsm = new GameStateManager(); 
         
         

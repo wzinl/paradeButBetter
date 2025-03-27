@@ -1,81 +1,120 @@
 package main.helpers;
 
 import java.util.Scanner;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class InputValidator {
 
-    // Create a single Scanner instance to be used throughout the class
+    private static final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private static final Scanner scanner = new Scanner(System.in);
+    private static final AtomicBoolean running = new AtomicBoolean(true);
 
-    /*
-     * Prompts the user for an integer and validates the input.
-     * Keeps prompting until a valid integer is entered.
-     */
-    public static int getInt(String prompt) {
-        while (true) {
-            try {
-                System.out.println(prompt);
-                return Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid integer.");
-                System.out.println();
-            } 
-        }
-    }
+    private static final int MAX_ATTEMPTS = 5;
+    private static final int COOLDOWN_THRESHOLD = 3;
+    private static final long COOLDOWN_MS = 2000;
 
-    /**
-     * Prompts the user for an integer within a specific range.
-     * Keeps prompting until a valid integer within the range is entered.
-     */
-    public static int getIntInRange(String prompt, int min, int max) {
-        while (true) {
-            int value = getInt(prompt); 
-            if (value >= min && value <= max) {
-                return value;
+    // Start background thread to read input
+    static {
+        Thread inputThread = new Thread(() -> {
+            while (running.get()) {
+                String line = scanner.nextLine().trim();
+                inputQueue.offer(line);
             }
-            System.out.println("Input out of range. Please enter a number between " + min + " and " + max + ".");
-            System.out.println();
+        });
+        inputThread.setDaemon(true); // Automatically dies with main program
+        inputThread.start();
+    }
+
+    // Flushes all input lines that were spammed or queued before prompt.
+    private static void flushQueue() {
+        inputQueue.clear();
+    }
+
+    // Waits for next clean line of input from user.
+    private static String waitForInput(String prompt) {
+        flushQueue();
+        System.out.println(prompt);
+        try {
+            return inputQueue.take(); // waits until input is available
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Input interrupted");
         }
     }
 
-    /**
-     * Prompts the user for a non-empty string.
-     * Keeps prompting until a non-empty input is entered.
-     */
+    private static void handleSpamDelay(int attempts) {
+        if (attempts >= COOLDOWN_THRESHOLD) {
+            System.out.println("Please wait a moment before trying again...\n");
+            try {
+                Thread.sleep(COOLDOWN_MS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    public static int getInt(String prompt) {
+        int attempts = 0;
+        while (attempts < MAX_ATTEMPTS) {
+            String input = waitForInput(prompt);
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid integer.\n");
+                attempts++;
+                handleSpamDelay(attempts);
+            }
+        }
+        throw new RuntimeException("Too many invalid integer inputs.");
+    }
+
+    public static int getIntInRange(String prompt, int min, int max) {
+        int attempts = 0;
+        while (attempts < MAX_ATTEMPTS) {
+            int val = getInt(prompt);
+            if (val >= min && val <= max) {
+                return val;
+            } else {
+                System.out.println("Value out of range. Please enter a number between " + min + " and " + max + ".\n");
+                attempts++;
+                handleSpamDelay(attempts);
+            }
+        }
+        throw new RuntimeException("Too many out-of-range inputs.");
+    }
+
     public static String getString(String prompt) {
-        while (true) {
-            System.out.println(prompt);
-            String input = scanner.nextLine().trim();
+        int attempts = 0;
+        while (attempts < MAX_ATTEMPTS) {
+            String input = waitForInput(prompt);
             if (!input.isEmpty()) {
                 return input;
+            } else {
+                System.out.println("Input cannot be empty.\n");
+                attempts++;
+                handleSpamDelay(attempts);
             }
-            System.out.println("Input cannot be empty. Please enter a valid string.");
         }
+        throw new RuntimeException("Too many invalid string inputs.");
     }
 
-    /**
-     * Prompts the user to enter a yes or no response (y/n).
-     * Keeps prompting until the user enters 'y' or 'n'.
-     */
     public static boolean getYesNo(String prompt) {
-        while (true) {
-            System.out.println(prompt + " (y/n): ");
-            String input = scanner.nextLine().trim().toLowerCase();
-            if (input.equals("y")) {
-                return true;
-            } 
-            if (input.equals("n")) {
-                return false;
-            }             
-            System.out.println("Invalid input. Please enter 'y' for Yes or 'n' for No.");
+        int attempts = 0;
+        while (attempts < MAX_ATTEMPTS) {
+            String input = waitForInput(prompt + " (y/n):").toLowerCase();
+            if (input.equals("y")) return true;
+            if (input.equals("n")) return false;
+
+            System.out.println("Invalid input. Please type 'y' or 'n'.\n");
+            attempts++;
+            handleSpamDelay(attempts);
         }
+        throw new RuntimeException("Too many invalid yes/no inputs.");
     }
 
-    /**
-     * Closes the scanner instance.
-     * Should only be called once at the very end of the program.
-     */
-    public static void closeScanner() {
+    public static void shutdown() {
+        running.set(false);
         scanner.close();
     }
 }

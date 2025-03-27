@@ -1,20 +1,22 @@
 package main.models;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Player {
+    private String playerID;
     static int current_id = 0;
     private String playerName;
-    private int playerID = 1;
     private int playerScore;
     private PlayerHand playerhand;
     private PlayerBoard playerBoard;
+
     
     // HashMap<Character, ArrayList<Card>> playerCollectedCards; // ????? 
 
     public Player (String playerName) {
         this.playerName = playerName;
-        this.playerID = playerID++;
+        playerID = UUID.randomUUID().toString();
         current_id++;
         this.playerhand = new PlayerHand();
         this.playerBoard = new PlayerBoard();
@@ -24,6 +26,10 @@ public class Player {
         return playerName;
     }
     
+    public String getPlayerID () {
+        return playerID;
+    }
+
     public int getPlayerScore () {
         return playerScore;
     }

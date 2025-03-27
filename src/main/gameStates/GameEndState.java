@@ -122,7 +122,9 @@ public class GameEndState extends GameState {
 
         // Discard first card
         int discardIndex1 = InputValidator.getIntInRange("Select first card to discard: ",
-                1, currentHand.getCardList().size()) - 1;
+        1, currentHand.getCardList().size()) - 1;
+
+
         Card discardCard1 = currentHand.getCardList().get(discardIndex1);
         currentHand.removeCard(discardCard1);
 
@@ -149,58 +151,4 @@ public class GameEndState extends GameState {
     public void exit() {
 
     }
-
-    // public String getDisplay(Player currentPlayer) {
-    //     String result = "";
-
-    //     // Display the parade board
-    //     result += "Parade Board:\n";
-    //     result += paradeBoard + "\n".repeat(3);
-
-    //     result += "Here is your board:\n";
-    //     result += getPlayerBoardDisplay(currentPlayer.getPlayerBoard());
-    //     result += "Here is your hand:\n";
-    //     result += getHandDisplay(currentPlayer.getPlayerHand());
-    //     result += "\n";
-    //     return result;
-    // }
-
-    // public String getDisplay() {
-    //     String result = "";
-
-    //     // Display the parade board
-    //     result += "Parade Board:\n";
-    //     result += paradeBoard + "\n".repeat(3);
-
-    //     for (Player curr : playerList) {
-    //         result += curr.getPlayerName() + "'s board\n";
-    //         result += getPlayerBoardDisplay(curr.getPlayerBoard());
-    //         if (!curr.getPlayerHand().getCardList().isEmpty()) {
-    //             result += curr.getPlayerName() + "'s hand\n";
-    //             result += getHandDisplay(curr.getPlayerHand());
-    //         }
-
-    //     }
-
-    //     result += "\n";
-    //     return result;
-    // }
-
-    // public String getHandDisplay(PlayerHand playerHand) {
-    //     String result = "";
-
-    //     result += playerHand + "\n".repeat(3);
-    //     return result;
-    // }
-
-    // public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
-    //     String result = "";
-    //     if (currentplayerBoard.isEmpty()) {
-    //         System.out.println();
-    //         result += "Your playerboard is empty.\n";
-    //     } else {
-    //         result += currentplayerBoard + "\n";
-    //     }
-    //     return result;
-    // }
 }
