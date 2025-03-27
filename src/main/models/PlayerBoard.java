@@ -69,45 +69,50 @@ public class PlayerBoard implements CardCollection{
 
 
     @Override
-    public String toString() {
-        List<String> colors = new ArrayList<>(playerBoard.keySet());
-        colors.sort(Comparator.naturalOrder());
-        
-        Map<String, List<Integer>> colorValues = new HashMap<>();
-        int maxRows = 0;
-        for (String color : colors) {
-            List<Integer> values = playerBoard.get(color).stream()
-                    .map(c -> c.getValue())
-                    .sorted()
-                    .toList();
-            colorValues.put(color, values);
-            maxRows = Math.max(maxRows, values.size());
-        }
-
-        List<Integer> colWidths = colors.stream().map(String::length).toList();
-        StringBuilder output = new StringBuilder();
-
-        // Header
+public String toString() {
+    // Get all colors (the keys of the board), sorted in natural order.
+    List<String> colors = new ArrayList<>(playerBoard.keySet());
+    colors.sort(Comparator.naturalOrder());
+    
+    Map<String, List<Card>> colorCards = new HashMap<>();
+    int maxRows = 0;
+    for (String color : colors) {
+        List<Card> cards = playerBoard.get(color).stream()
+                                .sorted(Comparator.comparingInt(Card::getValue))
+                                .toList();
+        colorCards.put(color, cards);
+        maxRows = Math.max(maxRows, cards.size());
+    }
+    
+    // Determine column widths based on header length
+    List<Integer> colWidths = colors.stream().map(String::length).toList();
+    StringBuilder output = new StringBuilder();
+    
+    // Header with colors
+    for (int i = 0; i < colors.size(); i++) {
+        String colorName = colors.get(i);
+        String code = getAnsiColorCode(colorName);
+        String coloredHeader = code + colorName + "\u001B[0m";
+        output.append(String.format("%-" + colWidths.get(i) + "s  ", coloredHeader));
+    }
+    output.append("\n");
+    
+    for (int row = 0; row < maxRows; row++) {
         for (int i = 0; i < colors.size(); i++) {
-            String colorName = colors.get(i);
-            String code = getAnsiColorCode(colorName);
-            String coloredHeader = code + colorName + "\u001B[0m"; //default col code for terminal to reset the colours used
-        
-            output.append(String.format("%-" + colWidths.get(i) + "s  ", coloredHeader));
+            List<Card> cards = colorCards.get(colors.get(i));
+            String display = "";
+            if (row < cards.size()) {
+                Card card = cards.get(row);
+                // Show the value if face up; otherwise show "?"
+                display = card.getIsFaceUp() ? String.valueOf(card.getValue()) : "?";
+            }
+            output.append(String.format("%-" + colWidths.get(i) + "s  ", display));
         }
         output.append("\n");
-    
-        // Values
-        for (int row = 0; row < maxRows; row++) {
-            for (int i = 0; i < colors.size(); i++) {
-                List<Integer> values = colorValues.get(colors.get(i));
-                String num = row < values.size() ? values.get(row) + "" : "";
-                output.append(String.format("%-" + colWidths.get(i) + "s  ", num));
-            }
-            output.append("\n");
-        }
-        return output.toString();
     }
+    
+    return output.toString();
+}
 
     private String getAnsiColorCode(String color) {
         switch (color) {

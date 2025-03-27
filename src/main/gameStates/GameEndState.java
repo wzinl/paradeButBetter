@@ -97,13 +97,14 @@ public class GameEndState extends GameState {
             Collections.sort(winners, Comparator.comparing(Player::calculateScore)); // lowest score is in first place
 
             System.out.println(getDisplay());
-            for (Player player : winners) {
-                System.out.println(player.getPlayerName() + " has scored: " + player.getPlayerScore());
-            }
+
+            revealWinnersWithPoints(winners);
 
             System.out.println();
-            System.out.println(winners.get(0).getPlayerName() + " wins!");
+            
         } catch (InvalidCardException e) {
+            System.out.println(e.getMessage());
+        } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }
 
@@ -144,6 +145,53 @@ public class GameEndState extends GameState {
         System.out.println("\033c");
 
     }
+
+    public static void countdown(int seconds) throws InterruptedException {
+        for (int i = seconds; i > 0; i--) {
+            System.out.print("⏳ " + i + "... ");
+            Thread.sleep(1000);
+        }
+        System.out.println("\n🎉 And the results are in!");
+    }
+
+    public static void revealWinnersWithPoints(ArrayList<Player> rankedPlayers) throws InterruptedException {
+        int size = rankedPlayers.size();
+    
+        System.out.println("Calculating results...");
+        countdown(3);
+        System.out.println("\n=== FINAL STANDINGS ===\n");
+    
+        if (size == 0) {
+            System.out.println("No players found.");
+            return;
+        }
+    
+        Player first = rankedPlayers.get(size - 1);
+        System.out.println("       <<< WINNER >>>");
+        System.out.println("      " + first.getPlayerName() + " (" + first.getPlayerScore() + " pts)");
+        System.out.println("-----------------------------");
+    
+ 
+        if (size >= 2) {
+            Player second = rankedPlayers.get(size - 2);
+            System.out.print("2nd: " + second.getPlayerName() + " (" + second.getPlayerScore() + " pts)");
+            if (size >= 3) {
+                Player third = rankedPlayers.get(size - 3);
+                System.out.print("     3rd: " + third.getPlayerName() + " (" + third.getPlayerScore() + " pts)");
+            }
+            System.out.println();
+        }
+    
+        if (size > 3) {
+            System.out.println("\nOther Participants:");
+            for (int i = 0; i < size - 3; i++) {
+                Player p = rankedPlayers.get(i);
+                int rank = size - i;
+                System.out.println(rank + "th: " + p.getPlayerName() + " (" + p.getPlayerScore() + " pts)");
+            }
+        }
+    }
+    
 
     @Override
     public void exit() {

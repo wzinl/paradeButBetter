@@ -1,0 +1,1 @@
+javadoc -d documentation src/main/context/*.java src/main/error/*.java src/main/gameStates/*.java src/main/helpers/*.java src/main/models/*.java src/main/Game.java  -cp classes
