@@ -3,11 +3,13 @@ package main.context;
 import java.util.ArrayList;
 import main.gameStates.GameState;
 import main.models.*;
+import main.models.cards.Deck;
+import main.models.player.Player;
 
 public class GameContext {
 
     //declaration of variables
-    private int finalRoundTriggerPlayerIndex; // index of player who triggered the final round
+    private int finalRoundStarterIndex; // index of player who triggered the final round
     private GameState currentState;
     private ArrayList<Player> playerList;
     private int currentPlayerIndex;
@@ -32,7 +34,7 @@ public class GameContext {
         this.deck = deck;
         this.paradeBoard = paradeBoard;
         this.isInFinalRound = false;
-        this.finalRoundTriggerPlayerIndex = -1;
+        this.finalRoundStarterIndex = -1;
         this.playerList = playerList;
         System.out.println("GameContext constructed!");
     }
@@ -48,8 +50,8 @@ public class GameContext {
     }
 
     //The player who triggered the final round
-    public void setFinalRoundTriggerPlayerIndex(int index){
-        this.finalRoundTriggerPlayerIndex = index;
+    public void setFinalRoundStarterIndex(int index){
+        this.finalRoundStarterIndex = index;
     }
 
     //Relevant Setters and Getters
@@ -67,8 +69,8 @@ public class GameContext {
     }
 
 
-    public int getFinalRoundTriggerPlayerIndex(){
-        return this.finalRoundTriggerPlayerIndex;
+    public int getFinalRoundStarterIndex(){
+        return this.finalRoundStarterIndex;
     }
 
     public boolean getIsInFinalRound(){

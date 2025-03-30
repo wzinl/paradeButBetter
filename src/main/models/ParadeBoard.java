@@ -2,6 +2,9 @@ package main.models;
 
 import java.util.*;
 
+import main.models.cards.Card;
+import main.models.cards.Deck;
+
 public class ParadeBoard {
     private ArrayList<Card> cardList;
 

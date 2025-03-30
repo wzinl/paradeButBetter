@@ -1,7 +1,9 @@
-package main.models;
+package main.models.player;
 
 import java.util.ArrayList;
 import java.util.UUID;
+
+import main.models.cards.Card;
 
 public class Player {
     private String playerID;

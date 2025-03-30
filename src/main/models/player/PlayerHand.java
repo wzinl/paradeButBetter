@@ -1,7 +1,10 @@
-package main.models;
+package main.models.player;
 
 import java.util.ArrayList;
-import main.error.InvalidCardException;
+
+import main.exceptions.InvalidCardException;
+import main.models.cards.Card;
+import main.models.cards.Deck;
 
 public class PlayerHand {
     private ArrayList<Card> cardList;

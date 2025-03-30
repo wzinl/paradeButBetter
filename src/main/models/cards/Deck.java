@@ -1,4 +1,4 @@
-package main.models;
+package main.models.cards;
 
 import java.util.ArrayList;
 import java.util.Collections;

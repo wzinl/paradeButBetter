@@ -1,5 +1,6 @@
 package main.helpers;
 
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,7 +29,17 @@ public class InputValidator {
 
     // Flushes all input lines that were spammed or queued before prompt.
     private static void flushQueue() {
+        // confirmBeforeFlush();
         inputQueue.clear();
+    }
+
+    private static void confirmBeforeFlush() {
+        System.out.println("Press Enter to continue...");
+        try {
+            System.in.read(); // waits for user to press Enter key
+        } catch (IOException e) {
+            System.out.println("Something went wrong while waiting for input.");
+        }
     }
 
     // Waits for next clean line of input from user.
@@ -103,8 +114,10 @@ public class InputValidator {
         int attempts = 0;
         while (attempts < MAX_ATTEMPTS) {
             String input = waitForInput(prompt + " (y/n):").toLowerCase();
-            if (input.equals("y")) return true;
-            if (input.equals("n")) return false;
+            if (input.equals("y"))
+                return true;
+            if (input.equals("n"))
+                return false;
 
             System.out.println("Invalid input. Please type 'y' or 'n'.\n");
             attempts++;
@@ -113,8 +126,22 @@ public class InputValidator {
         throw new RuntimeException("Too many invalid yes/no inputs.");
     }
 
-    public static void shutdown() {
-        running.set(false);
+    public static String getDifficulty(String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            String input = scanner.nextLine().trim();
+            if (!input.isEmpty()) {
+                return input;
+            }
+            System.out.println("Input cannot be empty. Please enter a valid string.");
+        }
+    }
+
+    /**
+     * Closes the scanner instance.
+     * Should only be called once at the very end of the program.
+     */
+    public static void closeScanner() {
         scanner.close();
     }
 }

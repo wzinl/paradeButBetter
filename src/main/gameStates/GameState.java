@@ -3,6 +3,11 @@ package main.gameStates;
 import java.util.ArrayList;
 import main.context.GameContext;
 import main.models.*;
+import main.models.cards.Card;
+import main.models.cards.Deck;
+import main.models.player.Player;
+import main.models.player.PlayerBoard;
+import main.models.player.PlayerHand;
 
 public abstract class GameState {
     protected final GameStateManager gsm;
@@ -25,7 +30,7 @@ public abstract class GameState {
         this.currentPlayerIndex = context.getCurrentPlayerIndex();
         this.paradeBoard = context.getParadeBoard();
         this.deck = context.getDeck();
-        this.finalPlayerIndex = context.getFinalRoundTriggerPlayerIndex();
+        this.finalPlayerIndex = context.getFinalRoundStarterIndex();
     }
 
     // Method to set context when it's available (can be called later when context is initialized)

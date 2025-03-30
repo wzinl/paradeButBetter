@@ -1,7 +1,8 @@
-package main.models;
+package main.models.cards;
 
 import java.util.ArrayList;
-import main.error.InvalidCardException;
+
+import main.exceptions.InvalidCardException;
 
 public interface CardCollection {
     void addCards(ArrayList<Card> Cards);

@@ -1,4 +1,4 @@
-package main.models;
+package main.models.cards;
 
 
 public class Card {

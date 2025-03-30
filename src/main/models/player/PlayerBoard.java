@@ -1,7 +1,10 @@
-package main.models;
+package main.models.player;
 
 import java.util.*;
-import main.error.InvalidCardException;
+
+import main.exceptions.InvalidCardException;
+import main.models.cards.Card;
+import main.models.cards.CardCollection;
 
 public class PlayerBoard implements CardCollection{
     HashMap<String, ArrayList<Card>> playerBoard;

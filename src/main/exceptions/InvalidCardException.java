@@ -1,4 +1,4 @@
-package main.error;
+package main.exceptions;
 
 public class InvalidCardException extends Exception {
     public InvalidCardException(String message) {
