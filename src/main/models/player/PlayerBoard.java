@@ -42,12 +42,6 @@ public class PlayerBoard implements CardCollection{
         playerBoard.get(cardToAddColor).add(cardToAdd);
     }
 
-    @Override
-    public void removeCard(Card card) throws InvalidCardException{
-        //TODO
-    }
-
-
     // get how many cards of a certain color a player has. if a player has 3 black
     // cards, return 3 when black is put in
     public int getCardNumberByColor(String color) {
@@ -122,5 +116,11 @@ public class PlayerBoard implements CardCollection{
             case "Grey": return "\u001B[38;5;245m";  
             default: return "\u001B[0m";        
         }
+    }
+
+    @Override
+    public void removeCard(Card card) throws InvalidCardException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'removeCard'");
     }
 }

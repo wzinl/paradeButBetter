@@ -5,10 +5,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import main.context.GameContext;
 import main.helpers.InputValidator;
 import main.models.*;
-import main.models.bots.RandomBot;
-import main.models.bots.SmartBot;
 import main.models.cards.Deck;
 import main.models.player.Player;
+import main.models.player.bots.RandomBot;
+import main.models.player.bots.SmartBot;
 
 public class InitState extends GameState {
     private int startingIndex;

@@ -1,6 +1,5 @@
 package main.helpers;
 
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -13,7 +12,7 @@ public class InputValidator {
 
     private static final int MAX_ATTEMPTS = 5;
     private static final int COOLDOWN_THRESHOLD = 3;
-    private static final long COOLDOWN_MS = 2000;
+    private static final int COOLDOWN_MS = 2000;
 
     // Start background thread to read input
     static {
@@ -23,31 +22,19 @@ public class InputValidator {
                 inputQueue.offer(line);
             }
         });
-        inputThread.setDaemon(true); // Automatically dies with main program
+        inputThread.setDaemon(true); // Dies with main program
         inputThread.start();
     }
 
-    // Flushes all input lines that were spammed or queued before prompt.
     private static void flushQueue() {
-        // confirmBeforeFlush();
         inputQueue.clear();
     }
 
-    private static void confirmBeforeFlush() {
-        System.out.println("Press Enter to continue...");
-        try {
-            System.in.read(); // waits for user to press Enter key
-        } catch (IOException e) {
-            System.out.println("Something went wrong while waiting for input.");
-        }
-    }
-
-    // Waits for next clean line of input from user.
     private static String waitForInput(String prompt) {
         flushQueue();
         System.out.println(prompt);
         try {
-            return inputQueue.take(); // waits until input is available
+            return inputQueue.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Input interrupted");
@@ -57,11 +44,7 @@ public class InputValidator {
     private static void handleSpamDelay(int attempts) {
         if (attempts >= COOLDOWN_THRESHOLD) {
             System.out.println("Please wait a moment before trying again...\n");
-            try {
-                Thread.sleep(COOLDOWN_MS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+            ScreenUtils.pause(COOLDOWN_MS);
         }
     }
 
@@ -87,7 +70,7 @@ public class InputValidator {
             if (val >= min && val <= max) {
                 return val;
             } else {
-                System.out.println("Value out of range. Please enter a number between " + min + " and " + max + ".\n");
+                System.out.printf("Value out of range. Please enter a number between %d and %d.\n\n", min, max);
                 attempts++;
                 handleSpamDelay(attempts);
             }
@@ -114,10 +97,8 @@ public class InputValidator {
         int attempts = 0;
         while (attempts < MAX_ATTEMPTS) {
             String input = waitForInput(prompt + " (y/n):").toLowerCase();
-            if (input.equals("y"))
-                return true;
-            if (input.equals("n"))
-                return false;
+            if (input.equals("y")) return true;
+            if (input.equals("n")) return false;
 
             System.out.println("Invalid input. Please type 'y' or 'n'.\n");
             attempts++;
@@ -137,10 +118,6 @@ public class InputValidator {
         }
     }
 
-    /**
-     * Closes the scanner instance.
-     * Should only be called once at the very end of the program.
-     */
     public static void closeScanner() {
         scanner.close();
     }
