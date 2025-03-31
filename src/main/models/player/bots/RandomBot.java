@@ -13,6 +13,6 @@ public class RandomBot extends Player implements Serializable{
     }
 
     public int getNextCardIndex(List<Card> hand) {
-        return new Random().nextInt(hand.size());
+        return new Random().nextInt(1,hand.size()+1);
     }
 }

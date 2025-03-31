@@ -26,6 +26,6 @@ public class SmartBot extends Player implements Serializable{
             }
         }
 
-        return bestIndex;
+        return bestIndex+1;
     }
 }
