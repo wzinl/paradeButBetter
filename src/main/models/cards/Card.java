@@ -42,14 +42,52 @@ public class Card implements Serializable{
     }
 
 
-    @Override
     public String toString() {
-
-        String reset = "\u001B[0m"; // store the default terminal color code in a string to use 
-
-        return getAnsiColorCode() + "[" + color + ": " + value + "]" + reset;
+        String reset = "\u001B[0m";
+        int CARD_WIDTH = 10;  // Fixed width (adjust if needed)
+        int TEXT_WIDTH = CARD_WIDTH - 4;  // Space between borders (after padding)
+    
+        StringBuilder result = new StringBuilder();
+    
+        // Top border
+        result.append("\n┌").append("─".repeat(CARD_WIDTH - 2)).append("┐\n");
+    
+        // Top value (left-aligned)
+        result.append("│ ")
+              .append(String.format("%-" + TEXT_WIDTH + "s", value))  // Left-align
+              .append(" │\n");
+    
+        // Empty line
+        result.append("│").append(" ".repeat(CARD_WIDTH - 2)).append("│\n");
+    
+        // Color (centered)
+        result.append("│ ")
+              .append(centerString(color, TEXT_WIDTH))  // Helper method below
+              .append(" │\n");
+    
+        // Empty line
+        result.append("│").append(" ".repeat(CARD_WIDTH - 2)).append("│\n");
+    
+        // Bottom value (right-aligned)
+        result.append("│ ")
+              .append(String.format("%" + TEXT_WIDTH + "s", value))  // Right-align
+              .append(" │\n");
+    
+        // Bottom border
+        result.append("└").append("─".repeat(CARD_WIDTH - 2)).append("┘\n");
+    
+        return getAnsiColorCode() + result.toString() + reset;
     }
-
+    
+    // Helper method to center text (add this to your class)
+    private String centerString(String text, int width) {
+        if (text.length() >= width) {
+            return text.substring(0, width);  // Truncate if too long
+        }
+        int padding = width - text.length();
+        int leftPad = padding / 2;
+        return " ".repeat(leftPad) + text + " ".repeat(padding - leftPad);
+    }
 
     public int length() {
         return ("[" + color + ": " + value + "]").length();
