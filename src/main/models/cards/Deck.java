@@ -1,9 +1,10 @@
 package main.models.cards;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public final class Deck {
+public final class Deck implements Serializable{
     private final ArrayList<Card> deck;  // unmodifiable after initialisation    
     public static final String[] colours = {"Green", "Purple", "Red", "Blue", "Orange", "Grey"};
 

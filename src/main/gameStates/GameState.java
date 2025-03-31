@@ -64,7 +64,7 @@ public abstract class GameState {
         result.append(getPlayerBoardDisplay(currentPlayer.getPlayerBoard()));
     
         result.append("Here is your hand:\n");
-        result.append("\n"); // Insert extra newline to ensure the hand starts on a fresh line
+        result.append("\n");
         result.append(getHandDisplay(hand));
         result.append(getIndexString(hand));
         return result.toString();

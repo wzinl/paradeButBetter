@@ -6,7 +6,8 @@ public class Game {
 
     public Game() {
         System.out.println("Welcome to Parade.");
-
+        
+        System.out.println("Welcome to Parade.");
         /*
          * Creating a new Game state manager object, the purpose of
          * game state:

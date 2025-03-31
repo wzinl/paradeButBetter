@@ -1,7 +1,6 @@
 package main.models.cards;
 
 import java.util.ArrayList;
-
 import main.exceptions.InvalidCardException;
 
 public interface CardCollection {

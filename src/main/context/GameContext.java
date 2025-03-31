@@ -1,12 +1,14 @@
 package main.context;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import main.gameStates.GameState;
 import main.models.*;
 import main.models.cards.Deck;
 import main.models.player.Player;
 
-public class GameContext {
+
+public class GameContext implements Serializable{
 
     //declaration of variables
     private int finalRoundStarterIndex; // index of player who triggered the final round
@@ -19,16 +21,11 @@ public class GameContext {
 
 
 
-    // constructor for game context
-    public GameContext(){
-
-    }
     /*
     creating Game Context from Init, populates all the necessary
     fields to start the game
      */
     public GameContext(ArrayList<Player> playerList, GameState currentState, int currentPlayerIndex, Deck deck, ParadeBoard paradeBoard){
-        this();
         this.currentPlayerIndex = currentPlayerIndex;
         this.currentState = currentState;
         this.deck = deck;
@@ -78,7 +75,6 @@ public class GameContext {
     }
 
     public int getCurrentPlayerIndex(){
-        
         return currentPlayerIndex;
     }
 

@@ -1,12 +1,13 @@
 package main.models.player;
 
 import java.util.*;
+import java.io.Serializable;
 
 import main.exceptions.InvalidCardException;
 import main.models.cards.Card;
 import main.models.cards.CardCollection;
 
-public class PlayerBoard implements CardCollection{
+public class PlayerBoard implements CardCollection, Serializable{
     HashMap<String, ArrayList<Card>> playerBoard;
 
     public PlayerBoard() {

@@ -1,11 +1,12 @@
 package main.models;
 
+import java.io.Serializable;
 import java.util.*;
 
 import main.models.cards.Card;
 import main.models.cards.Deck;
 
-public class ParadeBoard {
+public class ParadeBoard implements Serializable{
     private ArrayList<Card> cardList;
 
     // makes the board on its own using the deck and drawing the top 5 cards

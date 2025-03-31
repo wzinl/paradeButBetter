@@ -1,13 +1,13 @@
 package main.models.player.bots;
 
+import java.io.Serializable;
 import java.util.List;
-
+import main.helpers.CardEffects;
 import main.models.ParadeBoard;
 import main.models.cards.Card;
-import main.helpers.CardEffects;
 import main.models.player.Player;
 
-public class SmartBot extends Player {
+public class SmartBot extends Player implements Serializable{
 
     public SmartBot(String name) {
         super(name);
