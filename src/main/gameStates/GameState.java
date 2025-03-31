@@ -1,6 +1,8 @@
 package main.gameStates;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import main.context.GameContext;
 import main.models.*;
 import main.models.cards.Card;
@@ -91,11 +93,37 @@ public abstract class GameState {
     }
 
     public String getHandDisplay(PlayerHand playerHand) {
-        String result = "";
 
-        result += playerHand + "\n";
-        return result;
+        // Get all cards and their lines
+        List<Card> cards = playerHand.getCardList();
+        List<String[]> cardLines = new ArrayList<>();
+        List<String> colorCodes = new ArrayList<>();
+        
+        for (Card card : cards) {
+            // Store color code for each card
+            colorCodes.add(card.getAnsiColorCode());
+            // Store card lines (without color codes)
+            cardLines.add(card.toString().replaceAll("\u001B\\[[;\\d]*m", "").split("\n"));
+        }
+        
+        // Build output
+        StringBuilder result = new StringBuilder();
+        int linesPerCard = cardLines.get(0).length;
+        
+        for (int line = 0; line < linesPerCard; line++) {
+            for (int i = 0; i < cards.size(); i++) {
+                // Apply card's color, then line, then reset
+                result.append(colorCodes.get(i))
+                    .append(cardLines.get(i)[line])
+                    .append("\u001B[0m ")
+                    .append(" "); // Space between cards
+            }
+            result.append("\n");
+        }
+        
+        return result.toString();
     }
+    
 
     public String getPlayerBoardDisplay(PlayerBoard currentplayerBoard) {
         String result = "";

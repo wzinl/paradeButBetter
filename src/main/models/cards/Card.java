@@ -29,7 +29,7 @@ public class Card implements Serializable{
         this.isFaceUp = isFaceUp;
     }
 
-    private String getAnsiColorCode() {
+    public String getAnsiColorCode() {
         return switch (color) {
             case "Green" -> "\u001B[38;5;46m";
             case "Purple" -> "\u001B[38;5;129m";

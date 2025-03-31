@@ -72,10 +72,29 @@ public class ParadeBoard implements Serializable{
     @Override
     public String toString() {
 
-        StringBuilder result = new StringBuilder();
-
+        // Prepare all card lines and color codes
+        List<String[]> cardLines = new ArrayList<>();
+        List<String> colorCodes = new ArrayList<>();
+        
         for (Card card : cardList) {
-            result.append(card).append("  ");
+            colorCodes.add(card.getAnsiColorCode());
+            cardLines.add(card.toString()
+                        .replaceAll("\u001B\\[[;\\d]*m", "") // Remove existing ANSI codes
+                        .split("\n"));
+        }
+
+        // Build horizontal display
+        StringBuilder result = new StringBuilder();
+        int linesPerCard = cardLines.get(0).length;
+        
+        for (int line = 0; line < linesPerCard; line++) {
+            for (int i = 0; i < cardList.size(); i++) {
+                // Apply card's color, add line, then reset
+                result.append(colorCodes.get(i))
+                    .append(cardLines.get(i)[line])
+                    .append("\u001B[0m  "); // Reset + double space between cards
+            }
+            result.append("\n");
         }
 
         return result.toString();
@@ -84,43 +103,64 @@ public class ParadeBoard implements Serializable{
     // used in player turn when you want to display the cards that will be removed
     // from the parade board
     public String toString(ArrayList<Card> toRemove, Card chosenCard) {
-        String firstLine = "";
-        String secondLine = "";
+        List<Card> firstLine = new ArrayList<>();
+        List<Card> secondLine = new ArrayList<>();
         int i;
         int safeCardCount = chosenCard.getValue();
         if (chosenCard.getValue() >= cardList.size()) {
-            return this.toString() + "|  " + chosenCard;
+            return formatHorizontalLine(cardList) + "|  " + chosenCard;
         }
+        
         for (i = 0; i < cardList.size() - safeCardCount; i++) {
             Card card = cardList.get(i);
-            String blank = " ".repeat(card.length());
 
             if (toRemove.contains(card)) {
-                firstLine += card + "  ";
-                secondLine += blank + "  ";
+                firstLine.add(card);
+                secondLine.add(null);
             } else {
-                firstLine += blank + "  ";
-                secondLine += card + "  ";
+                firstLine.add(null);
+                secondLine.add(card);
             }
 
         }
         if (i < cardList.size()){
-            secondLine += ":  ";
+            secondLine.add(null);
         }
 
         while (i < cardList.size()) {
             Card card = cardList.get(i);
-            secondLine += card + "  ";
+            secondLine.add(card);
             i++;
         }
-        secondLine += "|  ";
-        secondLine += chosenCard;
-
-        firstLine = firstLine.replaceAll("\\s+$", "");
-        secondLine = secondLine.replaceAll("\\s+$", "");
-
-        // right trim both lines and combine
-        return firstLine + "\n" + secondLine;
+        
+        // Format the horizontal display
+        StringBuilder result = new StringBuilder();
+        
+        // First line (cards to remove)
+        result.append(formatHorizontalLine(firstLine));
+        result.append("\n\n"); // Space between lines
+        
+        // Second line (kept cards + safe cards + chosen card)
+        result.append(formatHorizontalLine(secondLine));
+        result.append("|  ").append(chosenCard);
+    
+        return result.toString();
     }
+    
+    // Helper method to format a list of cards horizontally
+    private String formatHorizontalLine(List<Card> cards) {
+        StringBuilder line = new StringBuilder();
+        int cardWidth = 10; // Adjust based on the expected length of cards
 
+        for (Card card : cards) {
+            if (card == null) {
+                line.append("     "); // Use consistent width for null cards
+            } else {
+                line.append(String.format("%-" + cardWidth + "s", card)); // Format each card to be aligned
+            }
+            line.append("  "); // Extra spacing between cards
+        }
+
+        return line.toString().trim();
+    }
 }
