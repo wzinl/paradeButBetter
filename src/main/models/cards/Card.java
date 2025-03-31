@@ -44,7 +44,7 @@ public class Card implements Serializable{
 
     public String toString() {
         String reset = "\u001B[0m";
-        int CARD_WIDTH = 10;  // Fixed width (adjust if needed)
+        int CARD_WIDTH = 10;  // Fixed width 
         int TEXT_WIDTH = CARD_WIDTH - 4;  // Space between borders (after padding)
     
         StringBuilder result = new StringBuilder();

@@ -12,7 +12,7 @@ public class ParadeBoard implements Serializable{
     // makes the board on its own using the deck and drawing the top 5 cards
     public ParadeBoard(Deck deck) {
         this.cardList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             cardList.add(deck.drawCard());
         }
     }
@@ -103,64 +103,96 @@ public class ParadeBoard implements Serializable{
     // used in player turn when you want to display the cards that will be removed
     // from the parade board
     public String toString(ArrayList<Card> toRemove, Card chosenCard) {
-        List<Card> firstLine = new ArrayList<>();
-        List<Card> secondLine = new ArrayList<>();
-        int i;
-        int safeCardCount = chosenCard.getValue();
-        if (chosenCard.getValue() >= cardList.size()) {
-            return formatHorizontalLine(cardList) + "|  " + chosenCard;
-        }
-        
-        for (i = 0; i < cardList.size() - safeCardCount; i++) {
-            Card card = cardList.get(i);
-
+        int safeCardCount = Math.min(chosenCard.getValue(), cardList.size());
+    
+        // Prepare data for display
+        List<String[]> firstLine = new ArrayList<>(); // Top row (cards to remove)
+        List<String[]> secondLine = new ArrayList<>(); // Bottom row (kept + safe)
+        List<String> colorCodes = new ArrayList<>();
+    
+        for (Card card : cardList) {
+            colorCodes.add(card.getAnsiColorCode());
+            String[] cardLines = card.toString()
+                                     .replaceAll("\u001B\\[[;\\d]*m", "")
+                                     .split("\n");
             if (toRemove.contains(card)) {
-                firstLine.add(card);
-                secondLine.add(null);
+                firstLine.add(cardLines); // Card appears in first row
+                secondLine.add(null); // Leave blank in second row
             } else {
-                firstLine.add(null);
-                secondLine.add(card);
+                firstLine.add(null); // Leave blank in first row
+                secondLine.add(cardLines); // Card appears in second row
             }
-
         }
-        if (i < cardList.size()){
-            secondLine.add(null);
-        }
-
-        while (i < cardList.size()) {
-            Card card = cardList.get(i);
-            secondLine.add(card);
-            i++;
-        }
-        
-        // Format the horizontal display
+    
+        // Prepare chosen card display
+        String[] chosenCardLines = chosenCard.toString()
+                                             .replaceAll("\u001B\\[[;\\d]*m", "")
+                                             .split("\n");
+        String chosenColor = chosenCard.getAnsiColorCode();
+    
+        // Format first and second row
         StringBuilder result = new StringBuilder();
-        
-        // First line (cards to remove)
-        result.append(formatHorizontalLine(firstLine));
-        result.append("\n\n"); // Space between lines
-        
-        // Second line (kept cards + safe cards + chosen card)
-        result.append(formatHorizontalLine(secondLine));
-        result.append("|  ").append(chosenCard);
+        int linesPerCard = 8;
+    
+        // First row (Cards to remove)
+        for (int line = 0; line < linesPerCard; line++) {
+            for (int i = 0; i < cardList.size() - safeCardCount; i++) {
+                if (firstLine.get(i) != null) {
+                    result.append(colorCodes.get(i))
+                          .append(firstLine.get(i)[line])
+                          .append("\u001B[0m  ");
+                } else {
+                    result.append(" ".repeat(secondLine.get(i)[line].length()))
+                          .append("  ");
+                }
+            }
+            result.append("\n");
+        }
+        result.append("\n"); // Space between rows
+    
+        // Second row (Kept cards + safe cards + chosen card)
+        for (int line = 0; line < linesPerCard; line++) {
+            // Kept cards
+            for (int i = 0; i < cardList.size() - safeCardCount; i++) {
+                if (secondLine.get(i) != null) {
+                    result.append(colorCodes.get(i))
+                          .append(secondLine.get(i)[line])
+                          .append("\u001B[0m  ");
+                } else {
+                    result.append(" ".repeat(firstLine.get(i)[line].length()))
+                          .append("  ");
+                }
+            }
+    
+            // Safe cards separator
+            if (safeCardCount > 0) {
+                if (line == linesPerCard / 2) {
+                    result.append(":  ");
+                } else {
+                    result.append("   ");
+                }
+            }
+    
+            // Safe cards (leftovers)
+            for (int i = cardList.size() - safeCardCount; i < cardList.size(); i++) {
+                result.append(colorCodes.get(i))
+                      .append(secondLine.get(i)[line])
+                      .append("\u001B[0m  ");
+            }
+    
+            // Chosen card separator and card
+            if (line == linesPerCard / 2) {
+                result.append("|  ");
+            } else {
+                result.append("   ");
+            }
+            result.append(chosenColor)
+                  .append(chosenCardLines[line])
+                  .append("\u001B[0m\n");
+        }
     
         return result.toString();
     }
     
-    // Helper method to format a list of cards horizontally
-    private String formatHorizontalLine(List<Card> cards) {
-        StringBuilder line = new StringBuilder();
-        int cardWidth = 10; // Adjust based on the expected length of cards
-
-        for (Card card : cards) {
-            if (card == null) {
-                line.append("     "); // Use consistent width for null cards
-            } else {
-                line.append(String.format("%-" + cardWidth + "s", card)); // Format each card to be aligned
-            }
-            line.append("  "); // Extra spacing between cards
-        }
-
-        return line.toString().trim();
-    }
+    
 }

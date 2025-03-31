@@ -141,9 +141,8 @@ public abstract class GameState {
         StringBuilder index = new StringBuilder();  //  second line displays the indexes of each cards 
         
         for (int i = 0; i < cardsList.size(); i++) {
-            Card currentCard = cardsList.get(i);  //  index (for users) start from 1, readjust by 1
 
-            int cardLength = currentCard.length();
+            int cardLength = 10; // width card
 
             String cardIndexStr = "{" + (i+1) + "}";
             int indexLength = cardIndexStr.length();
