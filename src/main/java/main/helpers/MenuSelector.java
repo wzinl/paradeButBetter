@@ -45,7 +45,7 @@
                     // ScreenUtils.clearScreen();
                     System.out.println(ScreenUtils.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
                     while (true) {
-                        System.out.println("iterartion!");
+                        // System.out.println("iterartion!");
                         int ch = terminal.reader().read();                    
                         if (ch == -1) {
                             continue; // No input yet
