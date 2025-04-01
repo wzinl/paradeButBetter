@@ -19,6 +19,7 @@ import main.models.player.bots.SmartBot;
 public class TurnState extends GameState {
 
     private boolean isInFinalRound;
+    private static final String[] ACTION_OPTIONS = {"Save Game", "Quit Game"};
 
     public TurnState(GameStateManager gsm, GameContext context) {
         super(gsm, context);
@@ -54,19 +55,11 @@ public class TurnState extends GameState {
 
 
         // System.out.println(ScreenUtils.getDisplay(current, paradeBoard, hand.getCardList().get(1)) + "\n");
-        ArrayList<String> actionOptions = new ArrayList<>();
-        actionOptions.add("Save Game");
-        actionOptions.add("Quit Game");
         while (true) { 
             try {
+                int index = getTurnSelection(current);
 
-                String chosen = MenuSelector.turnSelect(paradeBoard, current, actionOptions);
-                if(!chosen.matches("\\d+")){
-                    continue;
-                }
-
-                int index = Integer.parseInt(chosen);
-                Card chosenCard = cards.get(index-1);
+                Card chosenCard = cards.get(index);
     
                 if (current instanceof RandomBot || current instanceof SmartBot) {
                     System.out.printf("Bot is going to play card #%d...\n", index);
@@ -75,13 +68,16 @@ public class TurnState extends GameState {
     
                 CardEffects.apply(chosenCard, paradeBoard, board);
                 hand.removeCard(chosenCard);
-                hand.drawCard(deck);
+                if (!isFinalTurn) {
+                    hand.drawCard(deck);
+                }
                 ScreenUtils.clearScreen();
     
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
             }
-        }               
+        }
+    }
 
         // while (true) {
         //     try {
@@ -103,18 +99,30 @@ public class TurnState extends GameState {
         //         System.out.println("Invalid card. Please enter a valid card.");
         //     }
         // }
-    }
+    
 
-    private int getCardIndex(Player current, List<Card> hand, PlayerBoard board) {
+    private int getTurnSelection(Player current) {
+        PlayerBoard board = current.getPlayerBoard();
+        ArrayList<Card> cardList = current.getPlayerHand().getCardList();
         if (current instanceof RandomBot) {
-            return ((RandomBot) current).getNextCardIndex(hand);
+            return ((RandomBot) current).getNextCardIndex(cardList);
         } else if (current instanceof SmartBot) {
-            return ((SmartBot) current).getNextCardIndex(hand, paradeBoard);
+            return ((SmartBot) current).getNextCardIndex(cardList, paradeBoard);
         } else {
+            try{
+                String chosen = MenuSelector.turnSelect(paradeBoard, current, ACTION_OPTIONS);
+                if(chosen.matches("\\d+")){
+                    return Integer.parseInt(chosen);
+                }
+                if(chosen.startsWith("action: ")){
+                    return chosen.split("action: ")[1].charAt(0);
+                }
+            } catch(Exception e){
+                System.out.println("An error has occured displaying the menu! Resulting to manual input.");
+            }
             return InputValidator.getIntInRange(
-                    String.format("Which card would you like to play? (%d to %d): ", 1, hand.size()),
-                    1, hand.size()
-            );
+                String.format("Which card would you like to play? (%d to %d): ", 1, cardList.size()),
+                1, cardList.size());
         }
     }
 

@@ -52,7 +52,7 @@ public class Card implements Serializable{
         };
     }
 
-
+    @Override
     public String toString() {
         String reset = "\u001B[0m";
         int CARD_WIDTH = 10;  // Fixed width 

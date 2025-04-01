@@ -13,12 +13,12 @@ import org.jline.terminal.Attributes;
 
 public class MenuSelector {
 
-    public static String turnSelect(ParadeBoard paradeBoard, Player currentPlayer, List < String > actionOptions) {
+    public static String turnSelect(ParadeBoard paradeBoard, Player currentPlayer, String[] actionOptions){
         int selectedIndex = 0;
         PlayerHand currHand = currentPlayer.getPlayerHand();
         List < Card > cardList = currHand.getCardList();
         int handSize = cardList.size();
-        int actionOptionsCount = actionOptions.size();
+        int actionOptionsCount = actionOptions.length;
         boolean onCardRow = true;
 
         try {
@@ -37,9 +37,6 @@ public class MenuSelector {
                 if (ch == -1) {
                     continue; // No input yet
                 }
-
-                System.out.println("Ch: " + (int) ch);
-
                 switch (ch) {
                 case 'W', 'w' -> { // UP
                     if (!onCardRow) {
@@ -72,7 +69,7 @@ public class MenuSelector {
                     if (onCardRow) {
                         return String.valueOf(selectedIndex);
                     } else {
-                        return "action:" + actionOptions.get(selectedIndex);
+                        return "action: " + actionOptions[selectedIndex];
                     }
                 }
 
@@ -81,7 +78,6 @@ public class MenuSelector {
                 System.out.println();
                 System.out.println(ScreenUtils.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
             }
-
         } catch (IOException e) {
             throw new RuntimeException("Error reading input", e);
         }
