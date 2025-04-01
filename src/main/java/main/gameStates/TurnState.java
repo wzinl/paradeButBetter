@@ -1,10 +1,12 @@
 package main.gameStates;
 
+import java.util.ArrayList;
 import java.util.List;
 import main.context.GameContext;
 import main.exceptions.InvalidCardException;
 import main.helpers.CardEffects;
 import main.helpers.InputValidator;
+import main.helpers.MenuSelector;
 import main.helpers.ScreenUtils;
 import main.models.cards.Card;
 import main.models.player.*;
@@ -48,28 +50,57 @@ public class TurnState extends GameState {
         PlayerBoard board = current.getPlayerBoard();
         List<Card> cards = hand.getCardList();
 
-        System.out.println(ScreenUtils.getDisplay(current, paradeBoard, hand.getCardList().get(1)) + "\n");
 
-        while (true) {
+        // System.out.println(ScreenUtils.getDisplay(current, paradeBoard, hand.getCardList().get(1)) + "\n");
+        ArrayList<String> actionOptions = new ArrayList<>();
+        actionOptions.add("Save Game");
+        actionOptions.add("Quit Game");
+        while (true) { 
             try {
-                int index = getCardIndex(current, cards, board);
-                Card chosenCard = cards.get(index-1);
 
+                String chosen = MenuSelector.turnSelect(paradeBoard, current, actionOptions);
+                if(!chosen.matches("\\d+")){
+                    continue;
+                }
+
+                int index = Integer.parseInt(chosen);
+                Card chosenCard = cards.get(index-1);
+    
                 if (current instanceof RandomBot || current instanceof SmartBot) {
                     System.out.printf("Bot is going to play card #%d...\n", index);
                     ScreenUtils.pause(3000);
                 }
-
+    
                 CardEffects.apply(chosenCard, paradeBoard, board);
                 hand.removeCard(chosenCard);
                 hand.drawCard(deck);
                 ScreenUtils.clearScreen();
-                break;
-
+    
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
             }
-        }
+        }               
+
+        // while (true) {
+        //     try {
+        //         int index = getCardIndex(current, cards, board);
+        //         Card chosenCard = cards.get(index-1);
+
+        //         if (current instanceof RandomBot || current instanceof SmartBot) {
+        //             System.out.printf("Bot is going to play card #%d...\n", index);
+        //             ScreenUtils.pause(3000);
+        //         }
+
+        //         CardEffects.apply(chosenCard, paradeBoard, board);
+        //         hand.removeCard(chosenCard);
+        //         hand.drawCard(deck);
+        //         ScreenUtils.clearScreen();
+        //         break;
+
+        //     } catch (InvalidCardException e) {
+        //         System.out.println("Invalid card. Please enter a valid card.");
+        //     }
+        // }
     }
 
     private int getCardIndex(Player current, List<Card> hand, PlayerBoard board) {

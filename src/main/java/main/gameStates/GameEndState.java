@@ -126,7 +126,7 @@ public class GameEndState extends GameState {
 
         // Discard first card
         int discardIndex1 = InputValidator.getIntInRange("Select first card to discard: ",
-        1, currentHand.getCardList().size()) - 1;
+        1, currentHand.getHandSize()) - 1;
 
 
         Card discardCard1 = currentHand.getCardList().get(discardIndex1);
@@ -136,7 +136,7 @@ public class GameEndState extends GameState {
 
         // Discard second card
         int discardIndex2 = InputValidator.getIntInRange("Select second card to discard: ",
-                1, currentHand.getCardList().size()) - 1;
+                1, currentHand.getHandSize()) - 1;
         Card discardCard2 = currentHand.getCardList().get(discardIndex2);
         currentHand.removeCard(discardCard2);
 

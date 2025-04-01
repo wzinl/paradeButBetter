@@ -77,6 +77,8 @@ public class PlayerHand implements Serializable{
         return cardList;
     }
 
-
+    public int getHandSize() { 
+        return this.getCardList().size();
+    }
 
 }

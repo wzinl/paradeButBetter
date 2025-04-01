@@ -35,10 +35,12 @@ public class Player implements Serializable{
     public int getPlayerScore () {
         return playerScore;
     }
+    
 
     public PlayerHand getPlayerHand() { 
         return playerhand;
     }
+
 
     public PlayerBoard getPlayerBoard() {
         return playerBoard;
