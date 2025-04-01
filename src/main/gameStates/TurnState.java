@@ -63,7 +63,12 @@ public class TurnState extends GameState {
 
                 CardEffects.apply(chosenCard, paradeBoard, board);
                 hand.removeCard(chosenCard);
-                hand.drawCard(deck);
+
+                // **Only draw a card if it is NOT a final turn**
+                if (!isFinalTurn) {
+                    hand.drawCard(deck);
+                }
+                
                 ScreenUtils.clearScreen();
                 break;
 
