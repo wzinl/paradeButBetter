@@ -263,7 +263,7 @@ public class ScreenUtils {
             result += String.format("%-10s", content);
         }
 
-        result += "\n\nUse a/d to move, w/s to switch rows, Enter to select.";
+        result += "\n\nUse A/D to move, W/S to switch rows, Enter to select.";
 
         return result;
     }
