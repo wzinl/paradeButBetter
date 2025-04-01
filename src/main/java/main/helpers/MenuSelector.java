@@ -89,7 +89,7 @@
                             }
                         }
 
-                        // ScreenUtils.clearScreen();
+                        ScreenUtils.clearScreen();
 
                         System.out.println();
                         System.out.println(ScreenUtils.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
