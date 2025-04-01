@@ -1,12 +1,11 @@
 package main.gameStates;
 
 import java.util.List;
-
 import main.context.GameContext;
 import main.exceptions.InvalidCardException;
+import main.helpers.CardEffects;
 import main.helpers.InputValidator;
 import main.helpers.ScreenUtils;
-import main.helpers.CardEffects;
 import main.models.cards.Card;
 import main.models.player.*;
 import main.models.player.bots.RandomBot;
@@ -49,7 +48,7 @@ public class TurnState extends GameState {
         PlayerBoard board = current.getPlayerBoard();
         List<Card> cards = hand.getCardList();
 
-        System.out.println(getDisplay(current) + "\n");
+        System.out.println(ScreenUtils.getDisplay(current, paradeBoard, hand.getCardList().get(1)) + "\n");
 
         while (true) {
             try {

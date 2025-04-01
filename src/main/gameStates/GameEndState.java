@@ -5,8 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import main.context.GameContext;
 import main.exceptions.InvalidCardException;
-import main.helpers.InputValidator;
-import main.models.*;
+import main.helpers.*;
 import main.models.cards.Card;
 import main.models.cards.Deck;
 import main.models.player.Player;
@@ -101,7 +100,7 @@ public class GameEndState extends GameState {
             // first
             Collections.sort(winners, Comparator.comparing(Player::calculateScore)); // lowest score is in first place
 
-            System.out.println(getDisplay());
+            System.out.println(ScreenUtils.getDisplay(playerList, paradeBoard));
             for (Player player : winners) {
                 System.out.println(player.getPlayerName() + " has scored: " + player.getPlayerScore());
             }
@@ -120,7 +119,7 @@ public class GameEndState extends GameState {
 
         System.out.println(player.getPlayerName() + "'s turn");
         // System.out.println("Current Game State");
-        getDisplay(player);
+        ScreenUtils.getDisplay(player, paradeBoard);
         System.out.println("Discard 2 cards from hand.\n");
 
         System.out.println(currentHand); // Show full hand
