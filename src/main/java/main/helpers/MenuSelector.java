@@ -1,214 +1,103 @@
-package main.helpers;
+    package main.helpers;
 
-import java.io.Console;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.List;
+    // import java.io.Console;
+    // import java.io.IOException;
+    // import java.io.Reader;
+    // import java.util.List;
 
-import main.models.ParadeBoard;
-import main.models.cards.Card;
-import main.models.player.Player;
-import main.models.player.PlayerHand;
+    // import javax.naming.Binding;
 
-// import org.jline.reader.LineReader;
-// import org.jline.reader.LineReaderBuilder;
-// import org.jline.reader.EndOfFileException;
-// import org.jline.reader.UserInterruptException;
-// import org.jline.terminal.Terminal; 
-// import org.jline.terminal.TerminalBuilder;
+    import main.models.ParadeBoard;
+    import main.models.cards.Card;
+    import main.models.player.Player;
+    import main.models.player.PlayerHand;
 
-public class MenuSelector {
-
-    public static String turnSelect(ParadeBoard paradeBoard, Player currentPlayer, List<String> actionOptions) {
-        int selectedIndex = 0;
-        PlayerHand currHand = currentPlayer.getPlayerHand();
-        List<Card> cardList = currHand.getCardList();
-        int handSize = cardList.size();
-        int actionOptionsCount = actionOptions.size();
-        boolean onCardRow = true; // true = hand row, false = action row
+    import org.jline.terminal.Terminal;
+    import org.jline.terminal.TerminalBuilder;
+    import org.jline.terminal.Terminal;
+    import java.io.IOException;
+    import java.util.List;
+    import org.jline.terminal.Attributes;
 
 
-        try {
-            Console console = System.console();
-            if (console == null) {
-                throw new UnsupportedOperationException("Console not available. Run from a terminal.");
-            }
+    public class MenuSelector {
 
-            Reader reader = console.reader();
+        public static String turnSelect(ParadeBoard paradeBoard, Player currentPlayer, List<String> actionOptions) {
+            int selectedIndex = 0;
+            PlayerHand currHand = currentPlayer.getPlayerHand();
+            List<Card> cardList = currHand.getCardList();
+            int handSize = cardList.size();
+            int actionOptionsCount = actionOptions.size();
+            boolean onCardRow = true;
+        
+            try {
+                Terminal terminal = TerminalBuilder.builder()
+                        .system(true)
+                        .jna(true)
+                        .build();
+                terminal.enterRawMode(); // Raw mode = immediate input
+                Attributes attr = terminal.getAttributes();
+        
+                attr.setLocalFlag(Attributes.LocalFlag.ECHO, false);
+                terminal.setAttributes(attr);
+                System.out.println("Terminal class: " + terminal.getClass().getName());
 
-            while (true) {
-                // Clear screen
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
-                Card selectedCard = cardList.get(selectedIndex);
+                    // ScreenUtils.clearScreen();
+                    System.out.println(ScreenUtils.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
+                    while (true) {
+                        System.out.println("iterartion!");
+                        int ch = terminal.reader().read();                    
+                        if (ch == -1) {
+                            continue; // No input yet
+                        }
+                    
+                        System.out.println("Ch: " + (int)ch);
 
-                System.out.println(ScreenUtils.getDisplay(currentPlayer, paradeBoard, selectedCard));
-
-                // Spacer
-                System.out.println("\n");
-
-                // Bottom row highlight
-                for (int i = 0; i < actionOptionsCount; i++) {
-                    System.out.print((!onCardRow && i == selectedIndex ? "  ^   " : "      "));
-                }
-                System.out.println();
-
-                // Action options
-                for (String option : actionOptions) {
-                    System.out.print(String.format("%-10s", option));
-                }
-                System.out.println();
-
-                // Footer
-                System.out.println("\nUse ←/→ to move, ↑/↓ to switch rows, Enter to select.");
-
-                int first = reader.read();
-
-                if (first == 27) { // ESC
-                    int second = reader.read();
-                    if (second == 91) {
-                        int third = reader.read();
-                        switch (third) {
-                            case 65 -> {
-                                // up
+                        switch (ch) {
+                            case 'W', 'w' -> { // UP
                                 if (!onCardRow) {
-                                    System.out.println("up ENTERED");
                                     onCardRow = true;
-                                    selectedIndex = Math.min(selectedIndex, handSize - 1);
+                                    selectedIndex = 0;
                                 }
                             }
-                            case 66 -> {
-                                // down
+                            case 'S', 's' -> { // DOWN
                                 if (onCardRow) {
-                                    System.out.println("down ENTERED");
                                     onCardRow = false;
-                                    selectedIndex = Math.min(selectedIndex, handSize - 1);
+                                    selectedIndex = 0;
                                 }
                             }
-                            case 67 -> {
-                                // right
-                                System.out.println("right ENTERED");
+                            case 'D', 'd' -> { // RIGHT
                                 selectedIndex++;
-                                if (onCardRow && selectedIndex >= handSize) {
-                                    selectedIndex = 0;
-                                } else if (!onCardRow && selectedIndex >= actionOptionsCount) {
+                                int max = onCardRow ? handSize : actionOptionsCount;
+                                if (selectedIndex >= max) {
                                     selectedIndex = 0;
                                 }
                             }
-                            case 68 -> {
-                                // left
-                                System.out.println("left ENTERED");
+                            case 'A','a' -> { // LEFT
                                 selectedIndex--;
-                                if (onCardRow && selectedIndex < 0) {
-                                    selectedIndex = handSize - 1;
-                                } else if (!onCardRow && selectedIndex < 0) {
-                                    selectedIndex = actionOptionsCount - 1;
+                                int max = onCardRow ? handSize : actionOptionsCount;
+                                if (selectedIndex < 0) {
+                                    selectedIndex = max - 1;
                                 }
                             }
                         }
+                        if (ch == 10 || ch == 13) { // ENTER
+                            if (onCardRow) {
+                                return String.valueOf(selectedIndex);
+                            } else {
+                                return "action:" + actionOptions.get(selectedIndex);
+                            }
+                        }
+
+                        // ScreenUtils.clearScreen();
+
+                        System.out.println();
+                        System.out.println(ScreenUtils.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
                     }
-                } else if (first == '\n' || first == '\r') {
-                    System.out.println("NEWLINE ENTERED");
-                    if (onCardRow) {
-                        return String.valueOf(selectedIndex); // e.g., card:3 → 4th card
-                    } else {
-                        return "action:" + actionOptions.get(selectedIndex); // e.g., action:Save Game
-                    }
-                }
+                    
+
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading input", e);
             }
-
-        } catch (IOException e) {
-            throw new RuntimeException("Input reading error", e);
         }
-    }
-
-    // public static String turnSelect(ParadeBoard paradeBoard, Player currentPlayer, List<String> actionOptions) {
-    //     int selectedIndex = 0;
-    //     PlayerHand currHand = currentPlayer.getPlayerHand();
-    //     List<Card> cardList = currHand.getCardList();
-    //     int handSize = cardList.size();
-    //     int actionOptionsCount = actionOptions.size();
-    //     boolean onCardRow = true;
-
-    //     try {
-    //         Terminal terminal = TerminalBuilder.builder().system(true).build();
-    //         LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
-
-    //         terminal.enterRawMode(); // read character-by-character, not line-by-line
-    //         while (true) {
-    //             // Clear screen
-    //             System.out.print("\033[H\033[2J");
-    //             System.out.flush();
-    //             Card selectedCard = cardList.get(selectedIndex);
-    //             System.out.println(ScreenUtils.getDisplay(currentPlayer, paradeBoard, selectedCard));
-    //             System.out.println();
-
-    //             // Highlight arrow row
-    //             for (int i = 0; i < actionOptionsCount; i++) {
-    //                 System.out.print((!onCardRow && i == selectedIndex ? "  ^   " : "      "));
-    //             }
-    //             System.out.println();
-
-    //             for (String option : actionOptions) {
-    //                 System.out.print(String.format("%-10s", option));
-    //             }
-    //             System.out.println();
-    //             System.out.println("\nUse ←/→ to move, ↑/↓ to switch rows, Enter to select.");
-
-    //             int key = reader.readCharacter();
-
-    //             switch (key) {
-    //                 case 10, 13 -> { // Enter
-    //                     if (onCardRow) {
-    //                         return String.valueOf(selectedIndex);
-    //                     } else {
-    //                         return "action:" + actionOptions.get(selectedIndex);
-    //                     }
-    //                 }
-    //                 case 27 -> { // Arrow keys: start with ESC (27)
-    //                     int next1 = reader.readCharacter();
-    //                     int next2 = reader.readCharacter();
-
-    //                     if (next1 == 91) {
-    //                         switch (next2) {
-    //                             case 65 -> { // up
-    //                                 onCardRow = true;
-    //                                 selectedIndex = Math.min(selectedIndex, handSize - 1);
-    //                             }
-    //                             case 66 -> { // down
-    //                                 onCardRow = false;
-    //                                 selectedIndex = Math.min(selectedIndex, actionOptionsCount - 1);
-    //                             }
-    //                             case 67 -> { // right
-    //                                 selectedIndex++;
-    //                                 if (onCardRow && selectedIndex >= handSize) {
-    //                                     selectedIndex = 0;
-    //                                 } else if (!onCardRow && selectedIndex >= actionOptionsCount) {
-    //                                     selectedIndex = 0;
-    //                                 }
-    //                             }
-    //                             case 68 -> { // left
-    //                                 selectedIndex--;
-    //                                 if (onCardRow && selectedIndex < 0) {
-    //                                     selectedIndex = handSize - 1;
-    //                                 } else if (!onCardRow && selectedIndex < 0) {
-    //                                     selectedIndex = actionOptionsCount - 1;
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //                 default -> {
-    //                     // Ignore other keys
-    //                 }
-    //             }
-    //         }
-
-    //     } catch (UserInterruptException | EndOfFileException e) {
-    //         System.out.println("Input cancelled.");
-    //         return null;
-    //     } catch (Exception e) {
-    //         throw new RuntimeException("Input reading error", e);
-    //     }
-    // }
-}
+    }   

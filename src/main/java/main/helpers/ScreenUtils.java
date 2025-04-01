@@ -3,11 +3,14 @@ package main.helpers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
+import org.jline.utils.NonBlockingReader;
+
 
 
 public class ScreenUtils {
@@ -231,5 +234,37 @@ public class ScreenUtils {
         return "\u001B[1;" + textColorCode + ";" + bgColorCode + "m";
     }
      
-    
+    public static String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, List<String> actionOptions, Boolean onCardRow) {
+        System.out.println(currentPlayer.getPlayerName() + "'s turn.");
+        PlayerHand currHand = currentPlayer.getPlayerHand();
+        List<Card> cardList = currHand.getCardList();
+        int actionOptionsCount = actionOptions.size();
+
+        String result = "";
+        
+        if(onCardRow){
+            Card selectedCard = cardList.get(selectedIndex);
+            result += ScreenUtils.getDisplay(currentPlayer, paradeBoard, selectedCard) + "\n";
+        }else{
+            result += ScreenUtils.getDisplay(currentPlayer, paradeBoard) + "\n";
+        }
+        System.out.println();
+        for (int i = 0; i < actionOptionsCount; i++) {
+            String option = actionOptions.get(i);
+            boolean isSelected = (i == selectedIndex);
+
+            String content;
+            if (isSelected && !onCardRow) {
+                content = "[" + option + "]";
+            } else {
+                content = " " + option + " ";
+            }
+
+            result += String.format("%-10s", content);
+        }
+
+        result += "\n\nUse a/d to move, w/s to switch rows, Enter to select.";
+
+        return result;
+    }
 }

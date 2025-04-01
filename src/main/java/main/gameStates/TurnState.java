@@ -2,6 +2,7 @@ package main.gameStates;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import main.context.GameContext;
 import main.exceptions.InvalidCardException;
 import main.helpers.CardEffects;
@@ -9,7 +10,9 @@ import main.helpers.InputValidator;
 import main.helpers.MenuSelector;
 import main.helpers.ScreenUtils;
 import main.models.cards.Card;
-import main.models.player.*;
+import main.models.player.Player;
+import main.models.player.PlayerBoard;
+import main.models.player.PlayerHand;
 import main.models.player.bots.RandomBot;
 import main.models.player.bots.SmartBot;
 
@@ -45,7 +48,6 @@ public class TurnState extends GameState {
     }
 
     public void playTurn(Player current, Boolean isFinalTurn) {
-        System.out.println(current.getPlayerName() + "'s turn.");
         PlayerHand hand = current.getPlayerHand();
         PlayerBoard board = current.getPlayerBoard();
         List<Card> cards = hand.getCardList();
