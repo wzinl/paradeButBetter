@@ -4,7 +4,7 @@ public final class ActionSelection implements TurnSelection {
     private final Runnable executable;
 
     public ActionSelection(Runnable action) {
-        executable= action;
+        executable = action;
     }
 
     @Override

@@ -1,16 +1,11 @@
 package main.gameStates;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import main.context.GameContext;
 import main.exceptions.InvalidCardException;
-import main.exceptions.TurnSelectionException;
+import main.exceptions.SelectionException;
 import main.helpers.CardEffects;
-import main.helpers.InputValidator;
-import main.helpers.MenuSelector;
 import main.helpers.ScreenUtils;
 import main.models.cards.Card;
 import main.models.player.Player;
@@ -27,18 +22,9 @@ import main.models.selections.input.CardInput;
 import main.models.selections.input.SelectionInput;
 
 
-public class TurnState extends GameState {
+public class TurnState extends GamePlayState {
 
-    private boolean isInFinalRound;
-
-    private static final Map<String, Character> ACTION_MAP = Map.of(
-        "Save Game", 'S',
-        "Exit Game", 'Q',
-        "Change Input Type", 'C'
-    );
-    
-    
-    
+    private boolean isInFinalRound;    
 
     public TurnState(GameStateManager gsm, GameContext context) {
         super(gsm, context);
@@ -66,7 +52,7 @@ public class TurnState extends GameState {
         finalRound();
     }
 
-    public void playTurn(Player current) {
+    private void playTurn(Player current) {
         PlayerHand hand = current.getPlayerHand();
         List <Card> cardList = hand.getCardList();
 
@@ -84,7 +70,7 @@ public class TurnState extends GameState {
                 ScreenUtils.clearScreen();
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
-            } catch(TurnSelectionException e){
+            } catch(SelectionException e){
                 System.out.println(e.getMessage());
                 System.out.println("Trying Again...");
 
@@ -92,11 +78,7 @@ public class TurnState extends GameState {
         }
     }
 
-    public void performAction(char action){
-        System.out.println("Performing action");
-    }
-
-    public void playCard(Player current, int index) throws InvalidCardException{
+    private void playCard(Player current, int index) throws InvalidCardException{
         PlayerHand hand = current.getPlayerHand();
         PlayerBoard board = current.getPlayerBoard();
         List <Card> cardList = hand.getCardList();
@@ -114,40 +96,21 @@ public class TurnState extends GameState {
         }
     }
 
-    private TurnSelection getTurnSelection(Player current) throws TurnSelectionException{
-        SelectionInput input;
-        if(current.getPreferMenu()){
-            try {
-                input = getMenuSelection(current);
-            } catch (IOException e) {
-                System.out.println("An error has occured using menu selection mode! Defaulting to entry selection. ");
-                input = getEntrySelection(current);
-            }
-        }else{
-            input = getEntrySelection(current);
-        }
-
+    private TurnSelection getTurnSelection(Player current) throws SelectionException {
+        SelectionInput input = getSelectionInput(current);
+    
         if (input instanceof CardInput card) {
             return new CardSelection(() -> playCard(current, card.getCardIndex()));
-        } else if (input instanceof ActionInput action) {
+        }
+        if (input instanceof ActionInput action) {
             return new ActionSelection(() -> performAction(action.getActionChar()));
         }
-        throw new TurnSelectionException("Error Selecting Turn");
+    
+        throw new SelectionException("Error with selection!");
     }
+    
 
-    private SelectionInput getMenuSelection(Player current) throws IOException{
-        return MenuSelector.turnSelect(paradeBoard, current, ACTION_MAP);
-    }
-
-    private SelectionInput getEntrySelection(Player current) {
-        System.out.println(ScreenUtils.getDisplay(current, paradeBoard));
-        ArrayList <Card> cardList = current.getPlayerHand().getCardList();
-        return InputValidator.getIntInRangeWithExceptions(
-            String.format("Which card would you like to play? (%d to %d): ", 1, cardList.size()),
-            1, cardList.size(), ACTION_MAP);
-    }
-
-    public void finalRound() {
+    private void finalRound() {
         this.isInFinalRound = true;
         System.out.println("Each player gets one final turn! No more cards will be drawn!");
 
