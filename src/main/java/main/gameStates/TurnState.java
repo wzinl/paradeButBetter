@@ -1,5 +1,6 @@
 package main.gameStates;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,10 @@ import main.models.player.bots.SmartBot;
 public class TurnState extends GameState {
 
     private boolean isInFinalRound;
-    private static final String[] ACTION_OPTIONS = {"Save Game", "Quit Game"};
+    private static final String[] ACTION_OPTIONS = {
+        "Save Game",
+        "Quit Game"
+    };
 
     public TurnState(GameStateManager gsm, GameContext context) {
         super(gsm, context);
@@ -28,7 +32,6 @@ public class TurnState extends GameState {
 
     @Override
     public void enter() {
-        System.out.println("Entering TurnState");
         ScreenUtils.clearScreen();
 
         while (!isInFinalRound) {
@@ -51,75 +54,53 @@ public class TurnState extends GameState {
     public void playTurn(Player current, Boolean isFinalTurn) {
         PlayerHand hand = current.getPlayerHand();
         PlayerBoard board = current.getPlayerBoard();
-        List<Card> cards = hand.getCardList();
+        List <Card> cards = hand.getCardList();
 
 
         // System.out.println(ScreenUtils.getDisplay(current, paradeBoard, hand.getCardList().get(1)) + "\n");
-        while (true) { 
+        while (true) {
             try {
                 int index = getTurnSelection(current);
 
                 Card chosenCard = cards.get(index);
-    
+
                 if (current instanceof RandomBot || current instanceof SmartBot) {
                     System.out.printf("Bot is going to play card #%d...\n", index);
                     ScreenUtils.pause(3000);
                 }
-    
+
                 CardEffects.apply(chosenCard, paradeBoard, board);
                 hand.removeCard(chosenCard);
                 if (!isFinalTurn) {
                     hand.drawCard(deck);
                 }
                 ScreenUtils.clearScreen();
-    
+
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
             }
         }
     }
 
-        // while (true) {
-        //     try {
-        //         int index = getCardIndex(current, cards, board);
-        //         Card chosenCard = cards.get(index-1);
-
-        //         if (current instanceof RandomBot || current instanceof SmartBot) {
-        //             System.out.printf("Bot is going to play card #%d...\n", index);
-        //             ScreenUtils.pause(3000);
-        //         }
-
-        //         CardEffects.apply(chosenCard, paradeBoard, board);
-        //         hand.removeCard(chosenCard);
-        //         hand.drawCard(deck);
-        //         ScreenUtils.clearScreen();
-        //         break;
-
-        //     } catch (InvalidCardException e) {
-        //         System.out.println("Invalid card. Please enter a valid card.");
-        //     }
-        // }
-    
-
     private int getTurnSelection(Player current) {
-        PlayerBoard board = current.getPlayerBoard();
-        ArrayList<Card> cardList = current.getPlayerHand().getCardList();
-        if (current instanceof RandomBot) {
-            return ((RandomBot) current).getNextCardIndex(cardList);
-        } else if (current instanceof SmartBot) {
-            return ((SmartBot) current).getNextCardIndex(cardList, paradeBoard);
+        ArrayList <Card> cardList = current.getPlayerHand().getCardList();
+        if (current instanceof RandomBot randomBot) {
+            return randomBot.getNextCardIndex(cardList);
+        } else if (current instanceof SmartBot smartBot) {
+            return smartBot.getNextCardIndex(cardList, paradeBoard);
         } else {
-            try{
+            try {
                 String chosen = MenuSelector.turnSelect(paradeBoard, current, ACTION_OPTIONS);
-                if(chosen.matches("\\d+")){
+                if (chosen.matches("\\d+")) {
                     return Integer.parseInt(chosen);
                 }
-                if(chosen.startsWith("action: ")){
+                if (chosen.startsWith("action: ")) {
                     return chosen.split("action: ")[1].charAt(0);
                 }
-            } catch(Exception e){
-                System.out.println("An error has occured displaying the menu! Resulting to manual input.");
+            } catch (IOException e) {
+                System.out.println("An error has occured displaying the menu! Defaulting to manual input.");
             }
+            System.out.println(ScreenUtils.getDisplay(current, paradeBoard));
             return InputValidator.getIntInRange(
                 String.format("Which card would you like to play? (%d to %d): ", 1, cardList.size()),
                 1, cardList.size());

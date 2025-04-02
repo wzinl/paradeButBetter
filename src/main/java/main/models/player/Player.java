@@ -3,6 +3,7 @@ package main.models.player;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
+
 import main.models.cards.Card;
 
 public class Player implements Serializable{
@@ -52,7 +53,7 @@ public class Player implements Serializable{
             return 0; // No board means no score
         }
         
-        playerScore = 0;//so that playerScore does not add up if calculateScore is called multiple times
+        playerScore = 0; //so that playerScore does not add up if calculateScore is called multiple times
         //check through each value per color
         // System.out.println(playerBoard);
         //loop to iterate through each Arraylist of cards in playerBoard hashmap
