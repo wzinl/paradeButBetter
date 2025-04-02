@@ -57,7 +57,8 @@ public class TurnState extends GamePlayState {
         PlayerHand hand = current.getPlayerHand();
         List <Card> cardList = hand.getCardList();
 
-        while (true) {
+        boolean turnCompleted = false;
+        while (!turnCompleted) {
             try {
                 if(current instanceof Bot currBot){
                     int index = currBot.getNextCardIndex(cardList, paradeBoard);
@@ -69,12 +70,12 @@ public class TurnState extends GamePlayState {
                     selection.execute();
                 }
                 ScreenUtils.clearScreen();
+                turnCompleted = true;
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
             } catch(SelectionException e){
                 System.out.println(e.getMessage());
                 System.out.println("Trying Again...");
-
             }
         }
     }

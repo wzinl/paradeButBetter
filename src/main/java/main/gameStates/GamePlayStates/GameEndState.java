@@ -58,16 +58,18 @@ public class GameEndState extends GamePlayState {
 
         for(int i = 0; i < 2; i++){
             
-            while(true){
-                try{
+            boolean discardCompleted = false;
+            while (!discardCompleted) {
+                try {
                     System.out.println(hand);
                     TurnSelection selection = getDiscardSelection(currentPlayer);
                     selection.execute();
+                    discardCompleted = true;
                 } catch (InvalidCardException e) {
                     System.out.println("Invalid card. Please enter a valid card.");
-                }catch (SelectionException e) {
+                } catch (SelectionException e) {
                     System.out.println(e.getMessage());
-                    System.out.println("Trying Again...");            
+                    System.out.println("Trying Again...");
                 }
             }
         }
@@ -161,7 +163,7 @@ public class GameEndState extends GamePlayState {
                 Thread.sleep(500);
                 System.out.print(".");
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Sleep has been interrupted!");
             }
         }
         System.out.println();

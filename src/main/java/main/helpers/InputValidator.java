@@ -169,11 +169,11 @@ public class InputValidator {
     public static boolean getYesNo(String prompt) {
         int attempts = 0;
         while (attempts < MAX_ATTEMPTS) {
-            String input = waitForInput(prompt + " (y/n):").toLowerCase();
+            String input = waitForInput(prompt + " (Y/N):").toLowerCase();
             if (input.equals("y")) return true;
             if (input.equals("n")) return false;
 
-            System.out.println("Invalid input. Please type 'y' or 'n'.\n");
+            System.out.println("Invalid input. Please type 'Y' or 'N'.\n");
             attempts++;
             handleSpamDelay(attempts);
         }
