@@ -1,4 +1,4 @@
-package main.gameStates;
+package main.gameStates.GamePlayStates;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -6,6 +6,7 @@ import java.util.Comparator;
 import main.context.GameContext;
 import main.exceptions.InvalidCardException;
 import main.exceptions.SelectionException;
+import main.gameStates.GameStateManager;
 import main.helpers.ScreenUtils;
 import main.models.cards.Card;
 import main.models.cards.Deck;

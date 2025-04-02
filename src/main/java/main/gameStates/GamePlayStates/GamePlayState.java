@@ -1,10 +1,12 @@
-package main.gameStates;
+package main.gameStates.GamePlayStates;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
 import main.context.GameContext;
+import main.gameStates.GameState;
+import main.gameStates.GameStateManager;
 import main.helpers.InputValidator;
 import main.helpers.MenuSelector;
 import main.helpers.ScreenUtils;
