@@ -133,36 +133,46 @@ public class ScreenUtils {
 
      
     public static String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, Boolean onCardRow) {
-        System.out.println(currentPlayer.getPlayerName() + "'s turn.");
+        StringBuilder result = new StringBuilder();
+    
+        // Header
+        result.append(currentPlayer.getPlayerName()).append("'s turn.\n");
+    
+        // Board display
         PlayerHand currHand = currentPlayer.getPlayerHand();
         List<Card> cardList = currHand.getCardList();
-        int actionOptionsCount = actionOptions.length;
-
-        String result = "";
-        
-        if(onCardRow){
+    
+        if (onCardRow) {
             Card selectedCard = cardList.get(selectedIndex);
-            result += ScreenUtils.getDisplay(currentPlayer, paradeBoard, selectedCard) + "\n";
-        }else{
-            result += ScreenUtils.getDisplay(currentPlayer, paradeBoard) + "\n";
+            result.append(ScreenUtils.getDisplay(currentPlayer, paradeBoard, selectedCard)).append("\n");
+        } else {
+            result.append(ScreenUtils.getDisplay(currentPlayer, paradeBoard)).append("\n");
         }
-        System.out.println();
-        for (int i = 0; i < actionOptionsCount; i++) {
+    
+        result.append("\n\n");
+    
+        String[] formattedOptions = new String[actionOptions.length];
+    
+        for (int i = 0; i < actionOptions.length; i++) {
             String option = actionOptions[i];
             boolean isSelected = (i == selectedIndex);
-
-            String content;
-            if (isSelected && !onCardRow) {
-                content = "[" + option + "]";
-            } else {
-                content = " " + option + " ";
-            }
-
-            result += String.format("%-10s", content);
+    
+            // Format the option
+            String content = isSelected && !onCardRow
+                ? String.format("[ %s ]", option)
+                : String.format("  %s  ", option);
+    
+            formattedOptions[i] = content;
         }
-
-        result += "\n\nUse A/D to move, W/S to switch rows, Enter to select.";
-
-        return result;
+    
+        // Build a single line with all options, centered
+        for (String opt : formattedOptions) {
+            result.append(opt).append("  ");
+        }
+    
+        result.append("\n\nUse A/D to move, W/S to switch rows, Enter to select.");
+    
+        return result.toString();
     }
+    
 }

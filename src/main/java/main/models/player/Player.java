@@ -7,12 +7,12 @@ import java.util.UUID;
 import main.models.cards.Card;
 
 public class Player implements Serializable{
-    private String playerID;
+    private final String playerID;
     static int current_id = 0;
-    private String playerName;
+    private final String playerName;
     private int playerScore;
-    private PlayerHand playerhand;
-    private PlayerBoard playerBoard;
+    private final PlayerHand playerhand;
+    private final PlayerBoard playerBoard;
     private boolean preferMenu;
 
     

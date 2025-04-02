@@ -1,7 +1,11 @@
 package main.models.player;
 
-import java.util.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import main.exceptions.InvalidCardException;
 import main.models.cards.Card;
@@ -108,20 +112,19 @@ public class PlayerBoard implements CardCollection, Serializable{
     }
 
     private String getAnsiColorCode(String color) {
-        switch (color) {
-            case "Green": return "\u001B[38;5;46m";  
-            case "Purple": return "\u001B[38;5;129m";  
-            case "Red": return "\u001B[38;5;196m";  
-            case "Blue": return "\u001B[38;5;39m";  
-            case "Orange": return "\u001B[38;5;208m";  
-            case "Grey": return "\u001B[38;5;245m";  
-            default: return "\u001B[0m";        
-        }
+        return switch (color) {
+            case "Green" -> "\u001B[38;5;46m";
+            case "Purple" -> "\u001B[38;5;129m";
+            case "Red" -> "\u001B[38;5;196m";
+            case "Blue" -> "\u001B[38;5;39m";
+            case "Orange" -> "\u001B[38;5;208m";
+            case "Grey" -> "\u001B[38;5;245m";
+            default -> "\u001B[0m";
+        };
     }
 
     @Override
     public void removeCard(Card card) throws InvalidCardException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'removeCard'");
     }
 }

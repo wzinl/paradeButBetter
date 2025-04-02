@@ -1,6 +1,5 @@
 package main.models.player.bots;
 
-import java.io.Serializable;
 import java.util.List;
 
 import main.helpers.CardEffects;
@@ -9,7 +8,7 @@ import main.models.cards.Card;
 import main.models.player.Player;
 
 
-public class SmartBot extends Player implements Bot, Serializable{
+public class SmartBot extends Player implements Bot{
 
     public SmartBot(String name) {
         super(name);

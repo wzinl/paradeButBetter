@@ -114,7 +114,7 @@ public class TurnState extends GameState {
         }
     }
 
-    private TurnSelection getTurnSelection(Player current) throws NullPointerException, TurnSelectionException{
+    private TurnSelection getTurnSelection(Player current) throws TurnSelectionException{
         SelectionInput input;
         if(current.getPreferMenu()){
             try {

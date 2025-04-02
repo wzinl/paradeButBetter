@@ -55,8 +55,8 @@ public class Card implements Serializable{
     @Override
     public String toString() {
         String reset = "\u001B[0m";
-        int CARD_WIDTH = 10;  // Fixed width 
-        int TEXT_WIDTH = CARD_WIDTH - 4;  // Space between borders (after padding)
+        final int CARD_WIDTH = 10;  // Fixed width 
+        final int TEXT_WIDTH = CARD_WIDTH - 4;  // Space between borders (after padding)
     
         StringBuilder result = new StringBuilder();
     
