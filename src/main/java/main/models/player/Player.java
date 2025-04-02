@@ -13,6 +13,7 @@ public class Player implements Serializable{
     private int playerScore;
     private PlayerHand playerhand;
     private PlayerBoard playerBoard;
+    private boolean preferMenu;
 
     
     // HashMap<Character, ArrayList<Card>> playerCollectedCards; // ????? 
@@ -23,6 +24,7 @@ public class Player implements Serializable{
         current_id++;
         this.playerhand = new PlayerHand();
         this.playerBoard = new PlayerBoard();
+        this.preferMenu = true;
     }
 
     public String getPlayerName () {
@@ -46,6 +48,16 @@ public class Player implements Serializable{
     public PlayerBoard getPlayerBoard() {
         return playerBoard;
     }
+
+    public boolean getPreferMenu() {
+        return preferMenu;
+    }
+
+    public void setPreferMenu(boolean preferMenu) {
+        this.preferMenu = preferMenu;
+    }
+    
+
 
     public int calculateScore() { //calculates and sets player score
 

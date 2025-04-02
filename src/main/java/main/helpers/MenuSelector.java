@@ -2,6 +2,7 @@ package main.helpers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
@@ -11,15 +12,21 @@ import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.Player;
 import main.models.player.PlayerHand;
+import main.models.selections.input.ActionInput;
+import main.models.selections.input.CardInput;
+import main.models.selections.input.SelectionInput;
 
 public class MenuSelector {
 
-    public static String turnSelect(ParadeBoard paradeBoard, Player currentPlayer, String[] actionOptions) throws IOException{
+    public static SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, Map<String, Character> actionMap) throws IOException{
         int selectedIndex = 0;
         PlayerHand currHand = currentPlayer.getPlayerHand();
         List < Card > cardList = currHand.getCardList();
         int handSize = cardList.size();
+
+        String[] actionOptions = actionMap.keySet().toArray(new String[0]);
         int actionOptionsCount = actionOptions.length;
+
         boolean onCardRow = true;
 
         Terminal terminal = TerminalBuilder.builder()
@@ -66,14 +73,15 @@ public class MenuSelector {
                 }
                 case 10, 13 -> { // ENTER
                     if (onCardRow) {
-                        return String.valueOf(selectedIndex);
+                        return new CardInput(selectedIndex);
                     } else {
-                        return "action: " + actionOptions[selectedIndex];
+                        return new ActionInput(actionMap.get(actionOptions[selectedIndex]));
                     }
                 }
             }
             ScreenUtils.clearScreen();
             System.out.println();
             System.out.println(ScreenUtils.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
+        }
     }
 }
