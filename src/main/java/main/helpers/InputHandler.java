@@ -36,9 +36,13 @@ public class InputHandler {
     private final AtomicBoolean running = new AtomicBoolean(true);
     private Thread inputThread;
 
+
     private static final int MAX_ATTEMPTS = 5;
     private static final int COOLDOWN_THRESHOLD = 3;
     private static final int COOLDOWN_MS = 2000;
+
+
+    KeyMap<String> keyMap;
 
     public InputHandler() {
         try {
@@ -47,6 +51,12 @@ public class InputHandler {
         } catch (IOException e) {
             throw new RuntimeException("Failed to initialize terminal input", e);
         }
+        keyMap = new KeyMap<>();
+        keyMap.bind("UP", "w", "W", "\u001B[A");
+        keyMap.bind("DOWN", "s", "S", "\u001B[B");
+        keyMap.bind("LEFT", "a", "A", "\u001B[D");
+        keyMap.bind("RIGHT", "d", "D", "\u001B[C");
+        keyMap.bind("ENTER", "\r", "\n", "\r\n");
     }
 
     private void startInputThread() {
@@ -239,15 +249,6 @@ public class InputHandler {
         terminal.enterRawMode();
         BindingReader bindingReader = new BindingReader(terminal.reader());
         flushStdin();
-
-
-        KeyMap<String> keyMap = new KeyMap<>();
-        keyMap.bind("UP", "w", "W", "\u001B[A");
-        keyMap.bind("DOWN", "s", "S", "\u001B[B");
-        keyMap.bind("LEFT", "a", "A", "\u001B[D");
-        keyMap.bind("RIGHT", "d", "D", "\u001B[C");
-        keyMap.bind("ENTER", "\r", "\n", "\r\n");
-        
 
         System.out.println(ScreenUtils.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
         while (true) {
