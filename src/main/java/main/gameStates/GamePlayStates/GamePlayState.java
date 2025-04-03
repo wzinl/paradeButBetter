@@ -10,8 +10,8 @@ import main.gameStates.GameStateManager;
 import main.helpers.InputHandler;
 import main.helpers.ScreenUtils;
 import main.models.cards.Card;
+import main.models.input.SelectionInput;
 import main.models.player.Player;
-import main.models.selections.input.SelectionInput;
 
 public abstract class GamePlayState extends GameState{
 

@@ -10,6 +10,9 @@ import main.helpers.CardEffects;
 import main.helpers.InputHandler;
 import main.helpers.ScreenUtils;
 import main.models.cards.Card;
+import main.models.input.ActionInput;
+import main.models.input.CardInput;
+import main.models.input.SelectionInput;
 import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
@@ -19,9 +22,6 @@ import main.models.player.bots.SmartBot;
 import main.models.selections.ActionSelection;
 import main.models.selections.CardSelection;
 import main.models.selections.TurnSelection;
-import main.models.selections.input.ActionInput;
-import main.models.selections.input.CardInput;
-import main.models.selections.input.SelectionInput;
 
 
 public class TurnState extends GamePlayState {

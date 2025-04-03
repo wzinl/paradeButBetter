@@ -14,10 +14,10 @@ public class GameContext implements Serializable{
     //declaration of variables
     private int finalRoundStarterIndex; // index of player who triggered the final round
     private GameState currentState;
-    private ArrayList<Player> playerList;
-    private int currentPlayerIndex;
-    private Deck deck;
-    private ParadeBoard paradeBoard;
+    private final ArrayList<Player> playerList;
+    private final int currentPlayerIndex;
+    private final Deck deck;
+    private final ParadeBoard paradeBoard;
     private boolean isInFinalRound;
 
 

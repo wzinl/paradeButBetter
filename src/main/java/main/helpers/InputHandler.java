@@ -21,11 +21,11 @@ import org.jline.terminal.TerminalBuilder;
 
 import main.models.ParadeBoard;
 import main.models.cards.Card;
+import main.models.input.ActionInput;
+import main.models.input.CardInput;
+import main.models.input.SelectionInput;
 import main.models.player.Player;
 import main.models.player.PlayerHand;
-import main.models.selections.input.ActionInput;
-import main.models.selections.input.CardInput;
-import main.models.selections.input.SelectionInput;
 
 
 public class InputHandler {

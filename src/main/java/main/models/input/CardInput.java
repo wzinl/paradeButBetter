@@ -1,4 +1,4 @@
-package main.models.selections.input;
+package main.models.input;
 
 public final class CardInput implements SelectionInput {
     private final int cardIndex;
