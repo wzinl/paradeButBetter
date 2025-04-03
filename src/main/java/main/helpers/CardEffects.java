@@ -19,11 +19,11 @@ public class CardEffects {
             }
         }
 
-        ScreenUtils.pause(1000);
+        ScreenUtils.pause(1000);//1000
         System.out.println("Turn Summary:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();
-        ScreenUtils.pause(5000);
+        ScreenUtils.pause(5000);//5000
         ScreenUtils.clearScreen();
 
         for (Card card : removedCards) {
