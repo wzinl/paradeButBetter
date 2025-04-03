@@ -7,6 +7,7 @@ import main.context.GameContext;
 import main.exceptions.InvalidCardException;
 import main.exceptions.SelectionException;
 import main.gameStates.GameStateManager;
+import main.helpers.InputHandler;
 import main.helpers.ScreenUtils;
 import main.models.cards.Card;
 import main.models.cards.Deck;
@@ -22,8 +23,8 @@ import main.models.selections.input.SelectionInput;
 
 public class GameEndState extends GamePlayState {
 
-    public GameEndState(GameStateManager gsm, GameContext context) {
-        super(gsm, context);
+    public GameEndState(GameStateManager gsm, GameContext context, InputHandler inputHandler) {
+        super(gsm, context, inputHandler);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package main;
-import main.gameStates.*;
+import main.gameStates.GameStateManager;
+import main.helpers.InputHandler;
 
 public class Game {
     private GameStateManager gsm;
@@ -20,7 +21,7 @@ public class Game {
          * 3. GameEndState(GameStateManager gsm) - the final actions and the calculation of player scores
          */
 
-        gsm = new GameStateManager(); 
+        gsm = new GameStateManager(new InputHandler()); 
         
         
     }
@@ -32,7 +33,7 @@ public class Game {
         /*
          * Set current state to InitState, where the Game is initialised
          */
-        gsm.setState(new InitState(gsm)); 
+        gsm.init(); 
 
         //Once InitState is done, we move to Turn State.
         gsm.nextState();

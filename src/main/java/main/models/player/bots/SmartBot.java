@@ -28,6 +28,6 @@ public class SmartBot extends Player implements Bot{
             }
         }
 
-        return bestIndex+1;
+        return bestIndex;
     }
 }

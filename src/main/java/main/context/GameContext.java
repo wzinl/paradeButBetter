@@ -2,8 +2,9 @@ package main.context;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
 import main.gameStates.GameState;
-import main.models.*;
+import main.models.ParadeBoard;
 import main.models.cards.Deck;
 import main.models.player.Player;
 

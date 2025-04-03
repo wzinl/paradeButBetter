@@ -7,6 +7,7 @@ import main.exceptions.InvalidCardException;
 import main.exceptions.SelectionException;
 import main.gameStates.GameStateManager;
 import main.helpers.CardEffects;
+import main.helpers.InputHandler;
 import main.helpers.ScreenUtils;
 import main.models.cards.Card;
 import main.models.player.Player;
@@ -27,8 +28,8 @@ public class TurnState extends GamePlayState {
 
     private boolean isInFinalRound;    
 
-    public TurnState(GameStateManager gsm, GameContext context) {
-        super(gsm, context);
+    public TurnState(GameStateManager gsm, GameContext context, InputHandler inputHandler) {
+        super(gsm, context, inputHandler);
         this.isInFinalRound = context.getIsInFinalRound();
     }
 

@@ -2,19 +2,20 @@ package main.gameStates;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+
 import main.context.GameContext;
-import main.helpers.InputValidator;
-import main.models.*;
+import main.helpers.InputHandler;
+import main.models.ParadeBoard;
 import main.models.cards.Deck;
-import main.models.player.Player;
+import main.models.player.Player;                       
 import main.models.player.bots.RandomBot;
 import main.models.player.bots.SmartBot;
 
 public class InitState extends GameState {
     private int startingIndex;
 
-    public InitState(GameStateManager gsm) {
-        super(gsm);
+    public InitState(GameStateManager gsm, InputHandler InputHandler) {
+        super(gsm, InputHandler);
         System.out.println("Game initialized");
         // Initialising Deck and Parade Board
         this.deck = new Deck();
@@ -28,15 +29,15 @@ public class InitState extends GameState {
 
         System.out.println("\033c");
         // Get valid number of players
-        int numPlayers = InputValidator.getIntInRange("Enter number of players: ", 1, 6);
+        int numPlayers = inputHandler.getIntInRange("Enter number of players: ", 1, 6);
         int numBots = 0;
         int difficulty = 0;
         if (numPlayers != 6 && numPlayers!= 1) {
-            numBots = InputValidator.getIntInRange("Enter number of bots: ", 0, 6 - numPlayers);
-            difficulty = InputValidator.getIntInRange("Choose bot level (1 or 2)", 1, 2);
+            numBots = inputHandler.getIntInRange("Enter number of bots: ", 0, 6 - numPlayers);
+            difficulty = inputHandler.getIntInRange("Choose bot level (1 or 2)", 1, 2);
         } else if(numPlayers == 1){
-            numBots = InputValidator.getIntInRange("Enter number of bots: ", 1, 5);
-            difficulty = InputValidator.getIntInRange("Choose bot level (1 or 2)", 1, 2);
+            numBots = inputHandler.getIntInRange("Enter number of bots: ", 1, 5);
+            difficulty = inputHandler.getIntInRange("Choose bot level (1 or 2)", 1, 2);
         }
         
         /*
@@ -45,16 +46,11 @@ public class InitState extends GameState {
          */
         ArrayList<Player> playerList = new ArrayList<>();
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         System.out.println("\033c");
 
         for (int i = 1; i <= numPlayers; i++) {
             // String playerName = InputValidator.getString("Enter name of Player " + i + ": ");
-            String playerName = InputValidator.getString("Enter name of Player " + i + ": ");
+            String playerName = inputHandler.getString("Enter name of Player " + i + ": ");
             Player thisPlayer = new Player(playerName);
             thisPlayer.getPlayerHand().initHand(deck);
             playerList.add(thisPlayer);
@@ -65,7 +61,7 @@ public class InitState extends GameState {
         if (numBots != 0) {
             if(difficulty == 1){
                 for (int i = 1; i <= numBots; i++) {
-                    String BotName = InputValidator.getString("Enter name of Bot " + i + ": ");
+                    String BotName = inputHandler.getString("Enter name of Bot " + i + ": ");
                     RandomBot thisPlayer = new RandomBot(BotName);
                     thisPlayer.getPlayerHand().initHand(deck);
                     playerList.add(thisPlayer);
@@ -73,7 +69,7 @@ public class InitState extends GameState {
                 }
             } else{
                 for (int i = 1; i <= numBots; i++) {
-                    String BotName = InputValidator.getString("Enter name of Bot " + i + ": ");
+                    String BotName = inputHandler.getString("Enter name of Bot " + i + ": ");
                     SmartBot thisPlayer = new SmartBot(BotName);
                     thisPlayer.getPlayerHand().initHand(deck);
                     playerList.add(thisPlayer);
@@ -82,11 +78,11 @@ public class InitState extends GameState {
             }
         }
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     Thread.sleep(1500);
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
         System.out.println("\033c");
 
         // Completely randomise the order of the players

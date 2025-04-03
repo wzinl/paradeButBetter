@@ -16,6 +16,6 @@ public class RandomBot extends Player implements Bot{
 
     @Override
     public int getNextCardIndex(List<Card> hand, ParadeBoard paradeBoard) {
-        return new Random().nextInt(1,hand.size()+1);
+        return new Random().nextInt(hand.size());
     }
 }
