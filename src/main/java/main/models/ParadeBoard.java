@@ -134,21 +134,28 @@ public class ParadeBoard implements Serializable{
         StringBuilder result = new StringBuilder();
         int linesPerCard = 8;
     
-        // First row (Cards to remove)
-        for (int line = 0; line < linesPerCard; line++) {
-            for (int i = 0; i < cardList.size() - safeCardCount; i++) {
-                if (firstLine.get(i) != null) {
-                    result.append(colorCodes.get(i))
-                          .append(firstLine.get(i)[line])
-                          .append("\u001B[0m  ");
-                } else {
-                    result.append(" ".repeat(secondLine.get(i)[line].length()))
-                          .append("  ");
+        // Check if firstLine contains only null
+        boolean hasCardsToRemove = firstLine.stream().anyMatch(Objects::nonNull);
+
+        // Format first row (only if there are cards to remove)
+        if (hasCardsToRemove){ 
+            // First row (Cards to remove)
+            for (int line = 0; line < linesPerCard; line++) {
+                for (int i = 0; i < cardList.size() - safeCardCount; i++) {
+                    if (firstLine.get(i) != null) {
+                        result.append(colorCodes.get(i))
+                            .append(firstLine.get(i)[line])
+                            .append("\u001B[0m  ");
+                    } else {
+                        result.append(" ".repeat(secondLine.get(i)[line].length()))
+                            .append("  ");
+                    }
                 }
+                result.append("\n");
             }
-            result.append("\n");
+            result.append("\n"); // Space between rows
         }
-        result.append("\n"); // Space between rows
+        
     
         // Second row (Kept cards + safe cards + chosen card)
         for (int line = 0; line < linesPerCard; line++) {

@@ -100,6 +100,10 @@ public class Card implements Serializable{
         return " ".repeat(leftPad) + text + " ".repeat(padding - leftPad);
     }
 
+    public String[] toStringArray() {
+        return toString().split("\n");
+    }
+    
     public int length() {
         return ("[" + color + ": " + value + "]").length();
     }

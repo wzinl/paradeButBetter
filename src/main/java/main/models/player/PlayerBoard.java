@@ -74,44 +74,72 @@ public class PlayerBoard implements CardCollection, Serializable{
     public String toString() {
         List<String> colors = new ArrayList<>(playerBoard.keySet());
         colors.sort(Comparator.naturalOrder());
-        
-        Map<String, List<Integer>> colorValues = new HashMap<>();
-        int maxRows = 0;
+    
+        // Card dimensions
+        final int CARD_WIDTH = 10;
+        final int CARD_HEIGHT = 8;  // Your card height (8 lines)
+        final int OVERLAP = 3;       // Lines to overlap between cards
+    
+        Map<String, List<String[]>> colorStacks = new HashMap<>();
+        int maxStackHeight = 0;
+    
         for (String color : colors) {
-            List<Integer> values = playerBoard.get(color).stream()
-                    .map(c -> c.getValue())
-                    .sorted()
-                    .toList();
-            colorValues.put(color, values);
-            maxRows = Math.max(maxRows, values.size());
+            List<Card> cards = new ArrayList<>(playerBoard.get(color));
+            cards.sort(Comparator.comparingInt(Card::getValue));
+    
+            List<String[]> stack = new ArrayList<>();
+            for (Card card : cards) {
+                stack.add(card.toStringArray());
+            }
+            colorStacks.put(color, stack);
+            
+            // Calculate stack height: (n-1 cards × overlap) + full card height
+            maxStackHeight = Math.max(maxStackHeight, 
+                (stack.size() - 1) * OVERLAP + CARD_HEIGHT);
         }
-
-        List<Integer> colWidths = colors.stream().map(String::length).toList();
-        StringBuilder output = new StringBuilder();
-
-        // Header
-        for (int i = 0; i < colors.size(); i++) {
-            String colorName = colors.get(i);
-            String code = getAnsiColorCode(colorName);
-            String coloredHeader = code + colorName + "\u001B[0m"; //default col code for terminal to reset the colours used
-        
-            output.append(String.format("%-" + colWidths.get(i) + "s  ", coloredHeader));
+    
+        StringBuilder output = new StringBuilder("\n");
+    
+        // Print colored headers
+        for (String color : colors) {
+            String colorCode = getAnsiColorCode(color);
+            output.append(colorCode)
+                  .append(String.format("%-" + (CARD_WIDTH + 2) + "s", color))
+                  .append("\u001B[0m");
         }
         output.append("\n");
     
-        // Values
-        for (int row = 0; row < maxRows; row++) {
-            for (int i = 0; i < colors.size(); i++) {
-                List<Integer> values = colorValues.get(colors.get(i));
-                String num = row < values.size() ? values.get(row) + "" : "";
-                output.append(String.format("%-" + colWidths.get(i) + "s  ", num));
+        // Print stacks
+        for (int line = 0; line < maxStackHeight; line++) {
+            for (String color : colors) {
+                List<String[]> stack = colorStacks.get(color);
+                String colorCode = getAnsiColorCode(color);
+                boolean linePrinted = false;
+    
+                for (int cardIdx = 0; cardIdx < stack.size(); cardIdx++) {
+                    int cardLine = line - (cardIdx * OVERLAP);
+                    if (cardLine >= 0 && cardLine < CARD_HEIGHT) {
+                        String cardRow = stack.get(cardIdx)[cardLine];
+                        
+                        // Apply color to the entire card
+                        output.append(colorCode).append(cardRow).append("\u001B[0m");
+                        linePrinted = true;
+                        break; // Only show topmost visible card for this line
+                    }
+                }
+    
+                if (!linePrinted) {
+                    output.append(" ".repeat(CARD_WIDTH));
+                }
+                output.append("  "); // Spacing between color sets
             }
             output.append("\n");
         }
+    
         return output.toString();
     }
-
-    private String getAnsiColorCode(String color) {
+    
+    public String getAnsiColorCode(String color) {
         return switch (color) {
             case "Green" -> "\u001B[38;5;46m";
             case "Purple" -> "\u001B[38;5;129m";
