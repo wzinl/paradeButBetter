@@ -154,14 +154,18 @@ public class GameEndState extends GamePlayState {
             System.out.printf("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore());
         }
 
-        System.out.println("\n" + winners.get(0).getPlayerName() + " wins!");
+        if(winners.get(0).getPlayerScore()==winners.get(1).getPlayerScore()){
+            System.out.println("The game is a tie!");
+        } else{
+            System.out.println("\n" + winners.get(0).getPlayerName() + " wins!");
+        }
     }
 
     private void simulateLoading(String message, int dotCount) {
         System.out.print(message);
         for (int i = 0; i < dotCount; i++) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(10);
                 System.out.print(".");
             } catch (InterruptedException e) {
                 System.out.println("Sleep has been interrupted!");

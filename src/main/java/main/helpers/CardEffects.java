@@ -46,4 +46,21 @@ public class CardEffects {
         }
         return count;
     }
+
+    public static int[] smarterSimulate(Card chosenCard, ParadeBoard paradeBoard) {
+        int count = 0;
+        int score = 0;
+        int chosenValue = chosenCard.getValue();
+
+        for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
+            Card current = paradeBoard.getCardList().get(i);
+            if (current.getValue() <= chosenValue || current.getColor().equals(chosenCard.getColor())) {
+                count++;
+                score += current.getValue();
+            }
+        }
+
+        int[] ret = {count, score};
+        return ret;
+    }
 }

@@ -16,7 +16,6 @@ main/models/ParadeBoard.class
 main/models/input/CardInput.class
 main/gameStates/GamePlayStates/TurnState.class
 main/models/cards/Card.class
-main/gameStates/InitState.class
 main/models/player/bots/RandomBot.class
 main/exceptions/MenuException.class
 main/models/input/SelectionInput.class
