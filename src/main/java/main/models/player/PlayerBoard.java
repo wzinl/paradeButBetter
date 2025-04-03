@@ -78,7 +78,7 @@ public class PlayerBoard implements CardCollection, Serializable{
         // Card dimensions
         final int CARD_WIDTH = 10;
         final int CARD_HEIGHT = 8;  // Your card height (8 lines)
-        final int OVERLAP = 3;       // Lines to overlap between cards
+        final int OVERLAP = 2;       // Lines to overlap between cards
     
         Map<String, List<String[]>> colorStacks = new HashMap<>();
         int maxStackHeight = 0;
@@ -100,14 +100,16 @@ public class PlayerBoard implements CardCollection, Serializable{
     
         StringBuilder output = new StringBuilder("\n");
     
-        // Print colored headers
+        // Print centered colored headers
         for (String color : colors) {
             String colorCode = getAnsiColorCode(color);
-            output.append(colorCode)
-                  .append(String.format("%-" + (CARD_WIDTH + 2) + "s", color))
-                  .append("\u001B[0m");
+            int padding = (CARD_WIDTH - color.length()) / 2;
+            String centeredHeader = " ".repeat(padding) + colorCode + color + "\u001B[0m" + 
+                                " ".repeat(CARD_WIDTH - color.length() - padding);
+            output.append(centeredHeader).append("  "); // 2 spaces between columns
         }
         output.append("\n");
+
     
         // Print stacks
         for (int line = 0; line < maxStackHeight; line++) {
@@ -124,7 +126,7 @@ public class PlayerBoard implements CardCollection, Serializable{
                         // Apply color to the entire card
                         output.append(colorCode).append(cardRow).append("\u001B[0m");
                         linePrinted = true;
-                        break; // Only show topmost visible card for this line
+                        break; // Only show top most visible card for this line
                     }
                 }
     
@@ -138,7 +140,7 @@ public class PlayerBoard implements CardCollection, Serializable{
     
         return output.toString();
     }
-    
+
     public String getAnsiColorCode(String color) {
         return switch (color) {
             case "Green" -> "\u001B[38;5;46m";
