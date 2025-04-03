@@ -2,6 +2,7 @@ package main.gameStates.GamePlayStates;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import main.context.GameContext;
 import main.exceptions.InvalidCardException;
@@ -150,11 +151,100 @@ public class GameEndState extends GamePlayState {
         winners.sort(Comparator.comparing(Player::calculateScore));
 
         System.out.println(ScreenUtils.getDisplay(playerList, paradeBoard));
-        for (Player player : winners) {
-            System.out.printf("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore());
+        
+        // Dynamic column sizing
+        int maxNameLength = winners.stream()
+        .mapToInt(p -> p.getPlayerName().length())
+        .max()
+        .orElse(10); //10 is the minimum length for the name column
+
+        int nameWidth = Math.max(maxNameLength + 2, 12); // Minimum 12 characters
+        int scoreWidth = 8;
+        int positionWidth = 10;
+
+        // Header
+        String divider = String.join("+", 
+            "-".repeat(positionWidth),
+            "-".repeat(nameWidth),
+            "-".repeat(scoreWidth));
+
+        System.out.println("\n" + "=".repeat(divider.length() + 2) + "\n");
+        System.out.printf("%-" + positionWidth + "s | %-" + nameWidth + "s | %" + scoreWidth + "s%n",
+            "POSITION", "PLAYER", "SCORE");
+        System.out.println(divider);
+
+        // Display the sorted winners with position and score
+        int displayRank = 1;
+        int previousRank = -1;
+
+        for (int i = 0; i < winners.size(); i++) {
+            Player player = winners.get(i);
+            String position;
+            
+            // Check for tie with previous player (safe for i=0)
+            if (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore()) {
+                position = ""; // Empty position marker for ties
+            } else {
+                switch (displayRank) {
+                    case 1: position = "1st" ;
+                            break;
+                    case 2: position = "2nd" ;
+                            break;
+                    case 3: position = "3rd";
+                            break;
+                    default: position = displayRank + "th";
+                }
+                previousRank = player.getPlayerScore();
+                displayRank++;
+            }
+
+            System.out.printf("%-" + positionWidth + "s | %-" + nameWidth + "s | %" + scoreWidth + "d%n",
+                    position, 
+                    player.getPlayerName(), 
+                    player.getPlayerScore());
+            }
+
+        // Winner/tie announcement
+        System.out.println("\n" + "=".repeat(divider.length() + 2) + "\n");
+
+        // Tie
+        if (winners.size() > 1 && winners.get(0).getPlayerScore() == winners.get(1).getPlayerScore()) {
+            System.out.println("TIED RESULTS");
+
+            for (int i = 0; i < winners.size() && winners.get(i).getPlayerScore() == winners.get(0).getPlayerScore(); i++) {
+                System.out.printf("• %-" + (nameWidth - 2) + "s - %d points%n",
+                        winners.get(i).getPlayerName(),
+                        winners.get(i).getPlayerScore());
+            }
+        } else {
+            String winnerName = winners.get(0).getPlayerName();
+        int winnerScore = winners.get(0).getPlayerScore();
+
+        // Box width (should be wider than your longest line)
+        int boxWidth = 40;
+
+
+        // Print the announcement
+        System.out.println(centerText("╔══════════════════════════════╗", boxWidth));
+        System.out.println(centerText("║          CHAMPION           ║", boxWidth));
+        System.out.println(centerText("╠══════════════════════════════╣", boxWidth));
+        System.out.println(centerText("║        " + winnerName + "        ║", boxWidth));
+        System.out.println(centerText("║        " + winnerScore + " POINTS        ║", boxWidth));
+        System.out.println(centerText("╚══════════════════════════════╝", boxWidth));
+        System.out.println(centerText("       CONGRATULATIONS!       ", boxWidth)); // Centered "CONGRATULATIONS!"
+           
         }
 
-        System.out.println("\n" + winners.get(0).getPlayerName() + " wins!");
+        for (Player player: winners){
+            System.out.println(player.getPlayerName() + ":" + player.getPlayerScore());
+        }
+    }
+
+    // Center text helper function
+    String centerText(String text, int width) {
+        if (text.length() >= width) return text; // Don't truncate text if it's already wider
+        int padding = (width - text.length()) / 2;
+        return " ".repeat(padding) + text + " ".repeat(width - text.length() - padding);
     }
 
     private void simulateLoading(String message, int dotCount) {
