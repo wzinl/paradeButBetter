@@ -34,7 +34,9 @@ public class InitState extends GameState {
         int difficulty = 0;
         if (numPlayers != 6 && numPlayers!= 1) {
             numBots = inputHandler.getIntInRange("Enter number of bots: ", 0, 6 - numPlayers);
-            difficulty = inputHandler.getIntInRange("Choose bot level (1 or 2)", 1, 2);
+            if(numBots!=0){
+                difficulty = inputHandler.getIntInRange("Choose bot level (1 or 2)", 1, 2);
+            }
         } else if(numPlayers == 1){
             numBots = inputHandler.getIntInRange("Enter number of bots: ", 1, 5);
             difficulty = inputHandler.getIntInRange("Choose bot level (1 or 2)", 1, 2);
