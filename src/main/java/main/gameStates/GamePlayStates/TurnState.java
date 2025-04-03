@@ -89,7 +89,7 @@ public class TurnState extends GamePlayState {
         Card chosenCard = cardList.get(index);
 
         if (current instanceof RandomBot || current instanceof SmartBot || current instanceof SmarterBot) {
-            System.out.printf("smartest Bot is going to play card #%d...\n", index);
+            System.out.printf("Bot is going to play card #%d...\n", index);
             ScreenUtils.pause(3000); 
         }
 
