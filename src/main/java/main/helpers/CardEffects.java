@@ -19,11 +19,11 @@ public class CardEffects {
             }
         }
 
-        ScreenUtils.pause(1000);
+        ScreenUtils.pause(1000);//1000
         System.out.println("Turn Summary:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();
-        ScreenUtils.pause(5000);
+        ScreenUtils.pause(5000);//5000
         ScreenUtils.clearScreen();
 
         for (Card card : removedCards) {
@@ -45,5 +45,22 @@ public class CardEffects {
             }
         }
         return count;
+    }
+
+    public static int[] smarterSimulate(Card chosenCard, ParadeBoard paradeBoard) {
+        int count = 0;
+        int score = 0;
+        int chosenValue = chosenCard.getValue();
+
+        for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
+            Card current = paradeBoard.getCardList().get(i);
+            if (current.getValue() <= chosenValue || current.getColor().equals(chosenCard.getColor())) {
+                count++;
+                score += current.getValue();
+            }
+        }
+
+        int[] ret = {count, score};
+        return ret;
     }
 }

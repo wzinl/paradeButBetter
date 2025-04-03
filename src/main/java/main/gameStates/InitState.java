@@ -10,6 +10,7 @@ import main.models.cards.Deck;
 import main.models.player.Player;                       
 import main.models.player.bots.RandomBot;
 import main.models.player.bots.SmartBot;
+import main.models.player.bots.SmarterBot;
 
 public class InitState extends GameState {
     private int startingIndex;
@@ -34,15 +35,16 @@ public class InitState extends GameState {
         int difficulty = 0;
         if (numPlayers != 6 && numPlayers!= 1) {
             numBots = inputHandler.getIntInRange("Enter number of bots: ", 0, 6 - numPlayers);
-            difficulty = inputHandler.getIntInRange("Choose bot level (1 or 2)", 1, 2);
+            if(numBots!=0){
+                difficulty = inputHandler.getIntInRange("Choose bot level (1-3)", 1, 3);
+            }
         } else if(numPlayers == 1){
             numBots = inputHandler.getIntInRange("Enter number of bots: ", 1, 5);
-            difficulty = inputHandler.getIntInRange("Choose bot level (1 or 2)", 1, 2);
+            difficulty = inputHandler.getIntInRange("Choose bot level (1-3)", 1, 3);
         }
         
         /*
          * Prompting user for players names, and adding them into an ArrayList
-         * - Additional logic for bots will probably be here
          */
         ArrayList<Player> playerList = new ArrayList<>();
 
@@ -67,7 +69,7 @@ public class InitState extends GameState {
                     playerList.add(thisPlayer);
                     System.out.println("\033c");
                 }
-            } else{
+            } else if (difficulty == 2){
                 for (int i = 1; i <= numBots; i++) {
                     String BotName = inputHandler.getString("Enter name of Bot " + i + ": ");
                     SmartBot thisPlayer = new SmartBot(BotName);
@@ -75,14 +77,17 @@ public class InitState extends GameState {
                     playerList.add(thisPlayer);
                     System.out.println("\033c");
                 }  
+            } else{
+                for (int i = 1; i <= numBots; i++) {
+                    String BotName = inputHandler.getString("Enter name of Bot " + i + ": ");
+                    SmarterBot thisPlayer = new SmarterBot(BotName);
+                    thisPlayer.getPlayerHand().initHand(deck);
+                    playerList.add(thisPlayer);
+                    System.out.println("\033c");
+                }  
             }
         }
 
-        // try {
-        //     Thread.sleep(1500);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
         System.out.println("\033c");
 
         // Completely randomise the order of the players

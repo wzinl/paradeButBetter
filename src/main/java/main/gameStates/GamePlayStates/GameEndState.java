@@ -18,6 +18,10 @@ import main.models.input.SelectionInput;
 import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
+import main.models.player.bots.Bot;
+import main.models.player.bots.RandomBot;
+import main.models.player.bots.SmartBot;
+import main.models.player.bots.SmarterBot;
 import main.models.selections.ActionSelection;
 import main.models.selections.CardSelection;
 import main.models.selections.TurnSelection;
@@ -58,20 +62,28 @@ public class GameEndState extends GamePlayState {
         ScreenUtils.getDisplay(currentPlayer, paradeBoard);
         System.out.println("Discard 2 cards from hand.\n");
 
-        for(int i = 0; i < 2; i++){
-            
-            boolean discardCompleted = false;
-            while (!discardCompleted) {
-                try {
-                    System.out.println(hand);
-                    TurnSelection selection = getDiscardSelection(currentPlayer);
-                    selection.execute();
-                    discardCompleted = true;
-                } catch (InvalidCardException e) {
-                    System.out.println("Invalid card. Please enter a valid card.");
-                } catch (SelectionException e) {
-                    System.out.println(e.getMessage());
-                    System.out.println("Trying Again...");
+        if (currentPlayer instanceof Bot curBot) {
+            for (int i = 0; i < 2; i++) {
+                hand.removeCard(hand.getCardList().get(curBot.discardCardEndgame(hand, paradeBoard)));
+            }
+        } 
+        //if human player
+        else {
+            for (int i = 0; i < 2; i++) {
+
+                boolean discardCompleted = false;
+                while (!discardCompleted) {
+                    try {
+                        System.out.println(hand);
+                        TurnSelection selection = getDiscardSelection(currentPlayer);
+                        selection.execute();
+                        discardCompleted = true;
+                    } catch (InvalidCardException e) {
+                        System.out.println("Invalid card. Please enter a valid card.");
+                    } catch (SelectionException e) {
+                        System.out.println(e.getMessage());
+                        System.out.println("Trying Again...");
+                    }
                 }
             }
         }
@@ -86,7 +98,7 @@ public class GameEndState extends GamePlayState {
 
     private TurnSelection getDiscardSelection(Player current) throws SelectionException {
         SelectionInput input = getSelectionInput(current);
-    
+
         if (input instanceof CardInput cardInput) {
             return new CardSelection(() -> discardCard(current.getPlayerHand(), cardInput));
         }
@@ -96,11 +108,13 @@ public class GameEndState extends GamePlayState {
 
         throw new SelectionException("Error with selection!");
     }
+
+    // --------------------------------------
     private void discardCard(PlayerHand hand, CardInput cardInput) {
         int cardIndex = cardInput.getCardIndex();
         hand.removeCard(hand.getCardList().get(cardIndex));
     }
-    
+
     private void handleCardFlipping() {
         for (String color : Deck.colours) {
             if (playerList.size() > 2) {
@@ -113,8 +127,8 @@ public class GameEndState extends GamePlayState {
 
     private void flipForMoreThanTwoPlayers(String color) {
         int highestCount = playerList.stream()
-            .mapToInt(p -> p.getPlayerBoard().getCardNumberByColor(color))
-            .max().orElse(0);
+                .mapToInt(p -> p.getPlayerBoard().getCardNumberByColor(color))
+                .max().orElse(0);
 
         for (Player player : playerList) {
             if (player.getPlayerBoard().getCardNumberByColor(color) == highestCount) {
@@ -251,7 +265,7 @@ public class GameEndState extends GamePlayState {
         System.out.print(message);
         for (int i = 0; i < dotCount; i++) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(10);
                 System.out.print(".");
             } catch (InterruptedException e) {
                 System.out.println("Sleep has been interrupted!");

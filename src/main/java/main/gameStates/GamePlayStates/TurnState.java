@@ -19,6 +19,7 @@ import main.models.player.PlayerHand;
 import main.models.player.bots.Bot;
 import main.models.player.bots.RandomBot;
 import main.models.player.bots.SmartBot;
+import main.models.player.bots.SmarterBot;
 import main.models.selections.ActionSelection;
 import main.models.selections.CardSelection;
 import main.models.selections.TurnSelection;
@@ -87,9 +88,9 @@ public class TurnState extends GamePlayState {
         List <Card> cardList = hand.getCardList();
         Card chosenCard = cardList.get(index);
 
-        if (current instanceof RandomBot || current instanceof SmartBot) {
+        if (current instanceof RandomBot || current instanceof SmartBot || current instanceof SmarterBot) {
             System.out.printf("Bot is going to play card #%d...\n", index);
-            ScreenUtils.pause(3000);
+            ScreenUtils.pause(3000); //3000
         }
 
         CardEffects.apply(chosenCard, paradeBoard, board);
