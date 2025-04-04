@@ -1,6 +1,7 @@
 package main.helpers;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import main.models.ParadeBoard;
 import main.models.cards.Card;
@@ -13,6 +14,59 @@ public class GameDisplay {
     
     public void clearScreen() {
         System.out.print("\033c");
+    }
+
+    public static void showIntroduction() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        
+        final int SLEEP_TIME = 100;
+        
+        try {
+   
+            String[] welcome = {
+                "██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗    ████████╗ ██████╗ ",
+                "██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝    ╚══██╔══╝██╔═══██╗",
+                "██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗         ██║   ██║   ██║",
+                "██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝         ██║   ██║   ██║",
+                "╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗       ██║   ╚██████╔╝",
+                " ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝       ╚═╝    ╚═════╝ "
+            };
+            
+            for (String line : welcome) {
+                System.out.println(line);
+                Thread.sleep(SLEEP_TIME);
+            }
+            
+            Thread.sleep(500);
+            System.out.println();
+            
+            String[] title = {
+                "██████╗  █████╗ ██████╗  █████╗ ██████╗ ███████╗",
+                "██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝",
+                "██████╔╝███████║██████╔╝███████║██║  ██║█████╗  ",
+                "██╔═══╝ ██╔══██║██╔══██╗██╔══██║██║  ██║██╔══╝  ",
+                "██║     ██║  ██║██║  ██║██║  ██║██████╔╝███████╗",
+                "╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝"
+            };
+            
+            for (String line : title) {
+                System.out.println(line);
+                Thread.sleep(SLEEP_TIME);
+            }
+            
+            Thread.sleep(500);
+            System.out.println();
+            System.out.println("========================================");
+            Thread.sleep(300);
+            
+            System.out.println("\nPress enter to start your journey...");
+            sc.nextLine();
+            
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
     
     

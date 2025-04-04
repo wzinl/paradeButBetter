@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import main.context.GameContext;
+import main.helpers.GameDisplay;
 import main.helpers.InputHandler;
 import main.models.ParadeBoard;
 import main.models.cards.Deck;
@@ -11,6 +12,7 @@ import main.models.player.Player;
 import main.models.player.bots.RandomBot;
 import main.models.player.bots.SmartBot;
 import main.models.player.bots.SmarterBot;
+import main.helpers.GameDisplay;
 
 public class InitState extends GameState {
     private int startingIndex;
@@ -25,8 +27,10 @@ public class InitState extends GameState {
 
     @Override
     public void enter() {
-        System.out.println("Game setup will now take place.");
-        System.out.println();
+        // System.out.println("Game setup will now take place.");
+        // System.out.println();
+        GameDisplay.showIntroduction();
+
 
         System.out.println("\033c");
         // Get valid number of players
