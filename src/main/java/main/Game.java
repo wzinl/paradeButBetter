@@ -1,14 +1,12 @@
 package main;
 import main.gameStates.GameStateManager;
 import main.helpers.InputHandler;
+import main.helpers.ScreenUtils;
 
 public class Game {
     private GameStateManager gsm;
 
     public Game() {
-        System.out.println("Welcome to Parade.");
-        
-        System.out.println("Welcome to Parade.");
         /*
          * Creating a new Game state manager object, the purpose of
          * game state:
@@ -22,7 +20,7 @@ public class Game {
          */
 
         gsm = new GameStateManager(new InputHandler()); 
-        
+        ScreenUtils.clearScreen();
         
     }
 
@@ -33,6 +31,8 @@ public class Game {
         /*
          * Set current state to InitState, where the Game is initialised
          */
+
+         
         gsm.init(); 
 
         //Once InitState is done, we move to Turn State.
@@ -41,6 +41,7 @@ public class Game {
 
     //kickstarting Parade!
     public static void main(String[] args) {
+        
         new Game().run();
     }
 }

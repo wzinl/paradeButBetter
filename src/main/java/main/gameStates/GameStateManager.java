@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.util.UUID;
 
 import main.context.GameContext;
+import main.display.ParadeIntro;
 import main.gameStates.GamePlayStates.GameEndState;
 import main.gameStates.GamePlayStates.TurnState;
 import main.helpers.InputHandler;
@@ -30,6 +31,7 @@ public class GameStateManager {
         } 
         //Set the new current state, then enter the next state of the game
         currentState = new InitState(this, inputHandler);
+        ParadeIntro.printAsciiParadeZigZag();
         currentState.enter();
 
         this.currentContext = ((InitState)currentState).createGameContext();

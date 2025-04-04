@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import main.context.GameContext;
 import main.helpers.GameDisplay;
 import main.helpers.InputHandler;
+import main.helpers.ScreenUtils;
 import main.models.ParadeBoard;
 import main.models.cards.Deck;
 import main.models.player.Player;                       
@@ -19,7 +20,6 @@ public class InitState extends GameState {
 
     public InitState(GameStateManager gsm, InputHandler InputHandler) {
         super(gsm, InputHandler);
-        System.out.println("Game initialized");
         // Initialising Deck and Parade Board
         this.deck = new Deck();
         this.paradeBoard = new ParadeBoard(deck);
@@ -27,12 +27,17 @@ public class InitState extends GameState {
 
     @Override
     public void enter() {
+<<<<<<< HEAD
         // System.out.println("Game setup will now take place.");
         // System.out.println();
         GameDisplay.showIntroduction();
 
+=======
+>>>>>>> e3f5c23 (experimenting w parade intro)
 
-        System.out.println("\033c");
+        ScreenUtils.pause(1500);
+        //ScreenUtils.clearScreen();
+
         // Get valid number of players
         int numPlayers = inputHandler.getIntInRange("Enter number of players: ", 1, 6);
         int numBots = 0;
