@@ -9,6 +9,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.reader.EndOfFileException;
@@ -19,6 +20,7 @@ import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import main.java.main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.input.ActionInput;
@@ -110,7 +112,7 @@ public class InputHandler {
     private void handleSpamDelay(int attempts) {
         if (attempts >= COOLDOWN_THRESHOLD) {
             System.out.println("Please wait a moment before trying again...\n");
-            ScreenUtils.pause(COOLDOWN_MS);
+            UIManager.pauseExecution(COOLDOWN_MS);
         }
     }
 
@@ -250,7 +252,7 @@ public class InputHandler {
         BindingReader bindingReader = new BindingReader(terminal.reader());
         flushStdin();
 
-        System.out.println(ScreenUtils.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
+        System.out.println(UIManager.getFormattedTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
         while (true) {
             String key = bindingReader.readBinding(keyMap);
 
@@ -298,9 +300,9 @@ public class InputHandler {
                 }
             }
 
-            ScreenUtils.clearScreen();
+            UIManager.clearScreen();
             System.out.println();
-            System.out.println(ScreenUtils.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
+            System.out.println(UIManager.getFormattedTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
         }
     }
 

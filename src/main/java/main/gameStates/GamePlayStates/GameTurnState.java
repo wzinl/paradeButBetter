@@ -8,7 +8,7 @@ import main.exceptions.SelectionException;
 import main.gameStates.GameStateManager;
 import main.helpers.CardEffects;
 import main.helpers.InputHandler;
-import main.helpers.ScreenUtils;
+import main.java.main.helpers.ui.UIManager;
 import main.models.cards.Card;
 import main.models.input.ActionInput;
 import main.models.input.CardInput;
@@ -19,24 +19,23 @@ import main.models.player.PlayerHand;
 import main.models.player.bots.Bot;
 import main.models.player.bots.RandomBot;
 import main.models.player.bots.SmartBot;
-import main.models.player.bots.SmarterBot;
 import main.models.selections.ActionSelection;
 import main.models.selections.CardSelection;
 import main.models.selections.TurnSelection;
 
 
-public class TurnState extends GamePlayState {
+public class GameTurnState extends GamePlayState {
 
     private boolean isInFinalRound;    
 
-    public TurnState(GameStateManager gsm, GameContext context, InputHandler inputHandler) {
+    public GameTurnState(GameStateManager gsm, GameContext context, InputHandler inputHandler) {
         super(gsm, context, inputHandler);
         this.isInFinalRound = context.getIsInFinalRound();
     }
 
     @Override
     public void enter() {
-        ScreenUtils.clearScreen();
+        UIManager.clearScreen();
 
         while (!isInFinalRound) {
             Player currentPlayer = playerList.get(currentPlayerIndex);
@@ -71,7 +70,7 @@ public class TurnState extends GamePlayState {
                     TurnSelection selection = getTurnSelection(current);
                     selection.execute();
                 }
-                ScreenUtils.clearScreen();
+                UIManager.clearScreen();
                 turnCompleted = true;
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
@@ -88,9 +87,9 @@ public class TurnState extends GamePlayState {
         List <Card> cardList = hand.getCardList();
         Card chosenCard = cardList.get(index);
 
-        if (current instanceof RandomBot || current instanceof SmartBot || current instanceof SmarterBot) {
-            System.out.printf("Bot is going to play card #%d...\n", index);
-            ScreenUtils.pause(3000); //3000
+        if (current instanceof RandomBot || current instanceof SmartBot) {
+            UIManager.displayBotAction(current, index);
+            UIManager.pauseExecution(3000);
         }
 
         CardEffects.apply(chosenCard, paradeBoard, board);
@@ -109,7 +108,6 @@ public class TurnState extends GamePlayState {
         if (input instanceof ActionInput action) {
             return new ActionSelection(() -> performAction(action.getActionChar()));
         }
-    
         throw new SelectionException("Error with selection!");
     }
     
@@ -119,9 +117,6 @@ public class TurnState extends GamePlayState {
         System.out.println("Each player gets one final turn! No more cards will be drawn!");
 
         while (currentPlayerIndex != finalPlayerIndex) {
-            System.out.println("finalPlayerIndex: " + finalPlayerIndex);
-            System.out.println("currentPlayerIndex: " + currentPlayerIndex);
-
             Player currentPlayer = playerList.get(currentPlayerIndex);
             playTurn(currentPlayer);
             this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();

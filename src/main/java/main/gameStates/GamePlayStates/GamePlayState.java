@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import main.java.main.helpers.ui.UIManager;
 import main.context.GameContext;
 import main.gameStates.GameState;
 import main.gameStates.GameStateManager;
 import main.helpers.InputHandler;
-import main.helpers.ScreenUtils;
 import main.models.cards.Card;
 import main.models.input.SelectionInput;
 import main.models.player.Player;
@@ -42,7 +42,7 @@ public abstract class GamePlayState extends GameState{
     }
 
     protected SelectionInput getEntrySelection(Player current) {
-        System.out.println(ScreenUtils.getDisplay(current, paradeBoard));
+        UIManager.displayPlayerTurn(current, paradeBoard);
         ArrayList <Card> cardList = current.getPlayerHand().getCardList();
         return inputHandler.getIntInRangeWithExceptions(
             String.format("Which card would you like to play? (%d to %d): ", 1, cardList.size()),

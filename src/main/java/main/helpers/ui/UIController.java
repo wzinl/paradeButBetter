@@ -1,0 +1,328 @@
+package main.java.main.helpers.ui;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import main.models.ParadeBoard;
+import main.models.cards.Card;
+import main.models.player.Player;
+import main.models.player.PlayerBoard;
+import main.models.player.PlayerHand;
+
+public class UIController {
+
+    public void clearScreen() {
+        System.out.print("\033c");
+    }
+
+    public void pause(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void showLoadingMessage(String message, int dotCount) {
+        System.out.print(message);
+        for (int i = 0; i < dotCount; i++) {
+            try {
+                Thread.sleep(500);
+                System.out.print(".");
+            } catch (InterruptedException e) {
+                System.out.println("Sleep has been interrupted!");
+            }
+        }
+        System.out.println();
+    }
+
+    public void showPlayerView(Player player, ParadeBoard paradeBoard) {
+        System.out.println("========== " + player.getPlayerName() + "'s Turn ==========");
+        System.out.println("\nParade Board:");
+        showParadeBoard(paradeBoard);
+        System.out.println("\nYour Hand:");
+        showPlayerHand(player.getPlayerHand());
+        System.out.println("\nYour Board:");
+        showPlayerBoard(player.getPlayerBoard());
+    }
+
+    public void showParadeBoard(ParadeBoard paradeBoard) {
+        System.out.println(paradeBoard.toString());
+    }
+
+    public void showPlayerHand(PlayerHand hand) {
+        System.out.println(hand.toString());
+    }
+
+    public void showPlayerBoard(PlayerBoard board) {
+        System.out.println(board.toString());
+    }
+
+    public void showTurnPrompt(Player currentPlayer) {
+        System.out.println(currentPlayer.getPlayerName() + "'s turn");
+    }
+
+    public void showDiscardPrompt() {
+        System.out.println("Discard 2 cards from hand.\n");
+    }
+
+    public String getCardSelectionPrompt(int handSize) {
+        return String.format("Which card would you like to play? (%d to %d): ", 1, handSize);
+    }
+
+    public void showFinalScores(ArrayList<Player> players, ParadeBoard paradeBoard) {
+        System.out.println("=========== FINAL SCORES ===========");
+        for (Player player : players) {
+            System.out.printf("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore());
+        }
+
+        if (players.get(0).getPlayerScore() == players.get(1).getPlayerScore()) {
+            System.out.println("\nThe game is a tie!");
+        } else {
+            System.out.println("\n" + players.get(0).getPlayerName() + " wins!");
+        }
+    }
+
+    public void showBotAction(String botName, int cardIndex) {
+        System.out.printf("%s is going to play Card %d",botName, cardIndex);
+    }
+
+    public void showFinalRoundAnnouncement() {
+        System.out.println("Each player gets one final turn! No more cards will be drawn!");
+    }
+
+    public void showStateExit(String stateName) {
+        System.out.println("Exiting " + stateName);
+    }
+
+    public void showGameInitMessage() {
+        System.out.println("Game initialized");
+    }
+
+    public void showGameSetupMessage() {
+        System.out.println("Game setup will now take place.\n");
+    }
+
+    public void showError(String message) {
+        System.out.println("ERROR: " + message);
+    }
+
+    public void showAllColorsCollectedMessage() {
+        System.out.println("You have collected all 6 colors! Moving on to the final round!");
+    }
+
+    public String getFormattedHandWithIndex(PlayerHand hand, Card selectedCard) {
+        List<Card> cards = hand.getCardList();
+        if (cards.isEmpty()) return "No cards in hand.\n";
+
+        List<String[]> cardLines = new ArrayList<>();
+        List<String> colorCodes = new ArrayList<>();
+
+        for (Card card : cards) {
+            colorCodes.add(
+                selectedCard != null && card.equals(selectedCard)
+                    ? card.getHighlightedAnsiColorCode()
+                    : card.getAnsiColorCode()
+            );
+            cardLines.add(card.toString().replaceAll("\\u001B\\[[;\\d]*m", "").split("\n"));
+        }
+
+        StringBuilder result = new StringBuilder();
+        int linesPerCard = cardLines.get(0).length;
+
+        for (int line = 0; line < linesPerCard; line++) {
+            for (int i = 0; i < cards.size(); i++) {
+                result.append(colorCodes.get(i))
+                      .append(cardLines.get(i)[line])
+                      .append("\u001B[0m  ");
+            }
+            result.append("\n");
+        }
+
+        result.append(getIndexString(cards.size()));
+        return result.toString();
+    }
+
+    private String getIndexString(int size) {
+        StringBuilder index = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            int cardLength = 10;
+            String cardIndexStr = "{" + (i + 1) + "}";
+            int indexLength = cardIndexStr.length();
+            int leftPadding = (cardLength - indexLength) / 2;
+            int rightPadding = cardLength - indexLength - leftPadding;
+
+            index.append(" ".repeat(leftPadding))
+                 .append(cardIndexStr)
+                 .append(" ".repeat(rightPadding))
+                 .append("  ");
+        }
+        return index.toString();
+    }
+
+    public String getPlayerStatusDisplay(List<Player> playerList, ParadeBoard paradeBoard) {
+        StringBuilder result = new StringBuilder();
+        result.append("Parade Board:\n").append(paradeBoard).append("\n\n\n");
+
+        for (Player curr : playerList) {
+            result.append(curr.getPlayerName()).append("'s board\n");
+            result.append(curr.getPlayerBoard().toString()).append("\n\n");
+            if (!curr.getPlayerHand().getCardList().isEmpty()) {
+                result.append(curr.getPlayerName()).append("'s hand\n");
+                result.append(curr.getPlayerHand().toString());
+            }
+        }
+
+        result.append("\n");
+        return result.toString();
+    }
+
+    public String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, Boolean onCardRow) {
+        StringBuilder result = new StringBuilder();
+        result.append(currentPlayer.getPlayerName()).append("'s turn.\n");
+
+        PlayerHand currHand = currentPlayer.getPlayerHand();
+        List<Card> cardList = currHand.getCardList();
+
+        if (onCardRow) {
+            Card selectedCard = cardList.get(selectedIndex);
+            result.append(getPlayerDisplay(currentPlayer, paradeBoard, selectedCard)).append("\n");
+        } else {
+            result.append(getPlayerDisplay(currentPlayer, paradeBoard)).append("\n");
+        }
+
+        result.append("\n\n");
+
+        String[] formattedOptions = new String[actionOptions.length];
+        for (int i = 0; i < actionOptions.length; i++) {
+            String option = actionOptions[i];
+            boolean isSelected = (i == selectedIndex);
+
+            formattedOptions[i] = isSelected && !onCardRow ? String.format("[ %s ]", option) : String.format("  %s  ", option);
+        }
+
+        for (String opt : formattedOptions) {
+            result.append(opt).append("  ");
+        }
+
+        result.append("\n\nUse A/D to move, W/S to switch rows, Enter to select.");
+        return result.toString();
+    }
+
+    private String getPlayerDisplay(Player player, ParadeBoard paradeBoard) {
+        return getPlayerDisplay(player, paradeBoard, null);
+    }
+
+    private String getPlayerDisplay(Player player, ParadeBoard paradeBoard, Card selectedCard) {
+        StringBuilder result = new StringBuilder();
+        result.append("\u001B[0mParade:").append(paradeBoard.toString()).append("\n\n");
+        result.append(player.getPlayerName()).append("'s board\n");
+        result.append(player.getPlayerBoard().toString()).append("\n\n");
+        result.append(player.getPlayerName()).append("'s hand\n\n");
+        result.append(getFormattedHandWithIndex(player.getPlayerHand(), selectedCard));
+        return result.toString();
+    }
+
+    protected void getScoreboard(List<Player> winners) {
+        System.out.println(
+                "\n=========== FINAL SCORES ===========\n");
+
+        int maxNameLength = winners.stream()
+                .mapToInt(p -> p.getPlayerName().length())
+                .max()
+                .orElse(10);
+
+        int nameWidth = Math.max(maxNameLength + 2, 12);
+        int scoreWidth = 8;
+        int positionWidth = 10;
+
+        String divider = "-".repeat(positionWidth) + "+" + "-".repeat(nameWidth) + "+" + "-".repeat(scoreWidth);
+
+        System.out.printf("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "s%n",
+                "POSITION", "PLAYER", "SCORE");
+        System.out.println(divider);
+
+        int displayRank = 1;
+
+        for (int i = 0; i < winners.size(); i++) {
+            Player player = winners.get(i);
+            String position;
+
+            if (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore()) {
+                position = "";
+            } else {
+                switch (displayRank) {
+                    case 1:
+                        position = "1st";
+                        break;
+                    case 2:
+                        position = "2nd";
+                        break;
+                    case 3:
+                        position = "3rd";
+                        break;
+                    default:
+                        position = displayRank + "th";
+                }
+                displayRank++;
+            }
+
+            System.out.printf("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "d%n",
+                    position, player.getPlayerName(), player.getPlayerScore());
+        }
+
+        System.out.println("\n" + "=".repeat(divider.length()) + "\n");
+    }
+
+    public void displayWinner(Player winner) {
+        String winnerName = winner.getPlayerName();
+        int winnerScore = winner.getPlayerScore();
+        int boxWidth = 40;
+    
+        String topBorder = "╔" + "═".repeat(boxWidth - 2) + "╗";
+        String middleBorder = "╠" + "═".repeat(boxWidth - 2) + "╣";
+        String bottomBorder = "╚" + "═".repeat(boxWidth - 2) + "╝";
+    
+        System.out.println(topBorder);
+        System.out.println(formatBoxLine("CHAMPION", boxWidth));
+        System.out.println(middleBorder);
+        System.out.println(formatBoxLine(winnerName, boxWidth));
+        System.out.println(formatBoxLine(winnerScore + " POINTS", boxWidth));
+        System.out.println(bottomBorder);
+        System.out.println(centerText("CONGRATULATIONS!", boxWidth));
+    }
+    
+    public void displayTieResults(List<Player> winners) {
+        int topScore = winners.get(0).getPlayerScore();
+        int nameWidth = Math.max(
+            winners.stream()
+                   .filter(p -> p.getPlayerScore() == topScore)
+                   .mapToInt(p -> p.getPlayerName().length())
+                   .max()
+                   .orElse(10) + 2,
+            12
+        );
+    
+        System.out.println("TIED RESULTS");
+        for (Player p : winners) {
+            if (p.getPlayerScore() != topScore) break;
+            System.out.printf("• %-" + (nameWidth - 2) + "s - %d points%n",
+                    p.getPlayerName(), p.getPlayerScore());
+        }
+    }
+    
+    private String formatBoxLine(String text, int width) {
+        int contentWidth = width - 4;
+        int padding = contentWidth - text.length();
+        int leftPad = padding / 2;
+        int rightPad = padding - leftPad;
+    
+        return "║ " + " ".repeat(leftPad) + text + " ".repeat(rightPad) + " ║";
+    }
+    
+    private String centerText(String text, int width) {
+        int padding = (width - text.length()) / 2;
+        return " ".repeat(Math.max(0, padding)) + text;
+    }
+    
+}
