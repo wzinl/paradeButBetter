@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import main.context.GameContext;
 import main.gameStates.GamePlayStates.GameEndState;
-import main.gameStates.GamePlayStates.TurnState;
+import main.gameStates.GamePlayStates.GameTurnState;
 import main.helpers.InputHandler;
 
 public class GameStateManager {
@@ -55,10 +55,10 @@ public class GameStateManager {
     public void nextState() {
         if(currentState instanceof InitState){
             System.out.println("Moving to Turnstate");
-            setState(new TurnState(this, currentContext, inputHandler));
+            setState(new GameTurnState(this, currentContext, inputHandler));
         }
 
-        if(currentState instanceof TurnState){
+        if(currentState instanceof GameTurnState){
             setState(new GameEndState(this, currentContext, inputHandler));
         }
 

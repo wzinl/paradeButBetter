@@ -127,7 +127,7 @@ public class UIController {
     }
 
     public void showBotAction(String botName, int cardIndex) {
-        System.out.printf("%s is going to play Card %d", botName, cardIndex);
+        System.out.printf("%s is going to play Card %d \n", botName, cardIndex);
     }
 
     public void showFinalRoundAnnouncement() {
