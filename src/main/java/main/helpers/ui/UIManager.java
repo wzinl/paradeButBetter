@@ -21,6 +21,14 @@ public class UIManager {
         controller.pause(ms);
     }
 
+    public static void displayMessage(String message) {
+        controller.showMessage(message);
+    }
+
+    public static void displayIntroduction() {
+        controller.showIntroduction();
+    }
+
     public static void displayLoadingMessage(String message, int dots) {
         controller.showLoadingMessage(message, dots);
     }
@@ -92,5 +100,6 @@ public class UIManager {
     public static void displayTieResults(List<Player> tiedPlayers) {
         controller.displayTieResults(tiedPlayers);
     }
+
     
 }

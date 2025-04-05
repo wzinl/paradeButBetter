@@ -23,15 +23,58 @@ public class UIController {
         }
     }
 
+    public void showMessage(String message) {
+        System.out.println(message);
+    }
+    
+    public void showIntroduction() {
+        clearScreen();
+
+        final int SLEEP_TIME = 100;
+
+        String[] welcome = {
+                "██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗    ████████╗ ██████╗ ",
+                "██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝    ╚══██╔══╝██╔═══██╗",
+                "██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗         ██║   ██║   ██║",
+                "██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝         ██║   ██║   ██║",
+                "╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗       ██║   ╚██████╔╝",
+                " ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝       ╚═╝    ╚═════╝ "
+        };
+
+        String[] title = {
+                "██████╗  █████╗ ██████╗  █████╗ ██████╗ ███████╗",
+                "██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝",
+                "██████╔╝███████║██████╔╝███████║██║  ██║█████╗  ",
+                "██╔═══╝ ██╔══██║██╔══██╗██╔══██║██║  ██║██╔══╝  ",
+                "██║     ██║  ██║██║  ██║██║  ██║██████╔╝███████╗",
+                "╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝"
+        };
+
+        for (String line : welcome) {
+            System.out.println(line);
+            pause(SLEEP_TIME);
+        }
+
+        pause(500);
+        System.out.println();
+
+        for (String line : title) {
+            System.out.println(line);
+            pause(SLEEP_TIME);
+        }
+
+        pause(500);
+        System.out.println();
+        System.out.println("========================================");
+        pause(300);
+        System.out.println("\nPress enter to start your journey...");
+    }
+
     public void showLoadingMessage(String message, int dotCount) {
         System.out.print(message);
         for (int i = 0; i < dotCount; i++) {
-            try {
-                Thread.sleep(500);
-                System.out.print(".");
-            } catch (InterruptedException e) {
-                System.out.println("Sleep has been interrupted!");
-            }
+            pause(500);
+            System.out.print(".");
         }
         System.out.println();
     }
@@ -84,7 +127,7 @@ public class UIController {
     }
 
     public void showBotAction(String botName, int cardIndex) {
-        System.out.printf("%s is going to play Card %d",botName, cardIndex);
+        System.out.printf("%s is going to play Card %d", botName, cardIndex);
     }
 
     public void showFinalRoundAnnouncement() {
@@ -113,17 +156,17 @@ public class UIController {
 
     public String getFormattedHandWithIndex(PlayerHand hand, Card selectedCard) {
         List<Card> cards = hand.getCardList();
-        if (cards.isEmpty()) return "No cards in hand.\n";
+        if (cards.isEmpty())
+            return "No cards in hand.\n";
 
         List<String[]> cardLines = new ArrayList<>();
         List<String> colorCodes = new ArrayList<>();
 
         for (Card card : cards) {
             colorCodes.add(
-                selectedCard != null && card.equals(selectedCard)
-                    ? card.getHighlightedAnsiColorCode()
-                    : card.getAnsiColorCode()
-            );
+                    selectedCard != null && card.equals(selectedCard)
+                            ? card.getHighlightedAnsiColorCode()
+                            : card.getAnsiColorCode());
             cardLines.add(card.toString().replaceAll("\\u001B\\[[;\\d]*m", "").split("\n"));
         }
 
@@ -133,8 +176,8 @@ public class UIController {
         for (int line = 0; line < linesPerCard; line++) {
             for (int i = 0; i < cards.size(); i++) {
                 result.append(colorCodes.get(i))
-                      .append(cardLines.get(i)[line])
-                      .append("\u001B[0m  ");
+                        .append(cardLines.get(i)[line])
+                        .append("\u001B[0m  ");
             }
             result.append("\n");
         }
@@ -153,9 +196,9 @@ public class UIController {
             int rightPadding = cardLength - indexLength - leftPadding;
 
             index.append(" ".repeat(leftPadding))
-                 .append(cardIndexStr)
-                 .append(" ".repeat(rightPadding))
-                 .append("  ");
+                    .append(cardIndexStr)
+                    .append(" ".repeat(rightPadding))
+                    .append("  ");
         }
         return index.toString();
     }
@@ -177,7 +220,8 @@ public class UIController {
         return result.toString();
     }
 
-    public String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, Boolean onCardRow) {
+    public String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex,
+            String[] actionOptions, Boolean onCardRow) {
         StringBuilder result = new StringBuilder();
         result.append(currentPlayer.getPlayerName()).append("'s turn.\n");
 
@@ -198,7 +242,8 @@ public class UIController {
             String option = actionOptions[i];
             boolean isSelected = (i == selectedIndex);
 
-            formattedOptions[i] = isSelected && !onCardRow ? String.format("[ %s ]", option) : String.format("  %s  ", option);
+            formattedOptions[i] = isSelected && !onCardRow ? String.format("[ %s ]", option)
+                    : String.format("  %s  ", option);
         }
 
         for (String opt : formattedOptions) {
@@ -278,11 +323,11 @@ public class UIController {
         String winnerName = winner.getPlayerName();
         int winnerScore = winner.getPlayerScore();
         int boxWidth = 40;
-    
+
         String topBorder = "╔" + "═".repeat(boxWidth - 2) + "╗";
         String middleBorder = "╠" + "═".repeat(boxWidth - 2) + "╣";
         String bottomBorder = "╚" + "═".repeat(boxWidth - 2) + "╝";
-    
+
         System.out.println(topBorder);
         System.out.println(formatBoxLine("CHAMPION", boxWidth));
         System.out.println(middleBorder);
@@ -291,38 +336,39 @@ public class UIController {
         System.out.println(bottomBorder);
         System.out.println(centerText("CONGRATULATIONS!", boxWidth));
     }
-    
+
     public void displayTieResults(List<Player> winners) {
         int topScore = winners.get(0).getPlayerScore();
         int nameWidth = Math.max(
-            winners.stream()
-                   .filter(p -> p.getPlayerScore() == topScore)
-                   .mapToInt(p -> p.getPlayerName().length())
-                   .max()
-                   .orElse(10) + 2,
-            12
-        );
-    
+                winners.stream()
+                        .filter(p -> p.getPlayerScore() == topScore)
+                        .mapToInt(p -> p.getPlayerName().length())
+                        .max()
+                        .orElse(10) + 2,
+                12);
+
         System.out.println("TIED RESULTS");
         for (Player p : winners) {
-            if (p.getPlayerScore() != topScore) break;
+            if (p.getPlayerScore() != topScore)
+                break;
             System.out.printf("• %-" + (nameWidth - 2) + "s - %d points%n",
                     p.getPlayerName(), p.getPlayerScore());
         }
     }
-    
+
     private String formatBoxLine(String text, int width) {
         int contentWidth = width - 4;
         int padding = contentWidth - text.length();
         int leftPad = padding / 2;
         int rightPad = padding - leftPad;
-    
+
         return "║ " + " ".repeat(leftPad) + text + " ".repeat(rightPad) + " ║";
     }
-    
+
     private String centerText(String text, int width) {
         int padding = (width - text.length()) / 2;
         return " ".repeat(Math.max(0, padding)) + text;
     }
-    
+
 }
+

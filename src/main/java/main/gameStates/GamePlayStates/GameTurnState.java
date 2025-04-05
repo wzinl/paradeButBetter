@@ -119,6 +119,7 @@ public class GameTurnState extends GamePlayState {
         while (currentPlayerIndex != finalPlayerIndex) {
             Player currentPlayer = playerList.get(currentPlayerIndex);
             playTurn(currentPlayer);
+    
             this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         }
 
