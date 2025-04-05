@@ -1,8 +1,10 @@
-package main.java.main.helpers.ui;
+package main.helpers.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import main.Game;
+import main.helpers.InputHandler;
 import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.Player;
@@ -26,7 +28,15 @@ public class UIManager {
     }
 
     public static void displayIntroduction() {
+        UIManager.clearScreen();
         controller.showIntroduction();
+        UIManager.clearScreen();
+        
+    }
+
+    public static void displayInstructions() {
+        controller.showMessage(GameRulesDisplay.constructGameInstructions());
+        controller.pause(2000); //  need to implement taking user ENTER key to continue with game (HELP)
     }
 
     public static void displayLoadingMessage(String message, int dots) {

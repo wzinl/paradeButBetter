@@ -8,7 +8,8 @@ import main.exceptions.SelectionException;
 import main.gameStates.GameStateManager;
 import main.helpers.CardEffects;
 import main.helpers.InputHandler;
-import main.java.main.helpers.ui.UIManager;
+import main.helpers.ui.UIManager;
+import main.helpers.ui.DisplayEffects;
 import main.models.cards.Card;
 import main.models.input.ActionInput;
 import main.models.input.CardInput;
@@ -44,7 +45,7 @@ public class GameTurnState extends GamePlayState {
             if (currentPlayer.hasCollectedAllColours() || deck.isEmpty()) {
                 context.setInFinalRound(true);
                 isInFinalRound = true;
-                System.out.println("You have collected all 6 colors! Moving on to the final round!");
+                System.out.println(DisplayEffects.BOLD+DisplayEffects.YELLOW_BG+"You have collected all 6 colors! Moving on to the final round!🙀🙀🙀"+DisplayEffects.ANSI_RESET);
                 context.setFinalRoundStarterIndex(currentPlayerIndex);
                 this.finalPlayerIndex = currentPlayerIndex;
             }
@@ -73,10 +74,10 @@ public class GameTurnState extends GamePlayState {
                 UIManager.clearScreen();
                 turnCompleted = true;
             } catch (InvalidCardException e) {
-                System.out.println("Invalid card. Please enter a valid card.");
+                System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_BRIGHT_WHITE+DisplayEffects.RED_BG+"Invalid card. Please enter a valid card."+DisplayEffects.ANSI_RESET);
             } catch(SelectionException e){
                 System.out.println(e.getMessage());
-                System.out.println("Trying Again...");
+                System.out.println(DisplayEffects.BOLD+"Trying Again..."+DisplayEffects.ANSI_RESET);
             }
         }
     }
@@ -108,13 +109,13 @@ public class GameTurnState extends GamePlayState {
         if (input instanceof ActionInput action) {
             return new ActionSelection(() -> performAction(action.getActionChar()));
         }
-        throw new SelectionException("Error with selection!");
+        throw new SelectionException(DisplayEffects.BOLD+DisplayEffects.RED_BG+DisplayEffects.ANSI_BRIGHT_WHITE+"Error with selection!"+DisplayEffects.ANSI_RESET);
     }
     
 
     private void finalRound() {
         this.isInFinalRound = true;
-        System.out.println("Each player gets one final turn! No more cards will be drawn!");
+        System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_PURPLE+"Each player gets one final turn! No more cards will be drawn!"+DisplayEffects.ANSI_RESET);
 
         while (currentPlayerIndex != finalPlayerIndex) {
             Player currentPlayer = playerList.get(currentPlayerIndex);

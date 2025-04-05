@@ -20,7 +20,7 @@ import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-import main.java.main.helpers.ui.UIManager;
+import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.input.ActionInput;

@@ -1,7 +1,11 @@
-package main.java.main.helpers.ui;
+package main.helpers.ui;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import main.models.ParadeBoard;
 import main.models.cards.Card;
@@ -26,48 +30,32 @@ public class UIController {
     public void showMessage(String message) {
         System.out.println(message);
     }
-    
+
     public void showIntroduction() {
-        clearScreen();
 
-        final int SLEEP_TIME = 100;
-
-        String[] welcome = {
-                "██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗    ████████╗ ██████╗ ",
-                "██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝    ╚══██╔══╝██╔═══██╗",
-                "██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗         ██║   ██║   ██║",
-                "██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝         ██║   ██║   ██║",
-                "╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗       ██║   ╚██████╔╝",
-                " ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝       ╚═╝    ╚═════╝ "
-        };
-
-        String[] title = {
-                "██████╗  █████╗ ██████╗  █████╗ ██████╗ ███████╗",
-                "██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝",
-                "██████╔╝███████║██████╔╝███████║██║  ██║█████╗  ",
-                "██╔═══╝ ██╔══██║██╔══██╗██╔══██║██║  ██║██╔══╝  ",
-                "██║     ██║  ██║██║  ██║██║  ██║██████╔╝███████╗",
-                "╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝"
-        };
-
-        for (String line : welcome) {
-            System.out.println(line);
-            pause(SLEEP_TIME);
-        }
-
-        pause(500);
-        System.out.println();
-
-        for (String line : title) {
-            System.out.println(line);
-            pause(SLEEP_TIME);
-        }
-
-        pause(500);
-        System.out.println();
-        System.out.println("========================================");
-        pause(300);
-        System.out.println("\nPress enter to start your journey...");
+            StringBuilder openingMsg = new StringBuilder();
+            openingMsg.append("     ██████╗ ██████╗ ██████╗  █████╗ ██████╗ ███████╗\n")
+                    .append("     ██╔══██╗██╔══██╗██╔══██╗ ██╔══██╗██╔══██╗██╔════╝\n")
+                    .append("     ██████╔╝███████║██████╔╝ ███████║██║  ██║█████╗ \n")
+                    .append("     ██╔═══╝ ██╔══██║██╔══██╝ ██╔══██║██║  ██║██╔══╝  \n")
+                    .append("     ██║     ██║  ██║██║  ██║ ██║  ██║██████╔╝███████╗\n")
+                    .append("     ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝");
+            
+            try {
+                System.out.printf("\n\n");
+                System.out.println(DisplayEffects.BOLD+"------------------------Welcome To-------------------------"+DisplayEffects.ANSI_RESET);
+                UIManager.pauseExecution(500);
+                System.out.println();
+                
+                DisplayEffects.typeWriter(openingMsg.toString(), 6);
+                UIManager.pauseExecution(500);
+                System.out.println(DisplayEffects.BOLD+"-----------------------------------------------------------"+DisplayEffects.ANSI_RESET);
+                System.out.println();
+                DisplayEffects.blinkingEffect(DisplayEffects.BOLD+DisplayEffects.ANSI_RED+"                       [Enter Game]                         "+DisplayEffects.ANSI_RESET,3);
+                DisplayEffects.blinkingEffect(DisplayEffects.BOLD+DisplayEffects.ANSI_RED+"                    [Game Instructions]                      "+DisplayEffects.ANSI_RESET,3);
+            } catch (InterruptedException e) {
+                return;
+            }
     }
 
     public void showLoadingMessage(String message, int dotCount) {
@@ -110,11 +98,11 @@ public class UIController {
     }
 
     public String getCardSelectionPrompt(int handSize) {
-        return String.format("Which card would you like to play? (%d to %d): ", 1, handSize);
+        return String.format(DisplayEffects.BOLD+DisplayEffects.ANSI_GREEN+"Which card would you like to play? (%d to %d): "+DisplayEffects.ANSI_RESET, 1, handSize);
     }
 
     public void showFinalScores(ArrayList<Player> players, ParadeBoard paradeBoard) {
-        System.out.println("=========== FINAL SCORES ===========");
+        System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_MAGENTA+"=========== FINAL SCORES ==========="+DisplayEffects.ANSI_RESET);
         for (Player player : players) {
             System.out.printf("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore());
         }
@@ -127,7 +115,7 @@ public class UIController {
     }
 
     public void showBotAction(String botName, int cardIndex) {
-        System.out.printf("%s is going to play Card %d", botName, cardIndex);
+        System.out.printf(DisplayEffects.BOLD+DisplayEffects.ANSI_PURPLE+"%s is going to play Card %d"+DisplayEffects.ANSI_RESET+ "\n", botName, cardIndex);
     }
 
     public void showFinalRoundAnnouncement() {
@@ -205,13 +193,13 @@ public class UIController {
 
     public String getPlayerStatusDisplay(List<Player> playerList, ParadeBoard paradeBoard) {
         StringBuilder result = new StringBuilder();
-        result.append("Parade Board:\n").append(paradeBoard).append("\n\n\n");
+        result.append(DisplayEffects.BOLD+DisplayEffects.ANSI_UNDERLINE+"Parade Board:"+DisplayEffects.ANSI_RESET+"\n").append(paradeBoard).append("\n\n\n");
 
         for (Player curr : playerList) {
-            result.append(curr.getPlayerName()).append("'s board\n");
+            result.append(DisplayEffects.BOLD+DisplayEffects.ANSI_UNDERLINE+curr.getPlayerName()).append("'s board"+DisplayEffects.ANSI_RESET+"\n");
             result.append(curr.getPlayerBoard().toString()).append("\n\n");
             if (!curr.getPlayerHand().getCardList().isEmpty()) {
-                result.append(curr.getPlayerName()).append("'s hand\n");
+                result.append(DisplayEffects.BOLD+DisplayEffects.ANSI_UNDERLINE+curr.getPlayerName()).append("'s hand"+DisplayEffects.ANSI_RESET+"\n");
                 result.append(curr.getPlayerHand().toString());
             }
         }
@@ -223,7 +211,7 @@ public class UIController {
     public String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex,
             String[] actionOptions, Boolean onCardRow) {
         StringBuilder result = new StringBuilder();
-        result.append(currentPlayer.getPlayerName()).append("'s turn.\n");
+        result.append("=========="+DisplayEffects.BOLD+DisplayEffects.ANSI_GREEN+currentPlayer.getPlayerName()).append("'s turn!"+DisplayEffects.ANSI_RESET +"==========\n\n");
 
         PlayerHand currHand = currentPlayer.getPlayerHand();
         List<Card> cardList = currHand.getCardList();
@@ -250,7 +238,7 @@ public class UIController {
             result.append(opt).append("  ");
         }
 
-        result.append("\n\nUse A/D to move, W/S to switch rows, Enter to select.");
+        result.append(DisplayEffects.BOLD+"\n\nUse A/D to move, W/S to switch rows, Enter to select."+DisplayEffects.ANSI_RESET);
         return result.toString();
     }
 
@@ -261,9 +249,9 @@ public class UIController {
     private String getPlayerDisplay(Player player, ParadeBoard paradeBoard, Card selectedCard) {
         StringBuilder result = new StringBuilder();
         result.append("\u001B[0mParade:").append(paradeBoard.toString()).append("\n\n");
-        result.append(player.getPlayerName()).append("'s board\n");
+        result.append(DisplayEffects.BOLD+DisplayEffects.ANSI_UNDERLINE+player.getPlayerName()).append("'s board"+DisplayEffects.ANSI_RESET+"\n");
         result.append(player.getPlayerBoard().toString()).append("\n\n");
-        result.append(player.getPlayerName()).append("'s hand\n\n");
+        result.append(DisplayEffects.BOLD+DisplayEffects.ANSI_UNDERLINE+player.getPlayerName()).append("'s hand"+DisplayEffects.ANSI_RESET+"\n\n");
         result.append(getFormattedHandWithIndex(player.getPlayerHand(), selectedCard));
         return result.toString();
     }

@@ -1,4 +1,6 @@
 package main;
+import main.helpers.ui.*;
+
 import main.gameStates.GameStateManager;
 import main.helpers.InputHandler;
 
@@ -30,6 +32,9 @@ public class Game {
         /*
          * Set current state to InitState, where the Game is initialised
          */
+        UIManager.displayIntroduction();
+        UIManager.displayInstructions();
+        
         gsm.init(); 
 
         //Once InitState is done, we move to Turn State.

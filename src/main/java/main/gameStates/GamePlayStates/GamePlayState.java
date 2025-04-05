@@ -9,6 +9,7 @@ import main.context.GameContext;
 import main.gameStates.GameState;
 import main.gameStates.GameStateManager;
 import main.helpers.InputHandler;
+import main.helpers.ui.DisplayEffects;
 import main.models.cards.Card;
 import main.models.input.SelectionInput;
 import main.models.player.Player;
@@ -45,7 +46,7 @@ public abstract class GamePlayState extends GameState{
         UIManager.displayPlayerTurn(current, paradeBoard);
         ArrayList <Card> cardList = current.getPlayerHand().getCardList();
         return inputHandler.getIntInRangeWithExceptions(
-            String.format("Which card would you like to play? (%d to %d): ", 1, cardList.size()),
+            String.format(DisplayEffects.BOLD+DisplayEffects.ANSI_BLUE+"Which card would you like to play? (%d to %d): "+DisplayEffects.ANSI_RESET, 1, cardList.size()),
             1, cardList.size(), ACTION_MAP);
     }
 
