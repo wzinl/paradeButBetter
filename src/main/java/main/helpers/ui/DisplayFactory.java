@@ -9,7 +9,7 @@ import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
 
-public class UIController {
+public class DisplayFactory {
 
     public static void clearScreen() {
         System.out.print("\033c");

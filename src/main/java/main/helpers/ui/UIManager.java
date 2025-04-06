@@ -9,11 +9,11 @@ import main.models.player.Player;
 public class UIManager {
 
     public static void clearScreen() {
-        UIController.clearScreen();
+        DisplayFactory.clearScreen();
     }
 
     public static void pauseExecution(int ms) {
-        UIController.pause(ms);
+        DisplayFactory.pause(ms);
     }
 
     public static void displayMessage(String message) {
@@ -22,7 +22,7 @@ public class UIManager {
 
     public static void displayIntroduction() {
         UIManager.clearScreen();
-        UIController.showIntroduction();
+        DisplayFactory.showIntroduction();
         UIManager.clearScreen();
         
     }
@@ -41,16 +41,16 @@ public class UIManager {
     }
 
     public static void displayFinalScores(List<Player> players, ParadeBoard board) {
-        UIController.showFinalScores(new ArrayList<>(players), board);
+        DisplayFactory.showFinalScores(new ArrayList<>(players), board);
     }
 
 
     public static void displayDiscardPrompt() {
-        System.out.println(UIController.getDiscardPrompt());
+        System.out.println(DisplayFactory.getDiscardPrompt());
     }
 
     public static void displayBotAction(Player bot, int cardIndex) {
-        UIController.getBotAction(bot.getPlayerName(), cardIndex);
+        DisplayFactory.getBotAction(bot.getPlayerName(), cardIndex);
     }
 
     public static void displayErrorMessage(String message) {
@@ -60,27 +60,27 @@ public class UIManager {
         UIManager.clearScreen();
         System.out.println();
         System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_CYAN + "Here are all of the players' boards:" + DisplayEffects.ANSI_RESET);
-        System.out.println(UIController.getDisplayBoardOrverview(playerlist, paradeBoard));
+        System.out.println(DisplayFactory.getDisplayBoardOrverview(playerlist, paradeBoard));
     }
 
     public static void printFormattedTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, boolean onCardRow) {
-        System.out.println(UIController.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
+        System.out.println(DisplayFactory.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
     }
 
     public static void printFormattedTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, String[] actionOptions) {
-        System.out.println(UIController.getTurnDisplay(currentPlayer, paradeBoard, actionOptions));
+        System.out.println(DisplayFactory.getTurnDisplay(currentPlayer, paradeBoard, actionOptions));
     }
 
     public static void displayScoreboard(List<Player> winners) {
-        UIController.getScoreboard(winners);
+        DisplayFactory.getScoreboard(winners);
     }
 
     public static void displayWinner(Player winner) {
-        UIController.displayWinner(winner);
+        DisplayFactory.displayWinner(winner);
     }
     
     public static void displayTieResults(List<Player> tiedPlayers) {
-        UIController.displayTieResults(tiedPlayers);
+        DisplayFactory.displayTieResults(tiedPlayers);
     }
     
     public static void displayFinalRoundMessage() {
