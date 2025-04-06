@@ -50,17 +50,26 @@ public class DisplayFactory {
         return String.format(DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN + "Which card would you like to play? (%d to %d): " + DisplayEffects.ANSI_RESET, 1, handSize);
     }
 
-    public static void showFinalScores(ArrayList<Player> players, ParadeBoard paradeBoard) {
-        System.out.println(DisplayEffects.BOLD + DisplayEffects.ANSI_MAGENTA + "=========== FINAL SCORES ===========" + DisplayEffects.ANSI_RESET);
+    public static String showFinalScores(List<Player> players, ParadeBoard paradeBoard) {
+        StringBuilder finalScores = new StringBuilder();
+    
+        finalScores.append(DisplayEffects.BOLD)
+                   .append(DisplayEffects.ANSI_MAGENTA)
+                   .append("=========== FINAL SCORES ===========")
+                   .append(DisplayEffects.ANSI_RESET)
+                   .append("\n");
+    
         for (Player player : players) {
-            System.out.printf("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore());
+            finalScores.append(String.format("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore()));
         }
-
+    
         if (players.get(0).getPlayerScore() == players.get(1).getPlayerScore()) {
-            System.out.println("\nThe game is a tie!");
+            finalScores.append("\nThe game is a tie!");
         } else {
-            System.out.println("\n" + players.get(0).getPlayerName() + " wins!");
+            finalScores.append("\n").append(players.get(0).getPlayerName()).append(" wins!");
         }
+    
+        return finalScores.toString();
     }
 
     public static String getBotAction(String botName, int cardIndex) {
@@ -182,51 +191,52 @@ public class DisplayFactory {
     private static String getPlayerDisplay(Player player, ParadeBoard paradeBoard, Card selectedCard) {
         StringBuilder result = new StringBuilder();
         result.append("\u001B[0mParade:")
-                .append(paradeBoard.toString())
-                .append("\n\n")
-                .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
-                .append(player.getPlayerName());
+              .append(paradeBoard.toString())
+              .append("\n\n")
+              .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
+              .append(player.getPlayerName());
 
         if (player.getPlayerBoard().isEmpty()) {
             result.append("'s board is empty." + DisplayEffects.ANSI_RESET);
         } else {
             result.append("'s board" + DisplayEffects.ANSI_RESET + "\n")
-                    .append(player.getPlayerBoard().toString());
+                  .append(player.getPlayerBoard().toString());
         }
 
         result.append("\n\n")
-                .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
-                .append(player.getPlayerName())
-                .append("'s hand" + DisplayEffects.ANSI_RESET + "\n\n")
-                .append(getFormattedHandWithIndex(player.getPlayerHand(), selectedCard));
+              .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
+              .append(player.getPlayerName())
+              .append("'s hand" + DisplayEffects.ANSI_RESET + "\n\n")
+              .append(getFormattedHandWithIndex(player.getPlayerHand(), selectedCard));
         return result.toString();
     }
 
-    public static void getScoreboard(List<Player> winners) {
-        System.out.println(
-                "\n=========== FINAL SCORES ===========\n");
-
+    public static String getScoreboard(List<Player> winners) {
+        StringBuilder scoreboard = new StringBuilder();
+    
+        scoreboard.append("\n=========== FINAL SCORES ===========\n\n");
+    
         int maxNameLength = winners.stream()
                 .mapToInt(p -> p.getPlayerName().length())
                 .max()
                 .orElse(10);
-
+    
         int nameWidth = Math.max(maxNameLength + 2, 12);
         int scoreWidth = 8;
         int positionWidth = 10;
-
+    
         String divider = "-".repeat(positionWidth) + "+" + "-".repeat(nameWidth) + "+" + "-".repeat(scoreWidth);
-
-        System.out.printf("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "s%n",
-                "POSITION", "PLAYER", "SCORE");
-        System.out.println(divider);
-
+    
+        scoreboard.append(String.format("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "s%n",
+                "POSITION", "PLAYER", "SCORE"));
+        scoreboard.append(divider).append("\n");
+    
         int displayRank = 1;
-
+    
         for (int i = 0; i < winners.size(); i++) {
             Player player = winners.get(i);
             String position;
-
+    
             if (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore()) {
                 position = "";
             } else {
@@ -238,12 +248,14 @@ public class DisplayFactory {
                 };
                 displayRank++;
             }
-
-            System.out.printf("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "d%n",
-                    position, player.getPlayerName(), player.getPlayerScore());
+    
+            scoreboard.append(String.format("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "d%n",
+                    position, player.getPlayerName(), player.getPlayerScore()));
         }
-
-        System.out.println("\n" + "=".repeat(divider.length()) + "\n");
+    
+        scoreboard.append("\n").append("=".repeat(divider.length())).append("\n");
+    
+        return scoreboard.toString();
     }
 
     public static void displayWinner(Player winner) {
@@ -312,6 +324,8 @@ public class DisplayFactory {
             }
             result += boardString + "\n";
         }
-        return result;
+        result += "Parade:\n";
+        result += paradeBoard + "\n";
+        return result; 
     }
 }
