@@ -73,7 +73,7 @@ public abstract class GameTurnState extends GamePlayState{
             UIManager.pauseExecution(3000);
         }
 
-        CardEffects.apply(chosenCard, paradeBoard, board);
+        CardEffects.apply(current.getPlayerName(),chosenCard, paradeBoard, board);
         hand.removeCard(chosenCard);
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);

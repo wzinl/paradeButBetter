@@ -9,7 +9,7 @@ import main.models.player.PlayerBoard;
 
 public class CardEffects {
 
-    public static void apply(Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard) {
+    public static void apply(String playerName,Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard) {
         int chosenValue = chosenCard.getValue();
         ArrayList<Card> removedCards = new ArrayList<>();
 
@@ -19,10 +19,24 @@ public class CardEffects {
                 removedCards.add(current);
             }
         }
+        UIManager.clearScreen();
 
-        System.out.println("Turn Summary:");
+        System.out.println(playerName + " has played: ");
+        System.out.println(chosenCard);
+        UIManager.pauseExecution(1000);
+
+        System.out.println("Updated Parade:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();
+
+        if(playerBoard.isEmpty()){
+            System.out.println(playerName +"'s' Playerboard is empty.");
+        } else{
+            System.out.println("Updated playerboard:");
+            System.out.println(playerBoard.toString());
+            System.out.println();
+        }   
+
         UIManager.pauseExecution(5000);//5000
         UIManager.clearScreen();
 

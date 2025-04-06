@@ -216,10 +216,16 @@ public class UIController {
               .append(paradeBoard.toString())
               .append("\n\n")
               .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
-              .append(player.getPlayerName())
-              .append("'s board"+DisplayEffects.ANSI_RESET+"\n")
-              .append(player.getPlayerBoard().toString())
-              .append("\n\n")
+              .append(player.getPlayerName());
+
+        if(player.getPlayerBoard().isEmpty()) {
+            result.append("'s board is empty."+DisplayEffects.ANSI_RESET);
+        } else {
+            result.append("'s board"+DisplayEffects.ANSI_RESET+"\n")
+                  .append(player.getPlayerBoard().toString());
+        }
+
+        result.append("\n\n")
               .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
               .append(player.getPlayerName())
               .append("'s hand"+DisplayEffects.ANSI_RESET+"\n\n")
