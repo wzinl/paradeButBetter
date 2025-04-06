@@ -39,7 +39,6 @@ public class LineInputHandler {
     protected void resume() {
         running.set(true);
     }
-
     protected  void startInputThread() {
         this.reader = LineReaderBuilder.builder().terminal(terminal).build();
         flushQueue();
@@ -81,7 +80,9 @@ public class LineInputHandler {
     private String waitForInput(String prompt) {
         flushQueue();
         try {
+            System.out.flush();
             System.out.print(prompt);
+            System.out.flush();
             return inputQueue.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -126,7 +127,7 @@ public class LineInputHandler {
             if (val >= min && val <= max) {
                 return val;
             } else {
-                System.out.printf("Value out of range. Please enter a number between %d and %d.\n\n", min, max);
+                System.out.println("Value out of range. Please enter a number between " + min + " and " + max + ".\n");
             }
         }
     }
@@ -143,6 +144,7 @@ public class LineInputHandler {
         }
         prompt += DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN + "Select a card (1-" + max + "): " + DisplayEffects.ANSI_RESET;        
 
+        
         prompt = prompt.replaceAll(":$", ".");
         System.out.println(prompt);
         while (true) {
@@ -156,7 +158,8 @@ public class LineInputHandler {
                 if (val >= min && val <= max) {
                     return new CardInput(val - 1);
                 } else {
-                    System.out.printf("Value out of range. Please enter a number between %d and %d.\n\n", min, max);
+                    System.out.println("Value out of range. Please enter a number between " + min + " and " + max + ".\n\n");
+
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Enter a number or one of the allowed characters.\n");

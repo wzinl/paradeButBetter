@@ -11,7 +11,6 @@
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/gameStates/GameState.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/helpers/inputHandlers/InputManager.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/helpers/inputTypes/ActionInput.java
-/Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/helpers/ui/UIController.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/models/player/bots/SmartBot.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/gameStates/GamePlayStates/GameTurnStates/NotFinalRoundTurnState.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/models/ParadeBoard.java
@@ -22,6 +21,7 @@
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/exceptions/MenuException.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/models/player/bots/SmarterBot.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/models/player/Player.java
+/Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/helpers/ui/DisplayFactory.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/gameStates/GamePlayStates/GameTurnStates/GameTurnState.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/helpers/inputTypes/SelectionInput.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/models/cards/Card.java
