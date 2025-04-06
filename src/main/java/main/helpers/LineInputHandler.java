@@ -81,7 +81,7 @@ public class LineInputHandler {
     private String waitForInput(String prompt) {
         flushQueue();
         try {
-            System.out.println(prompt);
+            System.out.print(prompt);
             return inputQueue.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
