@@ -18,7 +18,7 @@ public class Game {
         // UIManager.displayIntroduction();
         UIManager.displayInstructions();
 
-        inputManager.getEnter("Press Enter to start the game...");
+        inputManager.getEnter();
 
         
         gsm.init();

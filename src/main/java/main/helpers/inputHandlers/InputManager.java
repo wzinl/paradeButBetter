@@ -129,9 +129,9 @@ public class InputManager {
         return lineHandler.getYesNo(prompt);
     }
 
-    public void getEnter(String prompt) {
+    public void getEnter() {
         ensureLineInput();
-        lineHandler.getEnter(prompt);
+        lineHandler.getEnter("Press Enter to continue...");
     }
 
 

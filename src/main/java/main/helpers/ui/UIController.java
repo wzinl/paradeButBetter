@@ -41,11 +41,11 @@ public class UIController {
             try {
                 System.out.printf("\n\n");
                 System.out.println(DisplayEffects.BOLD+"------------------------Welcome To-------------------------"+DisplayEffects.ANSI_RESET);
-                UIManager.pauseExecution(500);
+                // UIManager.pauseExecution(500);
                 System.out.println();
                 
                 DisplayEffects.typeWriter(openingMsg.toString(), 6);
-                UIManager.pauseExecution(500);
+                // UIManager.pauseExecution(500);
                 System.out.println(DisplayEffects.BOLD+"-----------------------------------------------------------"+DisplayEffects.ANSI_RESET);
                 System.out.println();
                 DisplayEffects.blinkingEffect(DisplayEffects.BOLD+DisplayEffects.ANSI_RED+"                       [Enter Game]                         "+DisplayEffects.ANSI_RESET);
@@ -152,8 +152,7 @@ public class UIController {
     public String getDiscardPrompt() {
         StringBuilder result = new StringBuilder();
         result.append("We have reached the end of the game!\n")
-              .append("Choose two cards to discard. The rest of your hand will go into your player board.\n");
-        
+              .append("Each player will choose two cards to discard. The rest of your hand will go into your player board.\n");
         return result.toString();
     }
 

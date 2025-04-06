@@ -48,7 +48,7 @@ public abstract class GamePlayState extends GameState{
 
     public void viewAllPlayerBoards() {
         UIManager.displayBoardOverview(context.getPlayerList(), context.getParadeBoard());
-        inputManager.getEnter("Press Enter to continue...");
+        inputManager.getEnter();
     }
 
     public void saveGame() {

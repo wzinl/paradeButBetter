@@ -23,7 +23,7 @@ public class CardEffects {
 
         System.out.println(playerName + " has played: ");
         System.out.println(chosenCard);
-        UIManager.pauseExecution(1000);
+        // UIManager.pauseExecution(1000);
 
         System.out.println("Updated Parade:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
@@ -37,7 +37,7 @@ public class CardEffects {
             System.out.println();
         }   
 
-        UIManager.pauseExecution(5000);//5000
+        // UIManager.pauseExecution(5000);
         UIManager.clearScreen();
 
         for (Card card : removedCards) {
