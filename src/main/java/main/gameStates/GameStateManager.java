@@ -11,7 +11,7 @@ import main.Game;
 import main.context.GameContext;
 import main.gameStates.GamePlayStates.GameEndState;
 import main.gameStates.GamePlayStates.GameTurnStates.NotFinalRoundTurnState;
-import main.helpers.InputManager;
+import main.helpers.inputHandlers.InputManager;
 
 public class GameStateManager {
     private final Game game;

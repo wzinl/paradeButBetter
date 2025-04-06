@@ -53,6 +53,11 @@ public class UIManager {
     public static void displayErrorMessage(String message) {
         System.out.println("ERROR: " + message);    }
 
+    public static void displayBoardOverview(List<Player> playerlist, ParadeBoard paradeBoard) {
+        System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_CYAN + "Here are all of the players' boards:" + DisplayEffects.ANSI_RESET);
+        System.out.println(controller.getDisplayBoardOrverview(playerlist, paradeBoard));
+    }
+
     public static void printFormattedTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, boolean onCardRow) {
         System.out.println(controller.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
     }
@@ -78,6 +83,7 @@ public class UIManager {
                            "Each player gets one final turn! No more cards will be drawn!"
                            +DisplayEffects.ANSI_RESET);
     }
+
     public static void displayFinalRoundTrigger(Boolean deckEmpty) {
 
         if(deckEmpty){

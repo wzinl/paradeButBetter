@@ -1,7 +1,7 @@
 package main;
 
 import main.gameStates.GameStateManager;
-import main.helpers.InputManager;
+import main.helpers.inputHandlers.InputManager;
 import main.helpers.ui.UIManager;
 
 public class Game {

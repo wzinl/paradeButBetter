@@ -2,7 +2,7 @@ package main.gameStates.GamePlayStates.GameTurnStates;
 
 import main.context.GameContext;
 import main.gameStates.GameStateManager;
-import main.helpers.InputManager;
+import main.helpers.inputHandlers.InputManager;
 import main.helpers.ui.UIManager;
 import main.models.player.Player;
 

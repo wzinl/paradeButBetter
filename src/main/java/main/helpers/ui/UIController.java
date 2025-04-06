@@ -329,5 +329,22 @@ public class UIController {
         return " ".repeat(Math.max(0, padding)) + text;
     }
 
+    public String getDisplayBoardOrverview(List<Player> playerlist, ParadeBoard paradeBoard) {
+        String result = "";
+        for (Player player : playerlist) {
+            PlayerBoard board = player.getPlayerBoard();
+            String boardString = "";
+            boardString+= DisplayEffects.BOLD+DisplayEffects.ANSI_GREEN +  player.getPlayerName() + DisplayEffects.ANSI_RESET;
+            if(board.isEmpty()){
+                boardString += "'s Player Board is empty.";
+            }else{
+                boardString += "'s Player Board:";
+                boardString += board;
+            }
+            result+= boardString + ;
+        }
+        return result;
+    }
+
 }
 

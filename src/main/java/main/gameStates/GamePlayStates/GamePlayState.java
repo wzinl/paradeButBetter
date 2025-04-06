@@ -8,8 +8,9 @@ import main.gameStates.GamePlayStates.GameTurnStates.FinalRoundTurnState;
 import main.gameStates.GamePlayStates.GameTurnStates.NotFinalRoundTurnState;
 import main.gameStates.GameState;
 import main.gameStates.GameStateManager;
-import main.helpers.InputManager;
-import main.models.input.SelectionInput;
+import main.helpers.inputHandlers.InputManager;
+import main.helpers.inputTypes.SelectionInput;
+import main.helpers.ui.UIManager;
 import main.models.player.Player;
 
 public abstract class GamePlayState extends GameState{
@@ -29,6 +30,7 @@ public abstract class GamePlayState extends GameState{
         actionHandlers.put('S', this::saveGame);
         actionHandlers.put('C', this::changeInputType);
         actionHandlers.put('Q', this::exitGame);
+        actionHandlers.put('D', this::viewAllPlayerBoards);
     }
 
     protected void performAction(char action) {
@@ -42,6 +44,11 @@ public abstract class GamePlayState extends GameState{
 
     private void exitGame() {
         gsm.exitGame();
+    }
+
+    public void viewAllPlayerBoards() {
+        UIManager.displayBoardOverview(context.getPlayerList(), context.getParadeBoard());
+        inputManager.getEnter("Press Enter to continue...");
     }
 
     public void saveGame() {
