@@ -5,7 +5,7 @@ public final class ActionInput implements SelectionInput {
 
     public ActionInput(char actionChar) {
 
-        this.actionChar = (actionChar +"").toUpperCase().charAt(0);
+        this.actionChar = actionChar ;
     }
 
     public char getActionChar() {
