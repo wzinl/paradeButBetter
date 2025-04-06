@@ -1,48 +1,45 @@
 package main;
-import main.helpers.ui.*;
 
 import main.gameStates.GameStateManager;
-import main.helpers.InputHandler;
+import main.helpers.InputManager;
+import main.helpers.ui.UIManager;
 
 public class Game {
-    private GameStateManager gsm;
+    private final GameStateManager gsm;
+    private boolean isRunning; // Flag to control the game loop
 
     public Game() {        
-        /*
-         * Creating a new Game state manager object, the purpose of
-         * game state:
-         * 1. scalability
-         * 2. modularity 
-         * 3. easier to debug
-         * there are 3 game states:
-         * 1. InitState(GameStateManager gsm) - initialises all the necessary classes
-         * 2. TurnState(GameStateManager gsm) - where the main logic of Parade occurs
-         * 3. GameEndState(GameStateManager gsm) - the final actions and the calculation of player scores
-         */
-
-        gsm = new GameStateManager(new InputHandler()); 
-        
-        
+        gsm = new GameStateManager(new InputManager(), this);
+        isRunning = true; // Initialize the game as running
     }
 
     public void run() {
-        //
-        // InitState init = new InitState(gsm);
-
-        /*
-         * Set current state to InitState, where the Game is initialised
-         */
-        UIManager.displayIntroduction();
+        InputManager inputManager = gsm.getInputManager();
+        // UIManager.displayIntroduction();
         UIManager.displayInstructions();
-        
-        gsm.init(); 
 
-        //Once InitState is done, we move to Turn State.
-        gsm.nextState();
+        inputManager.getEnter("Press Enter to start the game...");
+
+        
+        gsm.init();
+
+        // Main game loop
+        while (isRunning) {
+            gsm.nextState(); // Transition to the next state
+        }
+        exit();
+        
     }
 
-    //kickstarting Parade!
+    public void exit() {
+        System.out.println("Game has stopped. Thank you for playing!");
+        isRunning = false; // Set the flag to false to stop the game
+        System.exit(0);
+    }
+
+    // Kickstarting Parade!
     public static void main(String[] args) {
-        new Game().run();
+        Game game = new Game();
+        game.run();
     }
 }

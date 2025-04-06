@@ -20,7 +20,6 @@ public class CardEffects {
             }
         }
 
-        UIManager.pauseExecution(1000);//1000
         System.out.println("Turn Summary:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();

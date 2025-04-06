@@ -3,7 +3,6 @@ package main.context;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import main.gameStates.GameState;
 import main.models.ParadeBoard;
 import main.models.cards.Deck;
 import main.models.player.Player;
@@ -13,12 +12,11 @@ public class GameContext implements Serializable{
 
     //declaration of variables
     private int finalRoundStarterIndex; // index of player who triggered the final round
-    private GameState currentState;
+    private int currentStateIdx;
     private final ArrayList<Player> playerList;
-    private final int currentPlayerIndex;
+    private int currentPlayerIndex;
     private final Deck deck;
     private final ParadeBoard paradeBoard;
-    private boolean isInFinalRound;
 
 
 
@@ -26,15 +24,13 @@ public class GameContext implements Serializable{
     creating Game Context from Init, populates all the necessary
     fields to start the game
      */
-    public GameContext(ArrayList<Player> playerList, GameState currentState, int currentPlayerIndex, Deck deck, ParadeBoard paradeBoard){
+    public GameContext(ArrayList<Player> playerList, int currentStateIdx, int currentPlayerIndex, Deck deck, ParadeBoard paradeBoard){
         this.currentPlayerIndex = currentPlayerIndex;
-        this.currentState = currentState;
+        this.currentStateIdx = currentStateIdx;
         this.deck = deck;
         this.paradeBoard = paradeBoard;
-        this.isInFinalRound = false;
         this.finalRoundStarterIndex = -1;
         this.playerList = playerList;
-        System.out.println("GameContext constructed!");
     }
 
     // public access to game context instance 
@@ -43,8 +39,8 @@ public class GameContext implements Serializable{
     }
 
     // Manage game state transition --> delegate state transition to game state manager
-    public void setCurrentState(GameState newState){
-        this.currentState = newState;
+    public void setCurrentStateIdx(int currentStateIdx){
+        this.currentStateIdx = currentStateIdx;
     }
 
     //The player who triggered the final round
@@ -54,25 +50,19 @@ public class GameContext implements Serializable{
 
     //Relevant Setters and Getters
 
-    public void setInFinalRound(boolean isInFinalRound){
-        this.isInFinalRound = isInFinalRound;
+
+    public int getCurentStateIndex(){
+        return this.currentStateIdx;
     }
 
-    public GameState setCurrentState(){
-        return this.currentState;
-    }
 
-    public GameState getCurrentState(){
-        return this.currentState;
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex;
     }
 
 
     public int getFinalRoundStarterIndex(){
         return this.finalRoundStarterIndex;
-    }
-
-    public boolean getIsInFinalRound(){
-        return isInFinalRound;
     }
 
     public int getCurrentPlayerIndex(){
@@ -84,7 +74,6 @@ public class GameContext implements Serializable{
     }
 
     public ArrayList<Player> getPlayerList() {
-
         return this.playerList;
     }
 

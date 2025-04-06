@@ -8,8 +8,8 @@ import main.context.GameContext;
 import main.exceptions.InvalidCardException;
 import main.exceptions.SelectionException;
 import main.gameStates.GameStateManager;
-import main.helpers.InputHandler;
-import main.java.main.helpers.ui.UIManager;
+import main.helpers.InputManager;
+import main.helpers.ui.UIManager;
 import main.models.cards.Card;
 import main.models.cards.Deck;
 import main.models.input.ActionInput;
@@ -28,16 +28,19 @@ public class GameEndState extends GamePlayState {
     private static final int CARDS_TO_DISCARD = 2;
     private static final int BOT_PAUSE_MS = 1000;
     private static final int CHAMPION_BOX_WIDTH = 40;
+    
+    private final int finalPlayerIndex;
 
-    public GameEndState(GameStateManager gsm, GameContext context, InputHandler inputHandler) {
-        super(gsm, context, inputHandler);
+    public GameEndState(GameStateManager gsm, GameContext context, InputManager inputManager) {
+        super(gsm, context, inputManager);
+        this.finalPlayerIndex = context.getFinalRoundStarterIndex();
+
     }
 
     @Override
     public void enter() {
         try {
             UIManager.clearScreen();
-            System.out.println("Game End State entering");
 
             performFinalDiscardPhase();
             handleCardFlipping();
@@ -56,8 +59,6 @@ public class GameEndState extends GamePlayState {
     }
 
     private void performDiscardPhase(Player player) throws InvalidCardException {
-        UIManager.displayTurnPrompt(player);
-        UIManager.displayPlayerTurn(player, paradeBoard);
         UIManager.displayDiscardPrompt();
 
         discardTwoCards(player);
@@ -78,6 +79,7 @@ public class GameEndState extends GamePlayState {
         SelectionInput input = getSelectionInput(current);
 
         if (input instanceof CardInput cardInput) {
+            
             return new CardSelection(() -> discardCard(current.getPlayerHand(), cardInput));
         }
         if (input instanceof ActionInput action) {
@@ -157,6 +159,7 @@ public class GameEndState extends GamePlayState {
             UIManager.displayWinner(winners.get(0));
         }
     }
+    
     private void discardTwoCards(Player player) throws InvalidCardException {
         if (player instanceof Bot bot) {
             for (int i = 0; i < 2; i++) {
@@ -170,7 +173,6 @@ public class GameEndState extends GamePlayState {
                 boolean discardCompleted = false;
                 while (!discardCompleted) {
                     try {
-                        System.out.println(player.getPlayerHand());
                         TurnSelection selection = getDiscardSelection(player);
                         selection.execute();
                         discardCompleted = true;

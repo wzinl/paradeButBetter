@@ -2,6 +2,8 @@ package main.models.player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
 import main.exceptions.InvalidCardException;
 import main.models.cards.Card;
 import main.models.cards.Deck;
@@ -60,16 +62,34 @@ public class PlayerHand implements Serializable{
         }
     }
 
-
     @Override
     public String toString() {
-       
-        StringBuilder result = new StringBuilder();
 
+        // Prepare all card lines and color codes
+        List<String[]> cardLines = new ArrayList<>();
+        List<String> colorCodes = new ArrayList<>();
+        
         for (Card card : cardList) {
-            result.append(card).append("  ");
+            colorCodes.add(card.getAnsiColorCode());
+            cardLines.add(card.toString()
+                        .replaceAll("\u001B\\[[;\\d]*m", "") // Remove existing ANSI codes
+                        .split("\n"));
         }
-      
+
+        // Build horizontal display
+        StringBuilder result = new StringBuilder();
+        int linesPerCard = cardLines.get(0).length;
+        
+        for (int line = 0; line < linesPerCard; line++) {
+            for (int i = 0; i < cardList.size(); i++) {
+                // Apply card's color, add line, then reset
+                result.append(colorCodes.get(i))
+                    .append(cardLines.get(i)[line])
+                    .append("\u001B[0m  "); // Reset + double space between cards
+            }
+            result.append("\n");
+        }
+
         return result.toString();
     }
 

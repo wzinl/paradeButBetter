@@ -3,13 +3,8 @@ package main.helpers.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.Game;
-import main.helpers.InputHandler;
 import main.models.ParadeBoard;
-import main.models.cards.Card;
 import main.models.player.Player;
-import main.models.player.PlayerBoard;
-import main.models.player.PlayerHand;
 
 public class UIManager {
 
@@ -36,7 +31,6 @@ public class UIManager {
 
     public static void displayInstructions() {
         controller.showMessage(GameRulesDisplay.constructGameInstructions());
-        controller.pause(2000); //  need to implement taking user ENTER key to continue with game (HELP)
     }
 
     public static void displayLoadingMessage(String message, int dots) {
@@ -47,56 +41,24 @@ public class UIManager {
         controller.showFinalScores(new ArrayList<>(players), board);
     }
 
-    public static void displayPlayerTurn(Player player, ParadeBoard board) {
-        controller.showPlayerView(player, board);
-    }
-
-    public static void displayTurnPrompt(Player player) {
-        controller.showTurnPrompt(player);
-    }
 
     public static void displayDiscardPrompt() {
-        controller.showDiscardPrompt();
+        System.out.println(controller.getDiscardPrompt());
     }
 
     public static void displayBotAction(Player bot, int cardIndex) {
-        controller.showBotAction(bot.getPlayerName(), cardIndex);
-    }
-
-    public static void displayFinalRoundMessage() {
-        controller.showFinalRoundAnnouncement();
-    }
-
-    public static void displayGameInitMessage() {
-        controller.showGameInitMessage();
-    }
-
-    public static void displayGameSetupMessage() {
-        controller.showGameSetupMessage();
-    }
-
-    public static void displayStateExitMessage(String state) {
-        controller.showStateExit(state);
+        controller.getBotAction(bot.getPlayerName(), cardIndex);
     }
 
     public static void displayErrorMessage(String message) {
-        controller.showError(message);
+        System.out.println("ERROR: " + message);    }
+
+    public static void printFormattedTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, boolean onCardRow) {
+        System.out.println(controller.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow));
     }
 
-    public static void displayAllColorsCollectedMessage() {
-        controller.showAllColorsCollectedMessage();
-    }
-
-    public static void printFormattedHand(PlayerHand hand, Card selectedCard) {
-        System.out.println(controller.getFormattedHandWithIndex(hand, selectedCard));
-    }
-
-    public static String getFormattedTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, boolean onCardRow) {
-        return controller.getTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionOptions, onCardRow);
-    }
-
-    public static String getFormattedPlayerStatus(List<Player> players, ParadeBoard paradeBoard) {
-        return controller.getPlayerStatusDisplay(players, paradeBoard);
+    public static void printFormattedTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, String[] actionOptions) {
+        System.out.println(controller.getTurnDisplay(currentPlayer, paradeBoard, actionOptions));
     }
 
     public static void displayScoreboard(List<Player> winners) {
@@ -110,6 +72,25 @@ public class UIManager {
     public static void displayTieResults(List<Player> tiedPlayers) {
         controller.displayTieResults(tiedPlayers);
     }
+    
+    public static void displayFinalRoundMessage() {
+        System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_PURPLE+
+                           "Each player gets one final turn! No more cards will be drawn!"
+                           +DisplayEffects.ANSI_RESET);
+    }
+    public static void displayFinalRoundTrigger(Boolean deckEmpty) {
+
+        if(deckEmpty){
+            System.out.println("The last card has been drawn");
+        }
+        else{
+            System.out.println("One player has collected all 6 colours in his board!");
+        }
+        System.out.println(DisplayEffects.BOLD+DisplayEffects.YELLOW_BG+"Moving on to the final round!🙀🙀🙀"+DisplayEffects.ANSI_RESET);
+
+    }
+
+
 
     
 }

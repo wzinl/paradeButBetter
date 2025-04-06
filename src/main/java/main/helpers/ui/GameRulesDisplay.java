@@ -1,7 +1,5 @@
 package main.helpers.ui;
 
-import main.helpers.ui.*;
-
 public class GameRulesDisplay {
     
     public static String constructGameInstructions () {

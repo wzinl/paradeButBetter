@@ -26,6 +26,7 @@ public class DisplayEffects {
     // Text Effects
     public static final String BOLD = "\u001B[1m";
     public static final String ANSI_UNDERLINE = "\u001B[4m";
+    public static final int BLINK_COUNT = 20;
 
 
     public static void typeWriter(String text, int delay) throws InterruptedException {
@@ -36,8 +37,11 @@ public class DisplayEffects {
         System.out.println();
     }
 
-    public static void blinkingEffect(String text, int blinkCount) throws InterruptedException {
-        for (int i = 0; i < blinkCount; i++) {
+    public static void blinkingEffect(String text) throws InterruptedException {
+        for (int i = 0; i < BLINK_COUNT; i++) {
+            if (Thread.currentThread().isInterrupted()) {
+                throw new InterruptedException("Blinking effect interrupted");
+            }
             System.out.print("\r" + text);
             Thread.sleep(300);
             System.out.print("\r" + " ".repeat(text.length()));

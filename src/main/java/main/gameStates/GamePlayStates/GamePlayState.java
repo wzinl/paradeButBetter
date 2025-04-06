@@ -1,58 +1,79 @@
 package main.gameStates.GamePlayStates;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
-import main.java.main.helpers.ui.UIManager;
 import main.context.GameContext;
+import main.gameStates.GamePlayStates.GameTurnStates.FinalRoundTurnState;
+import main.gameStates.GamePlayStates.GameTurnStates.NotFinalRoundTurnState;
 import main.gameStates.GameState;
 import main.gameStates.GameStateManager;
-import main.helpers.InputHandler;
-import main.helpers.ui.DisplayEffects;
-import main.models.cards.Card;
+import main.helpers.InputManager;
 import main.models.input.SelectionInput;
 import main.models.player.Player;
 
 public abstract class GamePlayState extends GameState{
 
-    private static final Map<String, Character> ACTION_MAP = Map.of(
-        "Save Game", 'S',
-        "Exit Game", 'Q',
-        "Change Input Type", 'C'
-    );
+    private final Map<Character, Runnable> actionHandlers = new HashMap<>();
+    protected int currentPlayerIndex;
 
 
-    public GamePlayState(GameStateManager gsm, GameContext context,  InputHandler inputHandler) {
-        super(gsm, context, inputHandler);
+
+    public GamePlayState(GameStateManager gsm, GameContext context,  InputManager inputManager) {
+        super(gsm, context, inputManager);
+        this.currentPlayerIndex = context.getCurrentPlayerIndex();
+        initializeActionHandlers();
+    }
+    
+    private void initializeActionHandlers() {
+        actionHandlers.put('S', this::saveGame);
+        actionHandlers.put('C', this::changeInputType);
+        actionHandlers.put('Q', this::exitGame);
     }
 
-    protected void performAction(char action){
-        System.out.println("Performing action");
+    protected void performAction(char action) {
+        Runnable actionHandler = actionHandlers.get(action);
+        if (actionHandler != null) {
+            actionHandler.run();
+        } else {
+            System.out.println("Invalid action: " + action);
+        }
     }
+
+    private void exitGame() {
+        gsm.exitGame();
+    }
+
+    public void saveGame() {
+
+    }
+
+    private void changeInputType() {
+        Player current = context.getPlayerList().get(context.getCurrentPlayerIndex());
+        if(current.getPreferMenu()){
+            current.setPreferMenu(false);
+        }else{
+            current.setPreferMenu(true);
+        }
+    }
+
+    public void updateContext() {
+        
+        int currentStateIdx;
+        if(this instanceof NotFinalRoundTurnState){
+            currentStateIdx = 0;
+        } else if(this instanceof FinalRoundTurnState){
+            currentStateIdx = 1;
+            
+        } else {
+            currentStateIdx = 2;
+        }
+        context.setCurrentStateIdx(currentStateIdx);
+        
+    }
+
 
     protected SelectionInput getSelectionInput(Player current) {
-        if (current.getPreferMenu()) {
-            try {
-                return getMenuSelection(current);
-            } catch (IOException e) {
-                System.out.println("An error has occurred using menu selection mode! Defaulting to entry selection.");
-            }
-        }
-        return getEntrySelection(current);
+        return inputManager.turnSelect(paradeBoard, current);
     }
-
-    protected SelectionInput getEntrySelection(Player current) {
-        UIManager.displayPlayerTurn(current, paradeBoard);
-        ArrayList <Card> cardList = current.getPlayerHand().getCardList();
-        return inputHandler.getIntInRangeWithExceptions(
-            String.format(DisplayEffects.BOLD+DisplayEffects.ANSI_BLUE+"Which card would you like to play? (%d to %d): "+DisplayEffects.ANSI_RESET, 1, cardList.size()),
-            1, cardList.size(), ACTION_MAP);
-    }
-
-    protected SelectionInput getMenuSelection(Player current) throws IOException{
-        return inputHandler.turnSelect(paradeBoard, current, ACTION_MAP);
-    }
-
-    
 }
