@@ -41,6 +41,7 @@ public abstract class GameTurnState extends GamePlayState{
                 if(current instanceof Bot currBot){
                     int index = currBot.getNextCardIndex(cardList, paradeBoard);
                     playCard(current, index);
+                    turnCompleted = true;
                 }
                 // if Human player
                  else {
