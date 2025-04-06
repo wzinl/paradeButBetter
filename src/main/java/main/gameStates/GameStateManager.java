@@ -5,14 +5,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import main.Game;
 import main.context.GameContext;
 import main.display.ParadeIntro;
 import main.gameStates.GamePlayStates.GameEndState;
+import main.gameStates.GamePlayStates.GameTurnStates.FinalRoundTurnState;
 import main.gameStates.GamePlayStates.GameTurnStates.NotFinalRoundTurnState;
-import main.helpers.InputManager;
+import main.helpers.inputHandlers.InputManager;
 
 public class GameStateManager {
     private final Game game;
@@ -20,11 +23,17 @@ public class GameStateManager {
     private GameState currentState;
     private GameContext currentContext;
     private final InputManager inputManager;
+    private final Map<Class<? extends GameState>, Class<? extends GameState>> stateFlow = new HashMap<>();
+
     
     public GameStateManager(InputManager inputManager, Game game){
         gameStateID = UUID.randomUUID().toString();
         this.inputManager = inputManager;
         this.game = game;
+
+        stateFlow.put(InitState.class, NotFinalRoundTurnState.class);
+        stateFlow.put(NotFinalRoundTurnState.class, FinalRoundTurnState.class);
+        stateFlow.put(FinalRoundTurnState.class, GameEndState.class);
     }
 
     public void init() {
@@ -48,25 +57,21 @@ public class GameStateManager {
         return inputManager;
     }
     
-    //when the game is done
-    public void closeGame() {
-        if (currentState != null) {
-            currentState.exit();
-        }
-
-    }
     //for transition into the next Game State
     public void nextState() {
-        if(currentState instanceof InitState){
-            setState(new NotFinalRoundTurnState(this, currentContext, inputManager));
-        }
+        Class<? extends GameState> nextStateClass = stateFlow.get(currentState.getClass());
 
-        if(currentState instanceof NotFinalRoundTurnState){
-            setState(new GameEndState(this, currentContext, inputManager));
-        }
-
-        if(currentState instanceof GameEndState){
-            closeGame();
+        if (nextStateClass != null) {
+            try {
+                GameState nextState = nextStateClass
+                    .getConstructor(GameStateManager.class, GameContext.class, InputManager.class)
+                    .newInstance(this, currentContext, inputManager);
+                setState(nextState);
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("Failed to transition to the next state", e);
+            }
+        } else if (currentState instanceof GameEndState) {
+            game.exit();
         }
     }
     

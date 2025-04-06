@@ -1,4 +1,4 @@
-package main.helpers;
+package main.helpers.inputHandlers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,12 +9,12 @@ import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
 
+import main.helpers.inputTypes.ActionInput;
+import main.helpers.inputTypes.CardInput;
+import main.helpers.inputTypes.SelectionInput;
 import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
 import main.models.cards.Card;
-import main.models.input.ActionInput;
-import main.models.input.CardInput;
-import main.models.input.SelectionInput;
 import main.models.player.Player;
 import main.models.player.PlayerHand;
 

@@ -1,4 +1,4 @@
-package main.models.input;
+package main.helpers.inputTypes;
 
 public final class ActionInput implements SelectionInput {
     private final char actionChar;

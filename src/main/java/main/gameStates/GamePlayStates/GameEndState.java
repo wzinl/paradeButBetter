@@ -8,13 +8,13 @@ import main.context.GameContext;
 import main.exceptions.InvalidCardException;
 import main.exceptions.SelectionException;
 import main.gameStates.GameStateManager;
-import main.helpers.InputManager;
+import main.helpers.inputHandlers.InputManager;
+import main.helpers.inputTypes.ActionInput;
+import main.helpers.inputTypes.CardInput;
+import main.helpers.inputTypes.SelectionInput;
 import main.helpers.ui.UIManager;
 import main.models.cards.Card;
 import main.models.cards.Deck;
-import main.models.input.ActionInput;
-import main.models.input.CardInput;
-import main.models.input.SelectionInput;
 import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
@@ -25,10 +25,6 @@ import main.models.selections.TurnSelection;
 
 public class GameEndState extends GamePlayState {
 
-    private static final int CARDS_TO_DISCARD = 2;
-    private static final int BOT_PAUSE_MS = 1000;
-    private static final int CHAMPION_BOX_WIDTH = 40;
-    
     private final int finalPlayerIndex;
 
     public GameEndState(GameStateManager gsm, GameContext context, InputManager inputManager) {
@@ -52,6 +48,9 @@ public class GameEndState extends GamePlayState {
     }
 
     private void performFinalDiscardPhase() throws InvalidCardException {
+        UIManager.displayDiscardPrompt();
+        inputManager.getEnter();
+        UIManager.clearScreen();
         for (int i = 0; i < playerList.size(); i++) {
             int index = (finalPlayerIndex + i) % playerList.size();
             performDiscardPhase(playerList.get(index));
@@ -59,7 +58,6 @@ public class GameEndState extends GamePlayState {
     }
 
     private void performDiscardPhase(Player player) throws InvalidCardException {
-        UIManager.displayDiscardPrompt();
 
         discardTwoCards(player);
 
@@ -166,7 +164,7 @@ public class GameEndState extends GamePlayState {
                 player.getPlayerHand().removeCard(
                         player.getPlayerHand().getCardList()
                                 .get(bot.discardCardEndgame(player.getPlayerHand(), paradeBoard)));
-                UIManager.pauseExecution(1000);
+                // UIManager.pauseExecution(1000);
             }
         } else {
             for (int i = 0; i < 2; i++) {

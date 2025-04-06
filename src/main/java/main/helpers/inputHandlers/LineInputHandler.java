@@ -1,4 +1,4 @@
-package main.helpers;
+package main.helpers.inputHandlers;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -13,12 +13,12 @@ import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.UserInterruptException;
 import org.jline.terminal.Terminal;
 
+import main.helpers.inputTypes.ActionInput;
+import main.helpers.inputTypes.CardInput;
+import main.helpers.inputTypes.SelectionInput;
 import main.helpers.ui.DisplayEffects;
 import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
-import main.models.input.ActionInput;
-import main.models.input.CardInput;
-import main.models.input.SelectionInput;
 import main.models.player.Player;
 
 
@@ -39,7 +39,6 @@ public class LineInputHandler {
     protected void resume() {
         running.set(true);
     }
-
     protected  void startInputThread() {
         this.reader = LineReaderBuilder.builder().terminal(terminal).build();
         flushQueue();
@@ -81,7 +80,9 @@ public class LineInputHandler {
     private String waitForInput(String prompt) {
         flushQueue();
         try {
-            System.out.println(prompt);
+            System.out.flush();
+            System.out.print(prompt);
+            System.out.flush();
             return inputQueue.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -121,15 +122,16 @@ public class LineInputHandler {
     }
     
     public int getIntInRange(String prompt, int min, int max) {
+        String repeatPrompt = "Value out of range. Please enter a number between " + min + " and " + max + ".\n";
         while (true) {
             int val = getInt(prompt);
             if (val >= min && val <= max) {
                 return val;
             } else {
-                System.out.printf("Value out of range. Please enter a number between %d and %d.\n\n", min, max);
+                System.out.println(repeatPrompt);
             }
         }
-    }
+    } 
     
     public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, Map<String, Character> actionMap) {
         int max = currentPlayer.getPlayerHand().getCardList().size();
@@ -143,8 +145,10 @@ public class LineInputHandler {
         }
         prompt += DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN + "Select a card (1-" + max + "): " + DisplayEffects.ANSI_RESET;        
 
+        
         prompt = prompt.replaceAll(":$", ".");
         System.out.println(prompt);
+        String repeatPrompt = "Value out of range. Please enter a number between " + min + " and " + max + ".\n";
         while (true) {
             String input = waitForInput("> ").trim();
             if (input.length() == 1 && actionChars.contains(input.charAt(0))) {
@@ -156,7 +160,8 @@ public class LineInputHandler {
                 if (val >= min && val <= max) {
                     return new CardInput(val - 1);
                 } else {
-                    System.out.printf("Value out of range. Please enter a number between %d and %d.\n\n", min, max);
+                    System.out.println(repeatPrompt);
+
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Enter a number or one of the allowed characters.\n");

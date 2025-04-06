@@ -1,14 +1,15 @@
-package main.helpers;
+package main.helpers.inputHandlers;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import main.helpers.inputTypes.SelectionInput;
 import main.models.ParadeBoard;
-import main.models.input.SelectionInput;
 import main.models.player.Player;
 
 
@@ -21,11 +22,12 @@ public class InputManager {
     Attributes lineReaderAttributes;
     boolean inLineInput;
 
-    private static final Map<String, Character> ACTION_MAP = Map.of(
+    private static final Map<String, Character> ACTION_MAP = new TreeMap<>(Map.of(
         "Save Game", 'S',
+        "Display Everybody's Boards", 'D',
         "Exit Game", 'Q',
         "Change Input Type", 'C'
-    );
+    ));
 
 
     public InputManager() {
@@ -57,7 +59,7 @@ public class InputManager {
     }
 
 
-    public void startSelectInput() {
+    public void startMenuInput() {
         terminal.enterRawMode();
 }
     public void stopSelectInput() {
@@ -79,19 +81,26 @@ public class InputManager {
     }
 
     public SelectionInput lineTurnSelect(ParadeBoard paradeBoard, Player currentPlayer) {
-        if(!inLineInput){
-            stopSelectInput();
-            startLineInput();
-        }
+        ensureLineInput();
         return lineHandler.turnSelect(paradeBoard, currentPlayer, ACTION_MAP);
     }
 
     public SelectionInput menuturnSelect(ParadeBoard paradeBoard, Player currentPlayer) throws IOException{
+        ensureMenuInput();
+        return menuHandler.turnSelect(terminal,paradeBoard, currentPlayer, ACTION_MAP);
+    }
+
+    public void ensureLineInput() {
+        if(!inLineInput){
+            stopSelectInput();
+            startLineInput();
+        }
+    }
+    public void ensureMenuInput() {
         if(inLineInput){
             stopLineInput();
-            startSelectInput();
+            startMenuInput();
         }
-        return menuHandler.turnSelect(terminal,paradeBoard, currentPlayer, ACTION_MAP);
     }
 
 
@@ -101,23 +110,28 @@ public class InputManager {
     
 
     public int getInt(String prompt) {
+        ensureLineInput();
         return lineHandler.getInt(prompt);
     }
 
     public int getIntInRange(String prompt, int min, int max) {
+        ensureLineInput();
         return lineHandler.getIntInRange(prompt, min, max);
     }
 
     public String getString(String prompt) {
+        ensureLineInput();
         return lineHandler.getString(prompt);
     }
 
     public boolean getYesNo(String prompt) {
+        ensureLineInput();
         return lineHandler.getYesNo(prompt);
     }
 
-    public void getEnter(String prompt) {
-        lineHandler.getEnter(prompt);
+    public void getEnter() {
+        ensureLineInput();
+        lineHandler.getEnter("Press Enter to continue...");
     }
 
 

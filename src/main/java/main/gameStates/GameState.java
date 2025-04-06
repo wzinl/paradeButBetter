@@ -3,7 +3,7 @@ package main.gameStates;
 import java.util.ArrayList;
 
 import main.context.GameContext;
-import main.helpers.InputManager;
+import main.helpers.inputHandlers.InputManager;
 import main.models.ParadeBoard;
 import main.models.cards.Deck;
 import main.models.player.Player;

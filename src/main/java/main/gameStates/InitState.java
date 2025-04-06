@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 import main.context.GameContext;
-import main.helpers.InputManager;
+import main.helpers.inputHandlers.InputManager;
 import main.helpers.ui.DisplayEffects;
 import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;

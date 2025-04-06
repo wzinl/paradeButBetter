@@ -1,6 +1,5 @@
 package main.helpers.ui;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,13 +9,13 @@ import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
 
-public class UIController {
+public class DisplayFactory {
 
-    public void clearScreen() {
+    public static void clearScreen() {
         System.out.print("\033c");
     }
 
-    public void pause(int milliseconds) {
+    public static void pause(int milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
@@ -24,64 +23,35 @@ public class UIController {
         }
     }
 
-    public void showMessage(String message) {
-        System.out.println(message);
-    }
+    public static void showIntroduction() {
+        StringBuilder openingMsg = new StringBuilder();
+        openingMsg.append("    ██████╗ ██████╗ ██████╗  █████╗ ██████╗ ███████╗\n")
+                .append("     ██╔══██╗██╔══██╗██╔══██╗ ██╔══██╗██╔══██╗██╔════╝\n")
+                .append("     ██████╔╝███████║██████╔╝ ███████║██║  ██║█████╗ \n")
+                .append("     ██╔═══╝ ██╔══██║██╔══██╝ ██╔══██║██║  ██║██╔══╝  \n")
+                .append("     ██║     ██║  ██║██║  ██║ ██║  ██║██████╔╝███████╗\n")
+                .append("     ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝");
 
-    public void showIntroduction() {
-
-            StringBuilder openingMsg = new StringBuilder();
-            openingMsg.append("     ██████╗ ██████╗ ██████╗  █████╗ ██████╗ ███████╗\n")
-                    .append("     ██╔══██╗██╔══██╗██╔══██╗ ██╔══██╗██╔══██╗██╔════╝\n")
-                    .append("     ██████╔╝███████║██████╔╝ ███████║██║  ██║█████╗ \n")
-                    .append("     ██╔═══╝ ██╔══██║██╔══██╝ ██╔══██║██║  ██║██╔══╝  \n")
-                    .append("     ██║     ██║  ██║██║  ██║ ██║  ██║██████╔╝███████╗\n")
-                    .append("     ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝");
-            
-            try {
-                System.out.printf("\n\n");
-                System.out.println(DisplayEffects.BOLD+"------------------------Welcome To-------------------------"+DisplayEffects.ANSI_RESET);
-                UIManager.pauseExecution(500);
-                System.out.println();
-                
-                DisplayEffects.typeWriter(openingMsg.toString(), 6);
-                UIManager.pauseExecution(500);
-                System.out.println(DisplayEffects.BOLD+"-----------------------------------------------------------"+DisplayEffects.ANSI_RESET);
-                System.out.println();
-                DisplayEffects.blinkingEffect(DisplayEffects.BOLD+DisplayEffects.ANSI_RED+"                       [Enter Game]                         "+DisplayEffects.ANSI_RESET);
-                DisplayEffects.blinkingEffect(DisplayEffects.BOLD+DisplayEffects.ANSI_RED+"                    [Game Instructions]                      "+DisplayEffects.ANSI_RESET);
-            } catch (InterruptedException e) {
-                System.out.println("An error has occured trying to create introduction display!");
-            }
-    }
-
-    public void showLoadingMessage(String message, int dotCount) {
-        System.out.print(message);
-        for (int i = 0; i < dotCount; i++) {
-            pause(500);
-            System.out.print(".");
+        try {
+            System.out.printf("\n\n");
+            System.out.println(DisplayEffects.BOLD + "------------------------Welcome To-------------------------" + DisplayEffects.ANSI_RESET);
+            System.out.println();
+            DisplayEffects.typeWriter(openingMsg.toString(), 6);
+            System.out.println(DisplayEffects.BOLD + "-----------------------------------------------------------" + DisplayEffects.ANSI_RESET);
+            System.out.println();
+            DisplayEffects.blinkingEffect(DisplayEffects.BOLD + DisplayEffects.ANSI_RED + "                       [Enter Game]                         " + DisplayEffects.ANSI_RESET);
+            DisplayEffects.blinkingEffect(DisplayEffects.BOLD + DisplayEffects.ANSI_RED + "                    [Game Instructions]                      " + DisplayEffects.ANSI_RESET);
+        } catch (InterruptedException e) {
+            System.out.println("An error has occurred trying to create introduction display!");
         }
-        System.out.println();
     }
 
-    public void showParadeBoard(ParadeBoard paradeBoard) {
-        System.out.println(paradeBoard.toString());
+    public static String getCardSelectionPrompt(int handSize) {
+        return String.format(DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN + "Which card would you like to play? (%d to %d): " + DisplayEffects.ANSI_RESET, 1, handSize);
     }
 
-    public void showPlayerHand(PlayerHand hand) {
-        System.out.println(hand.toString());
-    }
-
-    public void showPlayerBoard(PlayerBoard board) {
-        System.out.println(board.toString());
-    }
-
-    public String getCardSelectionPrompt(int handSize) {
-        return String.format(DisplayEffects.BOLD+DisplayEffects.ANSI_GREEN+"Which card would you like to play? (%d to %d): "+DisplayEffects.ANSI_RESET, 1, handSize);
-    }
-
-    public void showFinalScores(ArrayList<Player> players, ParadeBoard paradeBoard) {
-        System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_MAGENTA+"=========== FINAL SCORES ==========="+DisplayEffects.ANSI_RESET);
+    public static void showFinalScores(ArrayList<Player> players, ParadeBoard paradeBoard) {
+        System.out.println(DisplayEffects.BOLD + DisplayEffects.ANSI_MAGENTA + "=========== FINAL SCORES ===========" + DisplayEffects.ANSI_RESET);
         for (Player player : players) {
             System.out.printf("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore());
         }
@@ -93,14 +63,14 @@ public class UIController {
         }
     }
 
-    public String getBotAction(String botName, int cardIndex) {
-       return String.format(DisplayEffects.BOLD+DisplayEffects.ANSI_PURPLE+
-                            "%s is going to play Card %d"
-                            +DisplayEffects.ANSI_RESET+ "\n", 
-                            botName, cardIndex);
+    public static String getBotAction(String botName, int cardIndex) {
+        return String.format(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE +
+                "%s is going to play Card %d"
+                + DisplayEffects.ANSI_RESET + "\n",
+                botName, cardIndex);
     }
 
-    public String getFormattedHandWithIndex(PlayerHand hand, Card selectedCard) {
+    public static String getFormattedHandWithIndex(PlayerHand hand, Card selectedCard) {
         List<Card> cards = hand.getCardList();
         if (cards.isEmpty())
             return "No cards in hand.\n";
@@ -132,7 +102,7 @@ public class UIController {
         return result.toString();
     }
 
-    private String getIndexString(int size) {
+    private static String getIndexString(int size) {
         StringBuilder index = new StringBuilder();
         for (int i = 0; i < size; i++) {
             int cardLength = 10;
@@ -149,15 +119,14 @@ public class UIController {
         return index.toString();
     }
 
-    public String getDiscardPrompt() {
+    public static String getDiscardPrompt() {
         StringBuilder result = new StringBuilder();
         result.append("We have reached the end of the game!\n")
-              .append("Choose two cards to discard. The rest of your hand will go into your player board.\n");
-        
+                .append("Each player will choose two cards to discard. The rest of your hand will go into your player board.\n");
         return result.toString();
     }
 
-    public String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard,String[] actionOptions) {
+    public static String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, String[] actionOptions) {
         StringBuilder result = new StringBuilder();
 
         result.append(getPlayerDisplay(currentPlayer, paradeBoard))
@@ -166,13 +135,13 @@ public class UIController {
         return result.toString();
     }
 
-    public String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex,
-        String[] actionOptions, Boolean onCardRow) {
+    public static String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex,
+                                         String[] actionOptions, Boolean onCardRow) {
         StringBuilder result = new StringBuilder();
 
         result.append("==========" + DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN)
-              .append(currentPlayer.getPlayerName())
-              .append("'s turn!"+DisplayEffects.ANSI_RESET +"==========\n\n");
+                .append(currentPlayer.getPlayerName())
+                .append("'s turn!" + DisplayEffects.ANSI_RESET + "==========\n\n");
 
         PlayerHand currHand = currentPlayer.getPlayerHand();
         List<Card> cardList = currHand.getCardList();
@@ -180,10 +149,10 @@ public class UIController {
         if (onCardRow) {
             Card selectedCard = cardList.get(selectedIndex);
             result.append(getPlayerDisplay(currentPlayer, paradeBoard, selectedCard))
-                  .append("\n");
+                    .append("\n");
         } else {
             result.append(getPlayerDisplay(currentPlayer, paradeBoard))
-                  .append("\n");
+                    .append("\n");
         }
 
         result.append("\n\n");
@@ -199,35 +168,41 @@ public class UIController {
 
         for (String opt : formattedOptions) {
             result.append(opt)
-                  .append("  ");
+                    .append("  ");
         }
 
-        result.append(DisplayEffects.BOLD+"\n\nUse A/D to move, W/S to switch rows, Enter to select."+DisplayEffects.ANSI_RESET);
+        result.append(DisplayEffects.BOLD + "\n\nUse A/D to move, W/S to switch rows, Enter to select." + DisplayEffects.ANSI_RESET);
         return result.toString();
     }
 
-    private String getPlayerDisplay(Player player, ParadeBoard paradeBoard) {
+    private static String getPlayerDisplay(Player player, ParadeBoard paradeBoard) {
         return getPlayerDisplay(player, paradeBoard, null);
     }
 
-    private String getPlayerDisplay(Player player, ParadeBoard paradeBoard, Card selectedCard) {
+    private static String getPlayerDisplay(Player player, ParadeBoard paradeBoard, Card selectedCard) {
         StringBuilder result = new StringBuilder();
         result.append("\u001B[0mParade:")
-              .append(paradeBoard.toString())
-              .append("\n\n")
-              .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
-              .append(player.getPlayerName())
-              .append("'s board"+DisplayEffects.ANSI_RESET+"\n")
-              .append(player.getPlayerBoard().toString())
-              .append("\n\n")
-              .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
-              .append(player.getPlayerName())
-              .append("'s hand"+DisplayEffects.ANSI_RESET+"\n\n")
-              .append(getFormattedHandWithIndex(player.getPlayerHand(), selectedCard));
+                .append(paradeBoard.toString())
+                .append("\n\n")
+                .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
+                .append(player.getPlayerName());
+
+        if (player.getPlayerBoard().isEmpty()) {
+            result.append("'s board is empty." + DisplayEffects.ANSI_RESET);
+        } else {
+            result.append("'s board" + DisplayEffects.ANSI_RESET + "\n")
+                    .append(player.getPlayerBoard().toString());
+        }
+
+        result.append("\n\n")
+                .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
+                .append(player.getPlayerName())
+                .append("'s hand" + DisplayEffects.ANSI_RESET + "\n\n")
+                .append(getFormattedHandWithIndex(player.getPlayerHand(), selectedCard));
         return result.toString();
     }
 
-    protected void getScoreboard(List<Player> winners) {
+    public static void getScoreboard(List<Player> winners) {
         System.out.println(
                 "\n=========== FINAL SCORES ===========\n");
 
@@ -271,7 +246,7 @@ public class UIController {
         System.out.println("\n" + "=".repeat(divider.length()) + "\n");
     }
 
-    public void displayWinner(Player winner) {
+    public static void displayWinner(Player winner) {
         String winnerName = winner.getPlayerName();
         int winnerScore = winner.getPlayerScore();
         int boxWidth = 40;
@@ -289,7 +264,7 @@ public class UIController {
         System.out.println(centerText("CONGRATULATIONS!", boxWidth));
     }
 
-    public void displayTieResults(List<Player> winners) {
+    public static void displayTieResults(List<Player> winners) {
         int topScore = winners.get(0).getPlayerScore();
         int nameWidth = Math.max(
                 winners.stream()
@@ -300,7 +275,7 @@ public class UIController {
                 12);
 
         System.out.println("TIED RESULTS");
-        
+
         for (Player p : winners) {
             if (p.getPlayerScore() != topScore)
                 break;
@@ -309,7 +284,7 @@ public class UIController {
         }
     }
 
-    private String formatBoxLine(String text, int width) {
+    private static String formatBoxLine(String text, int width) {
         int contentWidth = width - 4;
         int padding = contentWidth - text.length();
         int leftPad = padding / 2;
@@ -318,10 +293,25 @@ public class UIController {
         return "║ " + " ".repeat(leftPad) + text + " ".repeat(rightPad) + " ║";
     }
 
-    private String centerText(String text, int width) {
+    private static String centerText(String text, int width) {
         int padding = (width - text.length()) / 2;
         return " ".repeat(Math.max(0, padding)) + text;
     }
 
+    public static String getDisplayBoardOrverview(List<Player> playerlist, ParadeBoard paradeBoard) {
+        String result = "";
+        for (Player player : playerlist) {
+            PlayerBoard board = player.getPlayerBoard();
+            String boardString = "";
+            boardString += DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN + player.getPlayerName() + DisplayEffects.ANSI_RESET;
+            if (board.isEmpty()) {
+                boardString += "'s Player Board is empty.";
+            } else {
+                boardString += "'s Player Board:";
+                boardString += board;
+            }
+            result += boardString + "\n";
+        }
+        return result;
+    }
 }
-

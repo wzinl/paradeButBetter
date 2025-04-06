@@ -2,7 +2,7 @@ package main.gameStates.GamePlayStates.GameTurnStates;
 
 import main.context.GameContext;
 import main.gameStates.GameStateManager;
-import main.helpers.InputManager;
+import main.helpers.inputHandlers.InputManager;
 import main.helpers.ui.UIManager;
 import main.models.player.Player;
 
@@ -16,13 +16,15 @@ public class FinalRoundTurnState extends GameTurnState {
 
     @Override
     public void enter() {
-        while (currentPlayerIndex != finalPlayerIndex) {
-            UIManager.displayFinalRoundMessage();
+        UIManager.displayFinalRoundMessage();
+        inputManager.getEnter();
+        UIManager.clearScreen();
+        while (this.currentPlayerIndex != finalPlayerIndex) {
             Player currentPlayer = playerList.get(currentPlayerIndex);
             playTurn(currentPlayer);
     
             this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
-            currentPlayerIndex = context.getCurrentPlayerIndex();
+            context.setCurrentPlayerIndex(currentPlayerIndex);
 
         }
 

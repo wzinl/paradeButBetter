@@ -8,13 +8,13 @@ import main.exceptions.SelectionException;
 import main.gameStates.GamePlayStates.GamePlayState;
 import main.gameStates.GameStateManager;
 import main.helpers.CardEffects;
-import main.helpers.InputManager;
+import main.helpers.inputHandlers.InputManager;
+import main.helpers.inputTypes.ActionInput;
+import main.helpers.inputTypes.CardInput;
+import main.helpers.inputTypes.SelectionInput;
 import main.helpers.ui.DisplayEffects;
 import main.helpers.ui.UIManager;
 import main.models.cards.Card;
-import main.models.input.ActionInput;
-import main.models.input.CardInput;
-import main.models.input.SelectionInput;
 import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
@@ -41,6 +41,7 @@ public abstract class GameTurnState extends GamePlayState{
                 if(current instanceof Bot currBot){
                     int index = currBot.getNextCardIndex(cardList, paradeBoard);
                     playCard(current, index);
+                    turnCompleted = true;
                 }
                 // if Human player
                  else {
@@ -72,7 +73,7 @@ public abstract class GameTurnState extends GamePlayState{
             UIManager.pauseExecution(3000);
         }
 
-        CardEffects.apply(chosenCard, paradeBoard, board);
+        CardEffects.apply(current.getPlayerName(),chosenCard, paradeBoard, board);
         hand.removeCard(chosenCard);
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);
