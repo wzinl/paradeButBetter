@@ -341,7 +341,7 @@ public class UIController {
                 boardString += "'s Player Board:";
                 boardString += board;
             }
-            result+= boardString + ;
+            result+= boardString + "\n";
         }
         return result;
     }
