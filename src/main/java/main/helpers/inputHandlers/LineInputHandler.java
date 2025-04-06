@@ -122,15 +122,16 @@ public class LineInputHandler {
     }
     
     public int getIntInRange(String prompt, int min, int max) {
+        String repeatPrompt = "Value out of range. Please enter a number between " + min + " and " + max + ".\n";
         while (true) {
             int val = getInt(prompt);
             if (val >= min && val <= max) {
                 return val;
             } else {
-                System.out.println("Value out of range. Please enter a number between " + min + " and " + max + ".\n");
+                System.out.println(repeatPrompt);
             }
         }
-    }
+    } 
     
     public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, Map<String, Character> actionMap) {
         int max = currentPlayer.getPlayerHand().getCardList().size();
