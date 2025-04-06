@@ -16,8 +16,10 @@ public class FinalRoundTurnState extends GameTurnState {
 
     @Override
     public void enter() {
+        UIManager.displayFinalRoundMessage();
+        inputManager.getEnter();
+        UIManager.clearScreen();
         while (this.currentPlayerIndex != finalPlayerIndex) {
-            UIManager.displayFinalRoundMessage();
             Player currentPlayer = playerList.get(currentPlayerIndex);
             playTurn(currentPlayer);
     

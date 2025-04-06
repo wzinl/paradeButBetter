@@ -25,10 +25,6 @@ import main.models.selections.TurnSelection;
 
 public class GameEndState extends GamePlayState {
 
-    private static final int CARDS_TO_DISCARD = 2;
-    private static final int BOT_PAUSE_MS = 1000;
-    private static final int CHAMPION_BOX_WIDTH = 40;
-    
     private final int finalPlayerIndex;
 
     public GameEndState(GameStateManager gsm, GameContext context, InputManager inputManager) {
@@ -54,6 +50,7 @@ public class GameEndState extends GamePlayState {
     private void performFinalDiscardPhase() throws InvalidCardException {
         UIManager.displayDiscardPrompt();
         inputManager.getEnter();
+        UIManager.clearScreen();
         for (int i = 0; i < playerList.size(); i++) {
             int index = (finalPlayerIndex + i) % playerList.size();
             performDiscardPhase(playerList.get(index));
