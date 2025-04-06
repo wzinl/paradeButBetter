@@ -85,7 +85,7 @@ public class Card implements Serializable{
               .append(" │\n");
     
         // Bottom border
-        result.append("└").append("─".repeat(CARD_WIDTH - 2)).append("┘\n");
+        result.append("└").append("─".repeat(CARD_WIDTH - 2)).append("┘");
     
         return getAnsiColorCode() + result.toString() + reset;
     }

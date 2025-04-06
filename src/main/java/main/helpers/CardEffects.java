@@ -2,6 +2,7 @@ package main.helpers;
 
 import java.util.ArrayList;
 
+import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.PlayerBoard;
@@ -19,12 +20,11 @@ public class CardEffects {
             }
         }
 
-        ScreenUtils.pause(1000);//1000
         System.out.println("Turn Summary:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();
-        ScreenUtils.pause(5000);//5000
-        ScreenUtils.clearScreen();
+        UIManager.pauseExecution(5000);//5000
+        UIManager.clearScreen();
 
         for (Card card : removedCards) {
             paradeBoard.remove(card);

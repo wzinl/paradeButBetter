@@ -7,31 +7,28 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
 
+import main.Game;
 import main.context.GameContext;
 import main.display.ParadeIntro;
 import main.gameStates.GamePlayStates.GameEndState;
-import main.gameStates.GamePlayStates.TurnState;
-import main.helpers.InputHandler;
+import main.gameStates.GamePlayStates.GameTurnStates.NotFinalRoundTurnState;
+import main.helpers.InputManager;
 
 public class GameStateManager {
+    private final Game game;
     private final String gameStateID;
     private GameState currentState;
     private GameContext currentContext;
-    private final InputHandler inputHandler;
+    private final InputManager inputManager;
     
-    public GameStateManager(InputHandler inputHandler){
+    public GameStateManager(InputManager inputManager, Game game){
         gameStateID = UUID.randomUUID().toString();
-        this.inputHandler = inputHandler;
+        this.inputManager = inputManager;
+        this.game = game;
     }
 
     public void init() {
-        //exit the turn state 
-        if (currentState != null) {
-            currentState.exit();
-        } 
-        //Set the new current state, then enter the next state of the game
-        currentState = new InitState(this, inputHandler);
-        ParadeIntro.printAsciiParadeZigZag();
+        currentState = new InitState(this, inputManager);
         currentState.enter();
 
         this.currentContext = ((InitState)currentState).createGameContext();
@@ -46,6 +43,11 @@ public class GameStateManager {
         currentState = newState;
         currentState.enter();
     }
+
+    public InputManager getInputManager() {
+        return inputManager;
+    }
+    
     //when the game is done
     public void closeGame() {
         if (currentState != null) {
@@ -56,12 +58,11 @@ public class GameStateManager {
     //for transition into the next Game State
     public void nextState() {
         if(currentState instanceof InitState){
-            System.out.println("Moving to Turnstate");
-            setState(new TurnState(this, currentContext, inputHandler));
+            setState(new NotFinalRoundTurnState(this, currentContext, inputManager));
         }
 
-        if(currentState instanceof TurnState){
-            setState(new GameEndState(this, currentContext, inputHandler));
+        if(currentState instanceof NotFinalRoundTurnState){
+            setState(new GameEndState(this, currentContext, inputManager));
         }
 
         if(currentState instanceof GameEndState){
@@ -72,6 +73,7 @@ public class GameStateManager {
     public String getGameStateID() {
         return gameStateID;
     }
+    
 
     public void saveGame(String saveName) throws IOException {
         saveName = "saves/"+ saveName + ".dat";
@@ -85,6 +87,10 @@ public class GameStateManager {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(saveName))) {
             return (GameContext) ois.readObject();
         }
+    }
+    
+    public void exitGame(){
+        game.exit();
     }
 
 }
