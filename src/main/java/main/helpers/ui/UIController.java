@@ -48,8 +48,8 @@ public class UIController {
                 UIManager.pauseExecution(500);
                 System.out.println(DisplayEffects.BOLD+"-----------------------------------------------------------"+DisplayEffects.ANSI_RESET);
                 System.out.println();
-                DisplayEffects.blinkingEffect(DisplayEffects.BOLD+DisplayEffects.ANSI_RED+"                       [Enter Game]                         "+DisplayEffects.ANSI_RESET,3);
-                DisplayEffects.blinkingEffect(DisplayEffects.BOLD+DisplayEffects.ANSI_RED+"                    [Game Instructions]                      "+DisplayEffects.ANSI_RESET,3);
+                DisplayEffects.blinkingEffect(DisplayEffects.BOLD+DisplayEffects.ANSI_RED+"                       [Enter Game]                         "+DisplayEffects.ANSI_RESET);
+                DisplayEffects.blinkingEffect(DisplayEffects.BOLD+DisplayEffects.ANSI_RED+"                    [Game Instructions]                      "+DisplayEffects.ANSI_RESET);
             } catch (InterruptedException e) {
                 System.out.println("An error has occured trying to create introduction display!");
             }
