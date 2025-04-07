@@ -30,6 +30,7 @@ public class UIManager {
     }
 
     public static void displayInstructions() {
+        clearScreen();
         System.out.println(GameRulesDisplay.constructGameInstructions());
     }
 
