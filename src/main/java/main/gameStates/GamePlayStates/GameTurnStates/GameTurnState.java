@@ -1,5 +1,6 @@
 package main.gameStates.GamePlayStates.GameTurnStates;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import main.context.GameContext;
@@ -64,20 +65,38 @@ public abstract class GameTurnState extends GamePlayState{
 
     protected void playCard(Player current, int index) throws InvalidCardException{
         PlayerHand hand = current.getPlayerHand();
-        PlayerBoard board = current.getPlayerBoard();
         List <Card> cardList = hand.getCardList();
         Card chosenCard = cardList.get(index);
+        PlayerBoard playerBoard = current.getPlayerBoard();
 
         if (current instanceof RandomBot || current instanceof SmartBot) {
             UIManager.displayBotAction(current, index);
             UIManager.pauseExecution(3000);
         }
+        
+        int chosenValue = chosenCard.getValue();
+        ArrayList<Card> removedCards = new ArrayList<>();
 
-        CardEffects.apply(current.getPlayerName(),chosenCard, paradeBoard, board);
+        for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
+            Card currentCard = paradeBoard.getCardList().get(i);
+            if (currentCard.getValue() <= chosenValue || currentCard.getColor().equals(chosenCard.getColor())) {
+                removedCards.add(currentCard);
+            }
+        }
+        for (Card card : removedCards) {
+            paradeBoard.remove(card);
+            playerBoard.addCard(card);
+        }
+
+        paradeBoard.addToBoard(chosenCard);
+
+
         hand.removeCard(chosenCard);
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);
         }
+        CardEffects.apply(current,chosenCard, paradeBoard, playerBoard, removedCards);
+
     }
 
     protected TurnSelection getTurnSelection(Player current) throws SelectionException {

@@ -5,47 +5,35 @@ import java.util.ArrayList;
 import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
 import main.models.cards.Card;
+import main.models.player.Player;
 import main.models.player.PlayerBoard;
 
 public class CardEffects {
 
-    public static void apply(String playerName,Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard) {
-        int chosenValue = chosenCard.getValue();
-        ArrayList<Card> removedCards = new ArrayList<>();
-
-        for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
-            Card current = paradeBoard.getCardList().get(i);
-            if (current.getValue() <= chosenValue || current.getColor().equals(chosenCard.getColor())) {
-                removedCards.add(current);
-            }
-        }
+    public static void apply(Player player,Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard, ArrayList<Card> removedCards) {
         UIManager.clearScreen();
 
-        System.out.println(playerName + " has played: ");
+        System.out.println(player.getPlayerName() + " has played: ");
         System.out.println(chosenCard);
-        // UIManager.pauseExecution(1000);
+        UIManager.pauseExecution(1000);
 
         System.out.println("Updated Parade:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();
 
         if(playerBoard.isEmpty()){
-            System.out.println(playerName +"'s' Playerboard is empty.");
+            System.out.println(player.getPlayerName() +"'s Playerboard is empty.");
         } else{
             System.out.println("Updated playerboard:");
-            System.out.println(playerBoard.toString());
+            System.out.println(playerBoard);
             System.out.println();
         }   
 
-        // UIManager.pauseExecution(5000);
+        System.out.println("Updated Hand:");
+        System.out.println(player.getPlayerHand());
+
+        UIManager.pauseExecution(5000);
         UIManager.clearScreen();
-
-        for (Card card : removedCards) {
-            paradeBoard.remove(card);
-            playerBoard.addCard(card);
-        }
-
-        paradeBoard.addToBoard(chosenCard);
     }
 
     public static int simulate(Card chosenCard, ParadeBoard paradeBoard) {

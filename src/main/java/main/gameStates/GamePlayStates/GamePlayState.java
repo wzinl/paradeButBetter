@@ -56,12 +56,8 @@ public abstract class GamePlayState extends GameState{
     }
 
     private void changeInputType() {
-        Player current = context.getPlayerList().get(context.getCurrentPlayerIndex());
-        if(current.getPreferMenu()){
-            current.setPreferMenu(false);
-        }else{
-            current.setPreferMenu(true);
-        }
+        Player currentPlayer = context.getPlayerList().get(context.getCurrentPlayerIndex());
+        currentPlayer.setPreferMenu(!currentPlayer.getPreferMenu());
     }
 
     public void updateContext() {

@@ -80,9 +80,9 @@ public class LineInputHandler {
     private String waitForInput(String prompt) {
         flushQueue();
         try {
-            System.out.flush();
-            System.out.print(prompt);
-            System.out.flush();
+            System.out.println(prompt);
+            System.out.print("\n>");
+            System.out.print(" ");
             return inputQueue.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
