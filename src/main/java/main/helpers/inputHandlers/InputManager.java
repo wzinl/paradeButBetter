@@ -23,7 +23,6 @@ public class InputManager {
     boolean inLineInput;
 
     private static final Map<String, Character> ACTION_MAP = new TreeMap<>(Map.of(
-        "Save Game", 'S',
         "Display Everybody's Boards", 'D',
         "Exit Game", 'Q',
         "Change Input Type", 'C'

@@ -1,6 +1,5 @@
 package main.context;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import main.models.ParadeBoard;
@@ -8,7 +7,7 @@ import main.models.cards.Deck;
 import main.models.player.Player;
 
 
-public class GameContext implements Serializable{
+public class GameContext{
 
     //declaration of variables
     private int finalRoundStarterIndex; // index of player who triggered the final round
@@ -84,5 +83,7 @@ public class GameContext implements Serializable{
     public Deck getDeck(){
         return this.deck;
     }
+
+
 }
 

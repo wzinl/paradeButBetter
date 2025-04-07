@@ -27,7 +27,6 @@ public abstract class GamePlayState extends GameState{
     }
     
     private void initializeActionHandlers() {
-        actionHandlers.put('S', this::saveGame);
         actionHandlers.put('C', this::changeInputType);
         actionHandlers.put('Q', this::exitGame);
         actionHandlers.put('D', this::viewAllPlayerBoards);
@@ -49,10 +48,6 @@ public abstract class GamePlayState extends GameState{
     public void viewAllPlayerBoards() {
         UIManager.displayBoardOverview(context.getPlayerList(), context.getParadeBoard());
         inputManager.getEnter();
-    }
-
-    public void saveGame() {
-
     }
 
     private void changeInputType() {

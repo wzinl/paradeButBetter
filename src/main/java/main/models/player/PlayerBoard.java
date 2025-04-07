@@ -1,6 +1,5 @@
 package main.models.player;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,7 +10,7 @@ import main.exceptions.InvalidCardException;
 import main.models.cards.Card;
 import main.models.cards.CardCollection;
 
-public class PlayerBoard implements CardCollection, Serializable{
+public class PlayerBoard implements CardCollection{
     HashMap<String, ArrayList<Card>> playerBoard;
 
     public PlayerBoard() {

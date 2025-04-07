@@ -1,6 +1,5 @@
 package main.models.player;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +7,8 @@ import main.exceptions.InvalidCardException;
 import main.models.cards.Card;
 import main.models.cards.Deck;
 
-public class PlayerHand implements Serializable{
-    private ArrayList<Card> cardList;
+public class PlayerHand{
+    private final ArrayList<Card> cardList;
     // to double check
     public static final int MAXHANDCOUNT = 5;
 
