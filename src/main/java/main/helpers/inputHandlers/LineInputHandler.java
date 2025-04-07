@@ -83,8 +83,7 @@ public class LineInputHandler {
             if(prompt != null && !prompt.equals(""))  {
                 System.out.println(prompt);
             }
-            System.out.print("\n>");
-            System.out.print(" ");
+            System.out.println("> ");
             return inputQueue.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
