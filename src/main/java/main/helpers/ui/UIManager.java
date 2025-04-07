@@ -1,10 +1,12 @@
 package main.helpers.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.Player;
+import main.models.player.PlayerBoard;
 
 public class UIManager {
 
@@ -107,7 +109,9 @@ public class UIManager {
        DisplayFactory.getBotDiscardDisplay(player, discardedCard); 
     }
 
-
+    public static void displayCardPlay(Player player, Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard, ArrayList<Card> removedCards) {
+        DisplayFactory.getCardPlayDisplay(player, chosenCard, paradeBoard, playerBoard, removedCards);
+    }
 
     
 }

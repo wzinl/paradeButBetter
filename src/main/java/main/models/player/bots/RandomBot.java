@@ -30,5 +30,4 @@ public class RandomBot extends Player implements Bot{
         int res = rand.nextInt(max - min + 1) + min;
         return res;
     }
-
 }

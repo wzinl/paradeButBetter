@@ -180,7 +180,6 @@ public class LineInputHandler {
     }
 
     public void getEnter(String prompt) {
-
         waitforEnter(prompt);
     }
 

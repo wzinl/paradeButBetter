@@ -12,7 +12,6 @@ import main.helpers.inputHandlers.InputManager;
 import main.helpers.inputTypes.ActionInput;
 import main.helpers.inputTypes.CardInput;
 import main.helpers.inputTypes.SelectionInput;
-import main.helpers.ui.DisplayFactory;
 import main.helpers.ui.UIManager;
 import main.models.cards.Card;
 import main.models.cards.Deck;
@@ -62,7 +61,6 @@ public class GameEndState extends GamePlayState {
     private void performDiscardPhase(Player player) throws InvalidCardException {
 
         discardTwoCards(player);
-
         // Move remaining cards to board
         PlayerHand hand = player.getPlayerHand();
         PlayerBoard board = player.getPlayerBoard();

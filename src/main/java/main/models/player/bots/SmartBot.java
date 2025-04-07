@@ -2,7 +2,6 @@ package main.models.player.bots;
 
 import java.util.List;
 
-import main.helpers.CardEffects;
 import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.Player;
@@ -22,7 +21,7 @@ public class SmartBot extends Player implements Bot{
 
         for (int i = 0; i < hand.size(); i++) {
             Card card = hand.get(i);
-            int kicked = CardEffects.simulate(card, paradeBoard);
+            int kicked = simulate(card, paradeBoard);
             if (kicked < leastKicked) {
                 leastKicked = kicked;
                 bestIndex = i;
@@ -41,13 +40,24 @@ public class SmartBot extends Player implements Bot{
 
         for (int i = 0; i < list.size(); i++) {
             Card card = list.get(i);
-            int kicked = CardEffects.simulate(card, paradeBoard);
+            int kicked = simulate(card, paradeBoard);
             if (kicked < leastKicked) {
                 leastKicked = kicked;
                 bestIndex = i;
             }
         }
-
         return bestIndex;
+    }
+
+    public static int simulate(Card chosenCard, ParadeBoard paradeBoard) {
+        int count = 0;
+        int chosenValue = chosenCard.getValue();
+        for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
+            Card current = paradeBoard.getCardList().get(i);
+            if (current.getValue() <= chosenValue || current.getColor().equals(chosenCard.getColor())) {
+                count++;
+            }
+        }
+        return count;
     }
 }

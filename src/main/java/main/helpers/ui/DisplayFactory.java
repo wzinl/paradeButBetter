@@ -337,5 +337,32 @@ public class DisplayFactory {
         System.out.println("Updated hand:");
         System.out.println(getFormattedHandWithIndex(bot.getPlayerHand(), null));
     }
+
+    public static void getCardPlayDisplay(Player player, Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard, ArrayList<Card> removedCards) {
+        UIManager.clearScreen();
+    
+        System.out.println(player.getPlayerName() + " has played: ");
+        System.out.println(chosenCard);
+        UIManager.pauseExecution(1000);
+    
+        System.out.println("Updated Parade:");
+        System.out.println(paradeBoard.toString(removedCards, chosenCard));
+        System.out.println();
+    
+        if (playerBoard.isEmpty()) {
+            System.out.println(player.getPlayerName() + "'s Playerboard is empty.");
+        } else {
+            System.out.println("Updated playerboard:");
+            System.out.println(playerBoard);
+            System.out.println();
+        }
+    
+        System.out.println("Updated Hand:");
+        System.out.println(player.getPlayerHand());
+    
+        UIManager.pauseExecution(5000);
+        UIManager.clearScreen();
+    }
+    
     
 }

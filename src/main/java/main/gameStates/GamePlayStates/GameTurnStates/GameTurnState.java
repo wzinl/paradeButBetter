@@ -8,7 +8,6 @@ import main.exceptions.InvalidCardException;
 import main.exceptions.SelectionException;
 import main.gameStates.GamePlayStates.GamePlayState;
 import main.gameStates.GameStateManager;
-import main.helpers.CardEffects;
 import main.helpers.inputHandlers.InputManager;
 import main.helpers.inputTypes.ActionInput;
 import main.helpers.inputTypes.CardInput;
@@ -92,7 +91,7 @@ public abstract class GameTurnState extends GamePlayState{
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);
         }
-        CardEffects.apply(current,chosenCard, paradeBoard, playerBoard, removedCards);
+        UIManager.displayCardPlay(current,chosenCard, paradeBoard, playerBoard, removedCards);
         paradeBoard.addToBoard(chosenCard);
 
     }
