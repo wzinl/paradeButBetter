@@ -29,14 +29,14 @@ public class InitState extends GameState {
 
         UIManager.clearScreen();
         int numPlayers = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN
-                + "🎮 Enter number of players: " + DisplayEffects.ANSI_RESET, 1, 6);
+                + "🎮Enter number of players: " + DisplayEffects.ANSI_RESET, 1, 6);
         System.out.println();
         int numBots = 0;
         int difficulty = 0;
 
         if (numPlayers != 6 && numPlayers != 1) {
             numBots = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE
-                    + "🤖 Enter number of bots: " + DisplayEffects.ANSI_RESET, 0, 6 - numPlayers);
+                    + "Enter number of bots: " + DisplayEffects.ANSI_RESET, 0, 6 - numPlayers);
             System.out.println();
             if (numBots != 0) {
                 difficulty = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_RED
@@ -45,7 +45,7 @@ public class InitState extends GameState {
             }
         } else if (numPlayers == 1) {
             numBots = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE
-                    + "🤖 Enter number of bots: " + DisplayEffects.ANSI_RESET, 1, 5);
+                    + "Enter number of bots: " + DisplayEffects.ANSI_RESET, 1, 5);
             System.out.println();
             difficulty = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_RED
                     + "Choose bot level (1-3): " + DisplayEffects.ANSI_RESET, 1, 3);
@@ -58,13 +58,13 @@ public class InitState extends GameState {
 
         for (int i = 1; i <= numPlayers; i++) {
             String playerName = inputManager.getString(DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN
-                    + "🤓 Enter name of Player " + i + ": " + DisplayEffects.ANSI_RESET);
+                    + "Enter name of Player " + i + ": " + DisplayEffects.ANSI_RESET);
             while (playerNames.contains(playerName)) {
                 System.out.println();
                 System.out.println(DisplayEffects.BOLD + "Player name taken. Please choose another name."
                         + DisplayEffects.ANSI_RESET);
                 playerName = inputManager.getString(DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN
-                        + "🤓 Enter name of Player " + i + ": " + DisplayEffects.ANSI_RESET);
+                        + "Enter name of Player " + i + ": " + DisplayEffects.ANSI_RESET);
             }
             playerNames.add(playerName);
             Player player = new Player(playerName);
@@ -78,7 +78,7 @@ public class InitState extends GameState {
                 String botName = "";
                 do {
                     botName = inputManager.getString(DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN
-                            + "👾 Enter name of Bot " + i + ": " + DisplayEffects.ANSI_RESET);
+                            + "Enter name of Bot " + i + ": " + DisplayEffects.ANSI_RESET);
                     if (playerNames.contains(botName)) {
                         System.out.println();
                         System.out.println(DisplayEffects.BOLD + "Bot name taken. Please choose another name."

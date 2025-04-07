@@ -1,44 +1,3 @@
-<<<<<<< HEAD
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\exceptions\SelectionException.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\ui\DisplayFactory.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\ui\UIManager.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\inputTypes\SelectionInput.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\exceptions\CardNotFoundException.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\gameStates\InitState.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\Game.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\selections\CardSelection.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\context\GameContext.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\inputHandlers\InputManager.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\selections\ActionSelection.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\gameStates\GameStateManager.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\player\bots\RandomBot.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\cards\CardCollection.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\player\bots\Bot.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\player\bots\SmarterBot.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\gameStates\GamePlayStates\GameTurnStates\NotFinalRoundTurnState.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\selections\TurnSelection.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\gameStates\GamePlayStates\GameTurnStates\GameTurnState.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\ui\DisplayEffects.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\cards\Deck.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\player\bots\SmartBot.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\inputTypes\CardInput.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\gameStates\GameState.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\cards\Card.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\exceptions\BadInput.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\gameStates\GamePlayStates\GameTurnStates\FinalRoundTurnState.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\inputHandlers\MenuInputHandler.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\ParadeBoard.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\inputHandlers\LineInputHandler.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\gameStates\GamePlayStates\GamePlayState.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\gameStates\GamePlayStates\GameEndState.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\ui\GameRulesDisplay.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\player\Player.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\exceptions\InvalidCardException.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\exceptions\MenuException.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\helpers\inputTypes\ActionInput.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\player\PlayerBoard.java
-C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\player\PlayerHand.java
-=======
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/exceptions/CardNotFoundException.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/helpers/inputTypes/CardInput.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/models/player/bots/Bot.java
@@ -78,4 +37,3 @@ C:\Users\ZY\SMU Y1S2\CS102\project\paradeButBetter\src\main\java\main\models\pla
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/exceptions/SelectionException.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/gameStates/GamePlayStates/GameTurnStates/FinalRoundTurnState.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/main/helpers/ui/UIManager.java
->>>>>>> 7046dab37e702473fdf28a13cb2941b24b4bf4ab
