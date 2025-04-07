@@ -1,6 +1,5 @@
 package main.helpers.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import main.models.ParadeBoard;
@@ -41,7 +40,8 @@ public class UIManager {
     }
 
     public static void displayFinalScores(List<Player> players, ParadeBoard board) {
-        DisplayFactory.showFinalScores(new ArrayList<>(players), board);
+        displayBoardOverview(players, board);
+        System.out.println(DisplayFactory.showFinalScores(players, board));
     }
 
 
@@ -72,7 +72,7 @@ public class UIManager {
     }
 
     public static void displayScoreboard(List<Player> winners) {
-        DisplayFactory.getScoreboard(winners);
+        System.out.println(DisplayFactory.getScoreboard(winners));
     }
 
     public static void displayWinner(Player winner) {

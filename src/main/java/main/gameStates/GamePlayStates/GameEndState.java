@@ -50,9 +50,9 @@ public class GameEndState extends GamePlayState {
     private void performFinalDiscardPhase() throws InvalidCardException {
         UIManager.displayDiscardPrompt();
         inputManager.getEnter();
-        UIManager.clearScreen();
         for (int i = 0; i < playerList.size(); i++) {
             int index = (finalPlayerIndex + i) % playerList.size();
+            UIManager.clearScreen();
             performDiscardPhase(playerList.get(index));
         }
     }
@@ -140,7 +140,7 @@ public class GameEndState extends GamePlayState {
 
         ArrayList<Player> winners = new ArrayList<>(playerList);
         winners.sort(Comparator.comparing(Player::calculateScore));
-
+        
         UIManager.displayFinalScores(playerList, paradeBoard);
 
         UIManager.displayScoreboard(winners);
@@ -164,7 +164,7 @@ public class GameEndState extends GamePlayState {
                 player.getPlayerHand().removeCard(
                         player.getPlayerHand().getCardList()
                                 .get(bot.discardCardEndgame(player.getPlayerHand(), paradeBoard)));
-                // UIManager.pauseExecution(1000);
+                UIManager.pauseExecution(1000);
             }
         } else {
             for (int i = 0; i < 2; i++) {
