@@ -29,41 +29,37 @@ public class ParadeBoard implements Serializable{
         cardList.remove(card);
     }
 
-    // to check
-    public ArrayList<Card> playCard(Card card) {
-        ArrayList<Card> selectedcards = new ArrayList<>();
-        // check if cards value is greater than board size
-        if (card.getValue() > cardList.size()) {
-            return selectedcards;
-        }
-        // Cards beyond playedCard's value index enter "removal mode"
-        int removalStartIndex = cardList.size() - card.getValue() - 1;
+    // // to check
+    // public ArrayList<Card> playCard(Card card) {
+    //     ArrayList<Card> selectedCards = new ArrayList<>();
+    //     // check if cards value is greater than board size
+    //     if (card.getValue() > cardList.size()) {
+    //         return selectedCards;
+    //     }
+    //     // Cards beyond playedCard's value index enter "removal mode"
+    //     int removalStartIndex = cardList.size() - card.getValue() - 1;
 
-        // "removal mode" cards
-        ArrayList<Card> remainingParade = new ArrayList<>();
+    //     // "removal mode" cards
+    //     ArrayList<Card> remainingParade = new ArrayList<>();
 
-        // if not, the removal pile is no.of cards in board - card val
-        for (int i = cardList.size() - 1; i >= 0; i--) {
-            Card currentCard = cardList.get(i);
+    //     // if not, the removal pile is no.of cards in board - card val
+    //     for (int i = cardList.size() - 1; i >= 0; i--) {
+    //         Card currentCard = cardList.get(i);
 
-            if (i >= removalStartIndex) {
-                // Remove if same colour or value less than or equal to the value of played card
-                if (currentCard.getColor().equals(card.getColor()) || currentCard.getValue() <= card.getValue()) {
-                    selectedcards.add(currentCard);
-                } else {
-                    remainingParade.add(currentCard);
-                }
-            }
-            // even if not in "removal mode", add to remaining parade
-            else {
-                remainingParade.add(currentCard);
-            }
-        }
+    //         if (i >= removalStartIndex) {
+    //             // Remove if same colour or value less than or equal to the value of played card
+    //             if (currentCard.getColor().equals(card.getColor()) || currentCard.getValue() <= card.getValue()) {
+    //                 selectedCards.add(currentCard);
+    //             } else {
+    //                 remainingParade.add(currentCard);
+    //             }
+    //         }
 
-        // update the parade after removal
-        this.cardList = remainingParade;
-        return selectedcards;
-    }
+    //     }
+    //     // update the parade after removal
+    //     this.cardList = remainingParade;
+    //     return selectedCards;
+    // }
 
     public ArrayList<Card> getCardList() {
         return cardList;

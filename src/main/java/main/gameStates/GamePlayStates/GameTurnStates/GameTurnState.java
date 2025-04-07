@@ -27,7 +27,6 @@ import main.models.selections.CardSelection;
 import main.models.selections.TurnSelection;
 
 public abstract class GameTurnState extends GamePlayState{
-
     public GameTurnState(GameStateManager gsm, GameContext context, InputManager inputManager) {
         super(gsm, context, inputManager);
     }
@@ -35,7 +34,6 @@ public abstract class GameTurnState extends GamePlayState{
     protected void playTurn(Player current) {
         PlayerHand hand = current.getPlayerHand();
         List <Card> cardList = hand.getCardList();
-
         boolean turnCompleted = false;
         while (!turnCompleted) {
             try {
@@ -69,6 +67,8 @@ public abstract class GameTurnState extends GamePlayState{
         Card chosenCard = cardList.get(index);
         PlayerBoard playerBoard = current.getPlayerBoard();
 
+        
+
         if (current instanceof RandomBot || current instanceof SmartBot) {
             UIManager.displayBotAction(current, index);
             UIManager.pauseExecution(3000);
@@ -88,14 +88,12 @@ public abstract class GameTurnState extends GamePlayState{
             playerBoard.addCard(card);
         }
 
-        paradeBoard.addToBoard(chosenCard);
-
-
         hand.removeCard(chosenCard);
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);
         }
         CardEffects.apply(current,chosenCard, paradeBoard, playerBoard, removedCards);
+        paradeBoard.addToBoard(chosenCard);
 
     }
 

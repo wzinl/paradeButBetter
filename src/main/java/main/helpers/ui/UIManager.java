@@ -3,6 +3,7 @@ package main.helpers.ui;
 import java.util.List;
 
 import main.models.ParadeBoard;
+import main.models.cards.Card;
 import main.models.player.Player;
 
 public class UIManager {
@@ -60,7 +61,7 @@ public class UIManager {
         UIManager.clearScreen();
         System.out.println();
         System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_CYAN + "Here are all of the players' boards:" + DisplayEffects.ANSI_RESET);
-        System.out.println(DisplayFactory.getDisplayBoardOrverview(playerlist, paradeBoard));
+        System.out.println(DisplayFactory.getDisplayBoardOverview(playerlist, paradeBoard));
     }
 
     public static void printFormattedTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, boolean onCardRow) {
@@ -100,6 +101,10 @@ public class UIManager {
         }
         System.out.println(DisplayEffects.BOLD+DisplayEffects.YELLOW_BG+"Moving on to the final round!🙀🙀🙀"+DisplayEffects.ANSI_RESET);
 
+    }
+
+    public static void displayBotDiscard(Player player, Card discardedCard) {
+       DisplayFactory.getBotDiscardDisplay(player, discardedCard); 
     }
 
 

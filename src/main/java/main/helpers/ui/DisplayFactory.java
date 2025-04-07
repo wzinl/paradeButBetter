@@ -310,7 +310,7 @@ public class DisplayFactory {
         return " ".repeat(Math.max(0, padding)) + text;
     }
 
-    public static String getDisplayBoardOrverview(List<Player> playerlist, ParadeBoard paradeBoard) {
+    public static String getDisplayBoardOverview(List<Player> playerlist, ParadeBoard paradeBoard) {
         String result = "";
         for (Player player : playerlist) {
             PlayerBoard board = player.getPlayerBoard();
@@ -328,4 +328,14 @@ public class DisplayFactory {
         result += paradeBoard + "\n";
         return result; 
     }
+
+    public static void getBotDiscardDisplay(Player bot, Card discardedCard) {
+        System.out.println(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE
+                + bot.getPlayerName() + " discarded:"
+                + DisplayEffects.ANSI_RESET);
+        System.out.println(discardedCard);
+        System.out.println("Updated hand:");
+        System.out.println(getFormattedHandWithIndex(bot.getPlayerHand(), null));
+    }
+    
 }

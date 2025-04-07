@@ -12,6 +12,7 @@ import main.helpers.inputHandlers.InputManager;
 import main.helpers.inputTypes.ActionInput;
 import main.helpers.inputTypes.CardInput;
 import main.helpers.inputTypes.SelectionInput;
+import main.helpers.ui.DisplayFactory;
 import main.helpers.ui.UIManager;
 import main.models.cards.Card;
 import main.models.cards.Deck;
@@ -51,9 +52,10 @@ public class GameEndState extends GamePlayState {
         UIManager.displayDiscardPrompt();
         inputManager.getEnter();
         for (int i = 0; i < playerList.size(); i++) {
-            int index = (finalPlayerIndex + i) % playerList.size();
-            UIManager.clearScreen();
+            int index = (finalPlayerIndex + i + 1) % playerList.size();
             performDiscardPhase(playerList.get(index));
+            UIManager.clearScreen();
+
         }
     }
 
@@ -77,7 +79,7 @@ public class GameEndState extends GamePlayState {
         SelectionInput input = getSelectionInput(current);
 
         if (input instanceof CardInput cardInput) {
-            
+
             return new CardSelection(() -> discardCard(current.getPlayerHand(), cardInput));
         }
         if (input instanceof ActionInput action) {
@@ -140,15 +142,13 @@ public class GameEndState extends GamePlayState {
 
         ArrayList<Player> winners = new ArrayList<>(playerList);
         winners.sort(Comparator.comparing(Player::calculateScore));
-        
+
         UIManager.displayFinalScores(playerList, paradeBoard);
 
         UIManager.displayScoreboard(winners);
         announceWinner(winners);
 
     }
-
-    
 
     private void announceWinner(List<Player> winners) {
         if (winners.size() > 1 && winners.get(0).getPlayerScore() == winners.get(1).getPlayerScore()) {
@@ -157,14 +157,16 @@ public class GameEndState extends GamePlayState {
             UIManager.displayWinner(winners.get(0));
         }
     }
-    
+
     private void discardTwoCards(Player player) throws InvalidCardException {
         if (player instanceof Bot bot) {
             for (int i = 0; i < 2; i++) {
-                player.getPlayerHand().removeCard(
-                        player.getPlayerHand().getCardList()
-                                .get(bot.discardCardEndgame(player.getPlayerHand(), paradeBoard)));
-                UIManager.pauseExecution(1000);
+                int discardIndex = bot.discardCardEndgame(player.getPlayerHand(), paradeBoard);
+                Card discarded = player.getPlayerHand().getCardList().get(discardIndex);
+                player.getPlayerHand().removeCard(discarded);
+
+                UIManager.displayBotDiscard(player, discarded);
+                UIManager.pauseExecution(3000);
             }
         } else {
             for (int i = 0; i < 2; i++) {
