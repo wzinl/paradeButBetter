@@ -180,7 +180,7 @@ public class DisplayFactory {
                     .append("  ");
         }
 
-        result.append(DisplayEffects.BOLD + "\n\nUse A/D to move, W/S to switch rows, Enter to select." + DisplayEffects.ANSI_RESET);
+        result.append(DisplayEffects.BOLD + "\n\nUse arrow keys or WASD to navigate, and Enter to select." + DisplayEffects.ANSI_RESET);
         return result.toString();
     }
 
