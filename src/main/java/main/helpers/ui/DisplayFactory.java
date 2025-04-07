@@ -74,9 +74,9 @@ public class DisplayFactory {
 
     public static String getBotAction(String botName, int cardIndex) {
         return String.format(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE +
-                "%s is going to play Card %d"
+                "%s played Card %d"
                 + DisplayEffects.ANSI_RESET + "\n",
-                botName, cardIndex);
+                botName, cardIndex+1);
     }
 
     public static String getFormattedHandWithIndex(PlayerHand hand, Card selectedCard) {
@@ -183,6 +183,31 @@ public class DisplayFactory {
         result.append(DisplayEffects.BOLD + "\n\nUse A/D to move, W/S to switch rows, Enter to select." + DisplayEffects.ANSI_RESET);
         return result.toString();
     }
+
+    public static String getTurnDisplayBot(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex,
+                                          Boolean onCardRow) {
+        StringBuilder result = new StringBuilder();
+
+        result.append("==========" + DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN)
+                .append(currentPlayer.getPlayerName())
+                .append("'s turn!" + DisplayEffects.ANSI_RESET + "==========\n\n");
+
+        PlayerHand currHand = currentPlayer.getPlayerHand();
+        List<Card> cardList = currHand.getCardList();
+
+        if (onCardRow) {
+            Card selectedCard = cardList.get(selectedIndex);
+            result.append(getPlayerDisplay(currentPlayer, paradeBoard, selectedCard))
+                    .append("\n");
+        } else {
+            result.append(getPlayerDisplay(currentPlayer, paradeBoard))
+                    .append("\n");
+        }
+
+        result.append("\n\n");
+        return result.toString();
+    }
+
 
     private static String getPlayerDisplay(Player player, ParadeBoard paradeBoard) {
         return getPlayerDisplay(player, paradeBoard, null);

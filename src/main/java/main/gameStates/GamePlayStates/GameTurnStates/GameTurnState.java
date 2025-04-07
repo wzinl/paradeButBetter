@@ -19,8 +19,6 @@ import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
 import main.models.player.bots.Bot;
-import main.models.player.bots.RandomBot;
-import main.models.player.bots.SmartBot;
 import main.models.selections.ActionSelection;
 import main.models.selections.CardSelection;
 import main.models.selections.TurnSelection;
@@ -68,12 +66,15 @@ public abstract class GameTurnState extends GamePlayState{
         List <Card> cardList = hand.getCardList();
         Card chosenCard = cardList.get(index);
 
-        if (current instanceof RandomBot || current instanceof SmartBot) {
-            UIManager.displayBotAction(current, index);
+        if (current instanceof Bot) {
+            UIManager.displayBotAction(current, index, paradeBoard); 
             UIManager.pauseExecution(3000);
+            CardEffects.apply(current.getPlayerName(),chosenCard, paradeBoard, board);
+        } else{
+            CardEffects.apply(current.getPlayerName(),chosenCard, paradeBoard, board);
+
         }
 
-        CardEffects.apply(current.getPlayerName(),chosenCard, paradeBoard, board);
         hand.removeCard(chosenCard);
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);

@@ -55,7 +55,7 @@ public class InitState extends GameState {
             String playerName = inputManager.getString(DisplayEffects.BOLD+DisplayEffects.ANSI_GREEN+"🤓 Enter name of Player " + i + ": "+DisplayEffects.ANSI_RESET);
             while (playerNames.contains(playerName)) {
                 System.out.println();
-                System.out.println(DisplayEffects.BOLD+"Player name taken. Please choose another name."+DisplayEffects.ANSI_RESET);
+                System.out.println(DisplayEffects.BOLD+"Name taken. Please choose another name."+DisplayEffects.ANSI_RESET);
                 playerName = inputManager.getString(DisplayEffects.BOLD+DisplayEffects.ANSI_GREEN+"🤓 Enter name of Player " + i + ": "+DisplayEffects.ANSI_RESET);
             }
             playerNames.add(playerName);
@@ -69,7 +69,6 @@ public class InitState extends GameState {
             for (int i = 1; i <= numBots; i++) {
                 String botName = inputManager.getString(DisplayEffects.BOLD+DisplayEffects.ANSI_GREEN+"👾 Enter name of Bot " + i + ": "+DisplayEffects.ANSI_RESET);
                 Player bot;
-
                 switch (difficulty) {
                     case 1:
                         bot = new RandomBot(botName);
@@ -82,11 +81,13 @@ public class InitState extends GameState {
                         bot = new SmarterBot(botName);
                         break;
                 }
+                bot.setPreferMenu(false);
                 while (playerNames.contains(botName)) {
                     System.out.println();
-                    System.out.println(DisplayEffects.BOLD+"Bot name taken. Please choose another name."+DisplayEffects.ANSI_RESET);
+                    System.out.println(DisplayEffects.BOLD+"Name taken. Please choose another name."+DisplayEffects.ANSI_RESET);
                     botName = inputManager.getString(DisplayEffects.BOLD+DisplayEffects.ANSI_GREEN+"👾 Enter name of Bot " + i + ": "+DisplayEffects.ANSI_RESET);
                 }
+                playerNames.add(botName);
                 bot.getPlayerHand().initHand(deck);
                 createdPlayerList.add(bot);
                 UIManager.clearScreen();

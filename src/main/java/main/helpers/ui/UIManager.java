@@ -49,8 +49,9 @@ public class UIManager {
         System.out.println(DisplayFactory.getDiscardPrompt());
     }
 
-    public static void displayBotAction(Player bot, int cardIndex) {
-        DisplayFactory.getBotAction(bot.getPlayerName(), cardIndex);
+    public static void displayBotAction(Player bot, int cardIndex, ParadeBoard paradeBoard) {
+        System.out.println(DisplayFactory.getTurnDisplayBot(bot, paradeBoard, cardIndex, true));
+        System.out.println(DisplayFactory.getBotAction(bot.getPlayerName(), cardIndex));
     }
 
     public static void displayErrorMessage(String message) {

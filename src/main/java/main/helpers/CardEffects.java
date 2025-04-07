@@ -37,7 +37,7 @@ public class CardEffects {
             System.out.println();
         }   
 
-        // UIManager.pauseExecution(5000);
+        UIManager.pauseExecution(5000);
         UIManager.clearScreen();
 
         for (Card card : removedCards) {
