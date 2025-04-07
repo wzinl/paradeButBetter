@@ -213,30 +213,31 @@ public class DisplayFactory {
 
     public static String getScoreboard(List<Player> winners) {
         StringBuilder scoreboard = new StringBuilder();
-    
+
         scoreboard.append("\n=========== FINAL SCORES ===========\n\n");
-    
+
         int maxNameLength = winners.stream()
                 .mapToInt(p -> p.getPlayerName().length())
                 .max()
                 .orElse(10);
-    
+
         int nameWidth = Math.max(maxNameLength + 2, 12);
         int scoreWidth = 8;
         int positionWidth = 10;
-    
+
         String divider = "-".repeat(positionWidth) + "+" + "-".repeat(nameWidth) + "+" + "-".repeat(scoreWidth);
-    
-        scoreboard.append(String.format("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "s%n",
-                "POSITION", "PLAYER", "SCORE"));
+
+        // Use left-aligned position and name, right-aligned score
+        scoreboard.append(String.format("%-" + positionWidth + "s|%-" + nameWidth + "s|%" + scoreWidth + "s%n",
+                " POSITION", " PLAYER", "SCORE "));
         scoreboard.append(divider).append("\n");
-    
+
         int displayRank = 1;
-    
+
         for (int i = 0; i < winners.size(); i++) {
             Player player = winners.get(i);
             String position;
-    
+
             if (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore()) {
                 position = "";
             } else {
@@ -248,16 +249,17 @@ public class DisplayFactory {
                 };
                 displayRank++;
             }
-    
-            scoreboard.append(String.format("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "d%n",
-                    position, player.getPlayerName(), player.getPlayerScore()));
+
+            // Ensure consistent padding for name column
+            scoreboard.append(String.format("%-" + positionWidth + "s|%-" + nameWidth + "s|%" + scoreWidth + "d%n",
+                    " " + position, " " + player.getPlayerName(), player.getPlayerScore()));
         }
-    
+
         scoreboard.append("\n").append("=".repeat(divider.length())).append("\n");
-    
+
         return scoreboard.toString();
     }
-
+    
     public static void displayWinner(Player winner) {
         String winnerName = winner.getPlayerName();
         int winnerScore = winner.getPlayerScore();
