@@ -44,6 +44,7 @@ public class UIManager {
 
     /** Displays the game instructions using a formatted rule display. */
     public static void displayInstructions() {
+        clearScreen();
         System.out.println(GameRulesDisplay.constructGameInstructions());
     }
 

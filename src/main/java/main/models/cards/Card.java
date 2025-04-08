@@ -1,8 +1,6 @@
 package main.models.cards;
 
-import java.io.Serializable;
-
-public class Card implements Serializable{
+public class Card{
     private final int value;
     private final String color;
     private boolean isFaceUp;

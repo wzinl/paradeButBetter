@@ -1,12 +1,11 @@
 package main.models.player;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import main.models.cards.Card;
 
-public class Player implements Serializable{
+public class Player{
     private final String playerID;
     static int current_id = 0;
     private final String playerName;

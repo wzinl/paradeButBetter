@@ -172,7 +172,7 @@ public class DisplayFactory {
             result.append(isSelected && !onCardRow ? String.format("[ %s ]", option) : String.format("  %s  ", option)).append("  ");
         }
 
-        result.append(DisplayEffects.BOLD + "\n\nUse A/D to move, W/S to switch rows, Enter to select." + DisplayEffects.ANSI_RESET);
+        result.append(DisplayEffects.BOLD + "\n\nUse arrow keys or WASD to navigate, and Enter to select." + DisplayEffects.ANSI_RESET);
         return result.toString();
     }
 
@@ -184,8 +184,10 @@ public class DisplayFactory {
     /** Displays full game state for one player (hand, board, parade). */
     private static String getPlayerDisplay(Player player, ParadeBoard paradeBoard, Card selectedCard) {
         StringBuilder result = new StringBuilder();
-        result.append("\u001B[0mParade:").append(paradeBoard.toString()).append("\n\n")
-              .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
+        result.append("\u001B[0mParade:")
+              .append(paradeBoard.toString())
+              .append("\n\n")
+              .append(DisplayEffects.BOLD)
               .append(player.getPlayerName());
 
         if (player.getPlayerBoard().isEmpty()) {
@@ -207,39 +209,53 @@ public class DisplayFactory {
     /** Renders the final scoreboard based on sorted players list. */
     public static String getScoreboard(List<Player> winners) {
         StringBuilder scoreboard = new StringBuilder();
+
         scoreboard.append("\n=========== FINAL SCORES ===========\n\n");
 
         int maxNameLength = winners.stream()
-                                   .mapToInt(p -> p.getPlayerName().length())
-                                   .max()
-                                   .orElse(10);
+                .mapToInt(p -> p.getPlayerName().length())
+                .max()
+                .orElse(10);
 
         int nameWidth = Math.max(maxNameLength + 2, 12);
         int scoreWidth = 8;
         int positionWidth = 10;
 
         String divider = "-".repeat(positionWidth) + "+" + "-".repeat(nameWidth) + "+" + "-".repeat(scoreWidth);
-        scoreboard.append(String.format("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "s%n", "POSITION", "PLAYER", "SCORE"))
-                  .append(divider).append("\n");
+
+        // Use left-aligned position and name, right-aligned score
+        scoreboard.append(String.format("%-" + positionWidth + "s|%-" + nameWidth + "s|%" + scoreWidth + "s%n",
+                " POSITION", " PLAYER", "SCORE "));
+        scoreboard.append(divider).append("\n");
 
         int displayRank = 1;
+
         for (int i = 0; i < winners.size(); i++) {
             Player player = winners.get(i);
-            String position = (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore()) ? "" : switch (displayRank++) {
-                case 1 -> "1st";
-                case 2 -> "2nd";
-                case 3 -> "3rd";
-                default -> displayRank + "th";
-            };
+            String position;
 
-            scoreboard.append(String.format("%-" + positionWidth + "s | %" + nameWidth + "s | %" + scoreWidth + "d%n", position, player.getPlayerName(), player.getPlayerScore()));
+            if (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore()) {
+                position = "";
+            } else {
+                position = switch (displayRank) {
+                    case 1 -> "1st";
+                    case 2 -> "2nd";
+                    case 3 -> "3rd";
+                    default -> displayRank + "th";
+                };
+                displayRank++;
+            }
+
+            // Ensure consistent padding for name column
+            scoreboard.append(String.format("%-" + positionWidth + "s|%-" + nameWidth + "s|%" + scoreWidth + "d%n",
+                    " " + position, " " + player.getPlayerName(), player.getPlayerScore()));
         }
 
         scoreboard.append("\n").append("=".repeat(divider.length())).append("\n");
+
         return scoreboard.toString();
     }
-
-    /** Displays a boxed, centered winner announcement. */
+    
     public static void displayWinner(Player winner) {
         String winnerName = winner.getPlayerName();
         int winnerScore = winner.getPlayerScore();

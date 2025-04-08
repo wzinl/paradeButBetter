@@ -1,10 +1,5 @@
 package main.gameStates;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -78,20 +73,6 @@ public class GameStateManager {
         return gameStateID;
     }
     
-
-    public void saveGame(String saveName) throws IOException {
-        saveName = "saves/"+ saveName + ".dat";
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(saveName))) {
-            oos.writeObject(currentContext);
-        }
-    }
-
-    public GameContext loadGame(String saveName) throws IOException, ClassNotFoundException {
-        saveName = "saves/"+ saveName + ".dat";
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(saveName))) {
-            return (GameContext) ois.readObject();
-        }
-    }
     
     public void exitGame(){
         game.exit();

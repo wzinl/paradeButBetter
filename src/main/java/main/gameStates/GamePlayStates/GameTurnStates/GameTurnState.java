@@ -89,11 +89,12 @@ public abstract class GameTurnState extends GamePlayState{
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);
         }
-        
+        for (Card card : removedCards) {
+            playerBoard.addCard(card);
+        }
         UIManager.displayCardPlay(current,chosenCard, beforeRemovalParadeBoard, playerBoard, removedCards);
         for (Card card : removedCards) {
             paradeBoard.remove(card);
-            playerBoard.addCard(card);
         }
         paradeBoard.addToBoard(chosenCard);
 
