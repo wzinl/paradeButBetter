@@ -7,6 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.fusesource.jansi.Ansi;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -16,7 +17,6 @@ import org.jline.terminal.Terminal;
 import main.helpers.inputTypes.ActionInput;
 import main.helpers.inputTypes.CardInput;
 import main.helpers.inputTypes.SelectionInput;
-import main.helpers.ui.DisplayEffects;
 import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
 import main.models.player.Player;
@@ -93,10 +93,12 @@ public class LineInputHandler {
         flushQueue();
         Thread blinkingThread = new Thread(() -> {
             try {
-                DisplayEffects.blinkingEffect(DisplayEffects.BOLD + DisplayEffects.ANSI_RED + prompt + DisplayEffects.ANSI_RESET);
+                UIManager.blinkingEffect(
+                    Ansi.ansi().bold().fg(Ansi.Color.RED).a(prompt).reset().toString());
             } catch (InterruptedException e) {
-                System.out.println(DisplayEffects.BOLD + DisplayEffects.ANSI_RED + prompt + DisplayEffects.ANSI_RESET);
-            }
+                System.out.println(
+                    Ansi.ansi().bold().fg(Ansi.Color.RED).a(prompt).reset().toString());
+                }
         });
         blinkingThread.start();
     
@@ -141,9 +143,10 @@ public class LineInputHandler {
         UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, actionMap.keySet().toArray(String[]::new));
 
         for (String actionString : actionMap.keySet()) {
-            prompt += "Enter " + DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN +actionMap.get(actionString) + DisplayEffects.ANSI_RESET + " to " + actionString + "\n";
+            prompt += "Enter " + Ansi.ansi().bold().fg(Ansi.Color.GREEN).a(actionMap.get(actionString)).reset()
+                    + " to " + actionString + "\n";        
         }
-        prompt += DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN + "Select a card (1-" + max + "): " + DisplayEffects.ANSI_RESET;        
+        prompt += Ansi.ansi().bold().fg(Ansi.Color.CYAN).a("Select a card (1-" + max + "): ").reset();
 
         
         prompt = prompt.replaceAll(":$", ".");

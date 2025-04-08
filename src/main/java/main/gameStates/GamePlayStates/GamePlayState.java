@@ -74,4 +74,5 @@ public abstract class GamePlayState extends GameState{
     protected SelectionInput getSelectionInput(Player current) {
         return inputManager.turnSelect(paradeBoard, current);
     }
+    
 }

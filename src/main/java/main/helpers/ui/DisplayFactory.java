@@ -3,6 +3,10 @@ package main.helpers.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.helpers.ui.UIManager;
+import org.fusesource.jansi.Ansi;
+
+
 import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.Player;
@@ -16,7 +20,24 @@ import main.models.player.PlayerHand;
  */
 public class DisplayFactory {
 
-    /** Clears the console using ANSI escape code. */
+
+    private static final String TITLE_CARD = """
+         ██████╗ ██████╗ ██████╗  █████╗ ██████╗ ███████╗
+         ██╔══██╗██╔══██╗██╔══██╗ ██╔══██╗██╔══██╗██╔════╝
+         ██████╔╝███████║██████╔╝ ███████║██║  ██║█████╗ 
+         ██╔═══╝ ██╔══██║██╔══██╝ ██╔══██║██║  ██║██╔══╝  
+         ██║     ██║  ██║██║  ██║ ██║  ██║██████╔╝███████╗
+         ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+        """;
+        private static final String TOP_BORDER ="------------------------Welcome To-------------------------\n\n";
+        private static final String BOTTOM_BORDER ="\n-----------------------------------------------------------\n";
+        private static final String FULL_TITLE_CARD =  TOP_BORDER + TITLE_CARD +BOTTOM_BORDER;
+
+    public static String getTitleCard() {
+        return FULL_TITLE_CARD;
+    }
+
+    /** Clears the console screen. */
     public static void clearScreen() {
         System.out.print("\033c");
     }
@@ -30,23 +51,19 @@ public class DisplayFactory {
         }
     }
 
+
     /** Shows the stylized ASCII game introduction splash screen. */
     public static void showIntroduction() {
-        // Create the header art
-        StringBuilder openingMsg = new StringBuilder();
-        openingMsg.append("    ██████╗ ██████╗ ██████╗  █████╗ ██████╗ ███████╗\n")
-                  .append("     ██╔══██╗██╔══██╗██╔══██╗ ██╔══██╗██╔══██╗██╔════╝\n")
-                  .append("     ██████╔╝███████║██████╔╝ ███████║██║  ██║█████╗ \n")
-                  .append("     ██╔═══╝ ██╔══██║██╔══██╝ ██╔══██║██║  ██║██╔══╝  \n")
-                  .append("     ██║     ██║  ██║██║  ██║ ██║  ██║██████╔╝███████╗\n")
-                  .append("     ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝");
-
         try {
-            System.out.println("\n\n" + DisplayEffects.BOLD + "------------------------Welcome To-------------------------" + DisplayEffects.ANSI_RESET);
-            DisplayEffects.typeWriter(openingMsg.toString(), 6);
-            System.out.println(DisplayEffects.BOLD + "-----------------------------------------------------------" + DisplayEffects.ANSI_RESET);
-            DisplayEffects.blinkingEffect(DisplayEffects.BOLD + DisplayEffects.ANSI_RED + "                       [Enter Game]                         " + DisplayEffects.ANSI_RESET);
-            DisplayEffects.blinkingEffect(DisplayEffects.BOLD + DisplayEffects.ANSI_RED + "                    [Game Instructions]                      " + DisplayEffects.ANSI_RESET);
+            // System.out.printf("\n\n");
+            System.out.print(Ansi.ansi().bold().a(
+                            TOP_BORDER
+                            ).reset());
+            UIManager.typeWriter(TITLE_CARD, 6);
+            System.out.print(Ansi.ansi().bold().a(
+                BOTTOM_BORDER
+                ).reset());
+
         } catch (InterruptedException e) {
             System.out.println("An error has occurred trying to create introduction display!");
         }
@@ -54,23 +71,26 @@ public class DisplayFactory {
 
     /** Generates a card selection prompt based on hand size. */
     public static String getCardSelectionPrompt(int handSize) {
-        return String.format(DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN + "Which card would you like to play? (%d to %d): " + DisplayEffects.ANSI_RESET, 1, handSize);
+        return String.format(Ansi.ansi().bold().fg(Ansi.Color.GREEN).a(
+            "Which card would you like to play? (%d to %d): "
+            ).reset().toString(), 1, handSize);
     }
 
     /** Builds the final scores display with winner or tie result. */
     public static String showFinalScores(List<Player> players, ParadeBoard paradeBoard) {
         StringBuilder finalScores = new StringBuilder();
-        finalScores.append(DisplayEffects.BOLD)
-                   .append(DisplayEffects.ANSI_MAGENTA)
-                   .append("=========== FINAL SCORES ===========")
-                   .append(DisplayEffects.ANSI_RESET)
-                   .append("\n");
+
+        finalScores.append(
+                    Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
+                        "=========== FINAL SCORES ==========="
+                        ).reset())
+                    .append("\n");
 
         for (Player player : players) {
-            finalScores.append(String.format("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore()));
+            finalScores.append(
+                        String.format("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore()));
         }
-
-        // Handles tie display logic
+    
         if (players.get(0).getPlayerScore() == players.get(1).getPlayerScore()) {
             finalScores.append("\nThe game is a tie!");
         } else {
@@ -82,8 +102,7 @@ public class DisplayFactory {
 
     /** Returns formatted bot action announcement. */
     public static String getBotAction(String botName, int cardIndex) {
-        return String.format(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE +
-                "%s is going to play Card %d" + DisplayEffects.ANSI_RESET + "\n", botName, cardIndex);
+        return String.format(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a("%s is going to play Card %d").reset().toString() + "\n", botName, cardIndex);
     }
 
     /**
@@ -152,9 +171,8 @@ public class DisplayFactory {
      */
     public static String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, Boolean onCardRow) {
         StringBuilder result = new StringBuilder();
-        result.append("==========" + DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN)
-              .append(currentPlayer.getPlayerName())
-              .append("'s turn!" + DisplayEffects.ANSI_RESET + "==========\n\n");
+
+        result.append("==========" + Ansi.ansi().bold().fg(Ansi.Color.GREEN).a(currentPlayer.getPlayerName() + "'s turn!").reset() + "==========\n\n");
 
         PlayerHand currHand = currentPlayer.getPlayerHand();
         List<Card> cardList = currHand.getCardList();
@@ -172,7 +190,7 @@ public class DisplayFactory {
             result.append(isSelected && !onCardRow ? String.format("[ %s ]", option) : String.format("  %s  ", option)).append("  ");
         }
 
-        result.append(DisplayEffects.BOLD + "\n\nUse arrow keys or WASD to navigate, and Enter to select." + DisplayEffects.ANSI_RESET);
+        result.append(Ansi.ansi().bold().a("\n\nUse arrow keys or WASD to navigate, and Enter to select.").reset());
         return result.toString();
     }
 
@@ -187,20 +205,18 @@ public class DisplayFactory {
         result.append("\u001B[0mParade:")
               .append(paradeBoard.toString())
               .append("\n\n")
-              .append(DisplayEffects.BOLD)
-              .append(player.getPlayerName());
+              .append(Ansi.ansi().bold().a(player.getPlayerName()));
 
         if (player.getPlayerBoard().isEmpty()) {
-            result.append("'s board is empty." + DisplayEffects.ANSI_RESET);
+            result.append("'s board is empty.").append(Ansi.ansi().reset());
         } else {
-            result.append("'s board" + DisplayEffects.ANSI_RESET + "\n")
+            result.append("'s board").append(Ansi.ansi().reset()).append("\n")
                   .append(player.getPlayerBoard().toString());
         }
 
         result.append("\n\n")
-              .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
-              .append(player.getPlayerName())
-              .append("'s hand" + DisplayEffects.ANSI_RESET + "\n\n")
+              .append(Ansi.ansi().bold().a(player.getPlayerName() + "'s hand").reset())
+              .append("\n\n")
               .append(getFormattedHandWithIndex(player.getPlayerHand(), selectedCard));
 
         return result.toString();
@@ -223,7 +239,6 @@ public class DisplayFactory {
 
         String divider = "-".repeat(positionWidth) + "+" + "-".repeat(nameWidth) + "+" + "-".repeat(scoreWidth);
 
-        // Use left-aligned position and name, right-aligned score
         scoreboard.append(String.format("%-" + positionWidth + "s|%-" + nameWidth + "s|%" + scoreWidth + "s%n",
                 " POSITION", " PLAYER", "SCORE "));
         scoreboard.append(divider).append("\n");
@@ -246,7 +261,6 @@ public class DisplayFactory {
                 displayRank++;
             }
 
-            // Ensure consistent padding for name column
             scoreboard.append(String.format("%-" + positionWidth + "s|%-" + nameWidth + "s|%" + scoreWidth + "d%n",
                     " " + position, " " + player.getPlayerName(), player.getPlayerScore()));
         }
@@ -255,7 +269,7 @@ public class DisplayFactory {
 
         return scoreboard.toString();
     }
-    
+
     public static void displayWinner(Player winner) {
         String winnerName = winner.getPlayerName();
         int winnerScore = winner.getPlayerScore();
@@ -308,17 +322,24 @@ public class DisplayFactory {
         String result = "";
         for (Player player : playerlist) {
             PlayerBoard board = player.getPlayerBoard();
-            result += DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN + player.getPlayerName() + DisplayEffects.ANSI_RESET;
-            result += board.isEmpty() ? "'s Player Board is empty." : "'s Player Board:" + board;
-            result += "\n";
+            String boardString = "";
+            boardString += Ansi.ansi().bold().fg(Ansi.Color.GREEN).a(player.getPlayerName()).reset();
+            if (board.isEmpty()) {
+                boardString += "'s Player Board is empty.";
+            } else {
+                boardString += "'s Player Board:";
+                boardString += board;
+            }
+            result += boardString + "\n";
         }
-        result += "Parade:\n" + paradeBoard + "\n";
+        result += "Parade:\n";
+        result += paradeBoard + "\n";
         return result;
     }
 
     /** Prints the discard action of a bot. */
     public static void getBotDiscardDisplay(Player bot, Card discardedCard) {
-        System.out.println(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE + bot.getPlayerName() + " discarded:" + DisplayEffects.ANSI_RESET);
+        System.out.println(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a(bot.getPlayerName() + " discarded:").reset());
         System.out.println(discardedCard);
         System.out.println("Updated hand:");
         System.out.println(getFormattedHandWithIndex(bot.getPlayerHand(), null));
@@ -326,7 +347,7 @@ public class DisplayFactory {
 
     /** Displays a detailed breakdown when a card is played. */
     public static void getCardPlayDisplay(Player player, Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard, ArrayList<Card> removedCards) {
-        UIManager.clearScreen();
+
 
         System.out.println(player.getPlayerName() + " has played: ");
         System.out.println(chosenCard);
@@ -349,4 +370,6 @@ public class DisplayFactory {
         UIManager.pauseExecution(5000);
         UIManager.clearScreen();
     }
+    
+    
 }

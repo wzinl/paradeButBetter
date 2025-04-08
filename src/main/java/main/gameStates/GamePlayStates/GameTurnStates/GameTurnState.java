@@ -12,7 +12,6 @@ import main.helpers.inputHandlers.InputManager;
 import main.helpers.inputTypes.ActionInput;
 import main.helpers.inputTypes.CardInput;
 import main.helpers.inputTypes.SelectionInput;
-import main.helpers.ui.DisplayEffects;
 import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
 import main.models.cards.Card;
@@ -52,10 +51,10 @@ public abstract class GameTurnState extends GamePlayState{
                 }
                 UIManager.clearScreen();
             } catch (InvalidCardException e) {
-                System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_BRIGHT_WHITE+DisplayEffects.RED_BG+"Invalid card. Please enter a valid card."+DisplayEffects.ANSI_RESET);
+                System.out.println("Invalid card. Please enter a valid card.");
             } catch(SelectionException e){
                 System.out.println(e.getMessage());
-                System.out.println(DisplayEffects.BOLD+"Trying Again..."+DisplayEffects.ANSI_RESET);
+                System.out.println("Trying Again...");
             }
         }
         
@@ -109,6 +108,6 @@ public abstract class GameTurnState extends GamePlayState{
         if (input instanceof ActionInput action) {
             return new ActionSelection(() -> performAction(action.getActionChar()));
         }
-        throw new SelectionException(DisplayEffects.BOLD+DisplayEffects.RED_BG+DisplayEffects.ANSI_BRIGHT_WHITE+"Error with selection!"+DisplayEffects.ANSI_RESET);
+        throw new SelectionException("Error with selection!");
     }
 }

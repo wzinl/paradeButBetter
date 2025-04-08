@@ -8,6 +8,7 @@ import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import main.helpers.inputTypes.ActionInput;
 import main.helpers.inputTypes.SelectionInput;
 import main.models.ParadeBoard;
 import main.models.player.Player;
@@ -86,7 +87,7 @@ public class InputManager {
 
     public SelectionInput menuturnSelect(ParadeBoard paradeBoard, Player currentPlayer) throws IOException{
         ensureMenuInput();
-        return menuHandler.turnSelect(terminal,paradeBoard, currentPlayer, ACTION_MAP);
+        return menuHandler.turnSelect(paradeBoard, currentPlayer, ACTION_MAP);
     }
 
     public void ensureLineInput() {
@@ -103,7 +104,10 @@ public class InputManager {
     }
 
 
-
+    public ActionInput getIntroInput(String[] intoActions) throws IOException{
+        ensureMenuInput();
+        return menuHandler.introSelect(intoActions);
+    }
 
 
     

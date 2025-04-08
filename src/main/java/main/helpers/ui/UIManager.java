@@ -3,6 +3,8 @@ package main.helpers.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fusesource.jansi.Ansi;
+
 import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.Player;
@@ -13,6 +15,8 @@ import main.models.player.PlayerBoard;
  * delegating rendering tasks to DisplayFactory while managing flow and formatting.
  */
 public class UIManager {
+
+    public static final int BLINK_COUNT = 20;
 
     /** Clears the console screen. */
     public static void clearScreen() {
@@ -39,7 +43,6 @@ public class UIManager {
     public static void displayIntroduction() {
         UIManager.clearScreen();
         DisplayFactory.showIntroduction();
-        UIManager.clearScreen();
     }
 
     /** Displays the game instructions using a formatted rule display. */
@@ -91,7 +94,7 @@ public class UIManager {
      * @param message The error message
      */
     public static void displayErrorMessage(String message) {
-        System.out.println("ERROR: " + message);
+        System.out.println(Ansi.ansi().bold().fg(Ansi.Color.RED).a("ERROR: " + message).reset());
     }
 
     /**
@@ -102,8 +105,7 @@ public class UIManager {
     public static void displayBoardOverview(List<Player> playerlist, ParadeBoard paradeBoard) {
         UIManager.clearScreen();
         System.out.println();
-        System.out.println(DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN + 
-                           "Here are all of the players' boards:" + DisplayEffects.ANSI_RESET);
+        System.out.println(Ansi.ansi().bold().fg(Ansi.Color.CYAN).a("Here are all of the players' boards:").reset());
         System.out.println(DisplayFactory.getDisplayBoardOverview(playerlist, paradeBoard));
     }
 
@@ -145,20 +147,14 @@ public class UIManager {
         DisplayFactory.displayWinner(winner);
     }
 
-    /**
-     * Displays the result of a tie between players.
-     * @param tiedPlayers The list of players who tied
-     */
     public static void displayTieResults(List<Player> tiedPlayers) {
         DisplayFactory.displayTieResults(tiedPlayers);
     }
-
-    /** Displays a message announcing the start of the final round. */
+    
     public static void displayFinalRoundMessage() {
         clearScreen();
-        System.out.println(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE +
-                           "Each player gets one final turn! No more cards will be drawn!" +
-                           DisplayEffects.ANSI_RESET);
+        System.out.println(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a(
+                           "Each player gets one final turn! No more cards will be drawn!").reset());
     }
 
     /**
@@ -169,18 +165,18 @@ public class UIManager {
         if (deckEmpty) {
             System.out.println("The last card has been drawn");
         } else {
-            System.out.println("One player has collected all 6 colours in his board!");
+            System.out.println("One player has collected all 6 colours in their board!");
         }
-        System.out.println(DisplayEffects.BOLD + DisplayEffects.YELLOW_BG +
-                           "Moving on to the final round!🙀🙀🙀" +
-                           DisplayEffects.ANSI_RESET);
+        System.out.println(Ansi.ansi().bold().bg(Ansi.Color.YELLOW).fg(Ansi.Color.BLACK).a(
+                "Moving on to the final round! 🙀🙀🙀").reset());
     }
 
-    /**
+    /*
      * Displays which card a bot discarded.
      * @param player The bot player
      * @param discardedCard The card discarded
      */
+
     public static void displayBotDiscard(Player player, Card discardedCard) {
         DisplayFactory.getBotDiscardDisplay(player, discardedCard);
     }
@@ -195,5 +191,25 @@ public class UIManager {
      */
     public static void displayCardPlay(Player player, Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard, ArrayList<Card> removedCards) {
         DisplayFactory.getCardPlayDisplay(player, chosenCard, paradeBoard, playerBoard, removedCards);
+    }
+    public static void typeWriter(String text, int delay) throws InterruptedException {
+        for (char c : text.toCharArray()) {
+            System.out.print(c);
+            Thread.sleep(delay);
+        }
+        System.out.println();
+    }
+
+    public static void blinkingEffect(String text) throws InterruptedException {
+        for (int i = 0; i < BLINK_COUNT; i++) {
+            if (Thread.currentThread().isInterrupted()) {
+                throw new InterruptedException("Blinking effect interrupted");
+            }
+            System.out.print("\r" + text);
+            Thread.sleep(300);
+            System.out.print("\r" + " ".repeat(text.length()));
+            Thread.sleep(300);
+        }
+        System.out.println("\r" + text);
     }
 }

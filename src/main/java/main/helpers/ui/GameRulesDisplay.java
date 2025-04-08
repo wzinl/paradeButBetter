@@ -1,5 +1,7 @@
 package main.helpers.ui;
 
+import org.fusesource.jansi.Ansi;
+
 /**
  * GameRulesDisplay is responsible for constructing the formatted string
  * that contains all the game instructions for Parade.
@@ -15,18 +17,17 @@ public class GameRulesDisplay {
     public static String constructGameInstructions () {
 
         //Header for the rule section
-        String ruleHeader = DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN + "\n🎪 Parade Game Rules 🃏" + DisplayEffects.ANSI_RESET +"\n\n\n";
+        String ruleHeader = Ansi.ansi().bold().fg(Ansi.Color.CYAN).a("\n🎪 Parade Game Rules 🃏").reset().toString() + "\n\n\n";
 
         StringBuilder objectiveBuilder = new StringBuilder();
-        objectiveBuilder.append(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE + "🎯 Objective:" + DisplayEffects.ANSI_RESET)
-                        .append("Score the fewest points by strategically playing cards and collecting as few as possible.\n\n");
-        
-        //Objective
+        objectiveBuilder.append(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a("🎯 Objective:").reset())
+                        .append(" Score the fewest points by strategically playing cards and collecting as few as possible.\n\n");
+
         String gameObjective = objectiveBuilder.toString();
 
         //Game setup
         StringBuilder setupBuilder = new StringBuilder();
-        setupBuilder.append(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE + "Setup:" + DisplayEffects.ANSI_RESET +"\n")
+        setupBuilder.append(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a("Setup:\n").reset().toString())
                     .append("1. Deck Composition:\n")
                     .append("   • 6 colors (e.g., Red, Yellow, Green, Blue, Purple, Grey).\n")
                     .append("   • Each color has cards numbered 0 to 10.\n")
@@ -38,7 +39,7 @@ public class GameRulesDisplay {
         String gameSetup = setupBuilder.toString();
         // turn state mechanics
         StringBuilder turnBuilder = new StringBuilder();
-        turnBuilder.append(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE + "🔁 On Your Turn:" + DisplayEffects.ANSI_RESET +"\n")
+        turnBuilder.append(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a("🔁 On Your Turn:\n").reset().toString())
                     .append("1. Play a Card:\n")
                     .append("   • Choose a card from your hand and place it at the end of the parade\n")
                     .append("2. Check for Card Collection:\n")
@@ -56,7 +57,7 @@ public class GameRulesDisplay {
 
         //game end trigger
         StringBuilder endTriggBuilder = new StringBuilder();
-        endTriggBuilder.append(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE + "🚨 Game End Trigger:" + DisplayEffects.ANSI_RESET +'\n')
+        endTriggBuilder.append(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a("🚨 Game End Trigger:\n").reset().toString())
                         .append("• When the draw pile is empty\n")
                         .append("• One player has collected cards of all 6 colours\n\n");
 
@@ -64,20 +65,26 @@ public class GameRulesDisplay {
 
         //Scoring rules
         StringBuilder scoreBuilder = new StringBuilder();
-        scoreBuilder.append(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE + "📊 Scoring:" + DisplayEffects.ANSI_RESET +"\n")
+        scoreBuilder.append(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a("📊 Scoring:\n").reset().toString())
                     .append("1. Each card = its number in points\n")
                     .append("2. Color Majority Bonus:\n")
                     .append("   • If you have the most cards of a color, all of them = 1 point each\n")
                     .append("   • Ties don't count\n")
                     .append("3. Add up your total points\n")
-                    .append("4. Lowest score wins\n\n\n");  
+                    .append("4. Lowest score wins\n\n\n");
 
         String scoreString = scoreBuilder.toString();
 
-        String ruleEndString = DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN + "Good luck and enjoy the game!" + DisplayEffects.ANSI_RESET;
-        //combine all sections into one final instruction string
+        String ruleEndString = Ansi.ansi().bold().fg(Ansi.Color.GREEN).a("Good luck and enjoy the game!").reset().toString();
+
         StringBuilder instructionBuilder = new StringBuilder();
-        instructionBuilder.append(ruleHeader).append(gameObjective).append(gameSetup).append(gameTurnIntruc).append(endTriggString).append(scoreString).append(ruleEndString);
+        instructionBuilder.append(ruleHeader)
+                          .append(gameObjective)
+                          .append(gameSetup)
+                          .append(gameTurnIntruc)
+                          .append(endTriggString)
+                          .append(scoreString)
+                          .append(ruleEndString);
 
         String gameInstructions = instructionBuilder.toString();
         return gameInstructions;
