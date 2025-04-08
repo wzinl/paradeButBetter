@@ -193,7 +193,7 @@ public class DisplayFactory {
         result.append("\u001B[0mParade:")
               .append(paradeBoard.toString())
               .append("\n\n")
-              .append(DisplayEffects.BOLD + DisplayEffects.ANSI_UNDERLINE)
+              .append(DisplayEffects.BOLD)
               .append(player.getPlayerName());
 
         if (player.getPlayerBoard().isEmpty()) {
