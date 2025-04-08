@@ -1,32 +1,36 @@
 package main.helpers.ui;
+import org.fusesource.jansi.Ansi;
 
 
 public class DisplayEffects {
 
+
 // Text Colouring
-public static final String ANSI_RESET = "\u001B[0m";
-public static final String ANSI_RED = "\u001B[31m";
-public static final String ANSI_GREEN = "\u001B[32m";
-public static final String ANSI_YELLOW = "\u001B[33m";
-public static final String ANSI_BLUE = "\u001B[34m";
-public static final String ANSI_MAGENTA = "\u001B[35m"; // Magenta
-public static final String ANSI_CYAN = "\u001B[36m";
-public static final String ANSI_PURPLE = "\u001B[95m"; // Distinct purple
-public static final String ANSI_BRIGHT_WHITE = "\u001B[97m";
+public static final String ANSI_RESET = Ansi.ansi().reset().toString();
+public static final String ANSI_RED = Ansi.ansi().fg(Ansi.Color.RED).toString();
+public static final String ANSI_GREEN = Ansi.ansi().fg(Ansi.Color.GREEN).toString();
+public static final String ANSI_YELLOW = Ansi.ansi().fg(Ansi.Color.YELLOW).toString();
+public static final String ANSI_BLUE = Ansi.ansi().fg(Ansi.Color.BLUE).toString();
+public static final String ANSI_MAGENTA = Ansi.ansi().fg(Ansi.Color.MAGENTA).toString();
+public static final String ANSI_CYAN = Ansi.ansi().fg(Ansi.Color.CYAN).toString();
+public static final String ANSI_PURPLE = Ansi.ansi().fgBright(Ansi.Color.MAGENTA).toString();
+public static final String ANSI_BRIGHT_WHITE = Ansi.ansi().fgBright(Ansi.Color.WHITE).toString();
 
 // Background Colouring
-public static final String MAGENTA_BG = "\u001B[45m";
-public static final String RED_BG = "\u001B[41m";
-public static final String BLUE_BG = "\u001B[44m";
-public static final String LBLUE_BG = "\u001B[104m"; 
-public static final String YELLOW_BG = "\u001B[43m";
-public static final String GREEN_BG = "\u001B[42m";
-public static final String PURPLE_BG = "\u001B[105m";
+public static final String MAGENTA_BG = Ansi.ansi().bg(Ansi.Color.MAGENTA).toString();
+public static final String RED_BG = Ansi.ansi().bg(Ansi.Color.RED).toString();
+public static final String BLUE_BG = Ansi.ansi().bg(Ansi.Color.BLUE).toString();
+public static final String LBLUE_BG = Ansi.ansi().bgBright(Ansi.Color.BLUE).toString();
+public static final String YELLOW_BG = Ansi.ansi().bg(Ansi.Color.YELLOW).toString();
+public static final String GREEN_BG = Ansi.ansi().bg(Ansi.Color.GREEN).toString();
+public static final String PURPLE_BG = Ansi.ansi().bgBright(Ansi.Color.MAGENTA).toString();
 
 // Text Effects
-public static final String BOLD = "\u001B[1m";
-public static final String ANSI_UNDERLINE = "\u001B[4m";
+public static final String BOLD = Ansi.ansi().bold().toString();
+public static final String ANSI_UNDERLINE = "\u001B[4m"; // ANSI escape code for underline
+
 public static final int BLINK_COUNT = 20;
+
 
 
     public static void typeWriter(String text, int delay) throws InterruptedException {

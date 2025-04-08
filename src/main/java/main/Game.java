@@ -1,5 +1,7 @@
 package main;
 
+import org.fusesource.jansi.AnsiConsole;
+
 import main.gameStates.GameStateManager;
 import main.helpers.inputHandlers.InputManager;
 import main.helpers.ui.UIManager;
@@ -14,6 +16,7 @@ public class Game {
     }
 
     public void run() {
+        AnsiConsole.systemInstall();
         InputManager inputManager = gsm.getInputManager();
         // UIManager.displayIntroduction();
         UIManager.displayInstructions();
@@ -34,6 +37,7 @@ public class Game {
     public void exit() {
         System.out.println("Game has stopped. Thank you for playing!");
         isRunning = false; // Set the flag to false to stop the game
+        AnsiConsole.systemUninstall();
         System.exit(0);
     }
 
