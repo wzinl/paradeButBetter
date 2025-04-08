@@ -3,8 +3,6 @@ package main.helpers.inputHandlers;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -92,7 +90,8 @@ public class LineInputHandler {
             throw new RuntimeException("Input interrupted");
         }
     }
-    private void waitforEnter(String prompt) {
+    private void waitforEnter() {
+        String prompt = "Press Enter to continue...";
         flushQueue();
         Thread blinkingThread = new Thread(() -> {
             try {
@@ -189,8 +188,8 @@ public class LineInputHandler {
         }
     }
 
-    public void getEnter(String prompt) {
-        waitforEnter(prompt);
+    public void getEnter() {
+        waitforEnter();
     }
 
     

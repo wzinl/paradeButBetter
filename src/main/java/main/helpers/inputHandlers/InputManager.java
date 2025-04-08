@@ -131,7 +131,7 @@ public class InputManager {
 
     public void getEnter() {
         ensureLineInput();
-        lineHandler.getEnter("Press Enter to continue...");
+        lineHandler.getEnter();
     }
 
 

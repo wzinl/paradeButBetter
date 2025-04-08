@@ -35,9 +35,5 @@ public abstract class GameState {
     public void setContext(GameContext context) {
         this.context = context;
     }
-
-
-
-    public abstract void enter();    // Called when the state is entered
-    public abstract void exit();     // Called when switching to another state
+    public abstract void run();    // Called when the state is entered
 }

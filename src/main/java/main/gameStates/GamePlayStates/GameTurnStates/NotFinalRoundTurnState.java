@@ -14,7 +14,7 @@ public class NotFinalRoundTurnState extends GameTurnState {
     }
 
     @Override
-    public void enter() {
+    public void run() {
         UIManager.clearScreen();
         boolean finished = false;
 
@@ -31,10 +31,5 @@ public class NotFinalRoundTurnState extends GameTurnState {
             context.setCurrentPlayerIndex(currentPlayerIndex);
 
         }
-    }
-
-    @Override
-    public void exit() {
-        System.out.println("Exiting TurnState.");
     }
 }

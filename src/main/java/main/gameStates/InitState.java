@@ -26,7 +26,7 @@ public class InitState extends GameState {
     }
 
     @Override
-    public void enter() {
+    public void run() {
 
         UIManager.clearScreen();
         int numPlayers = inputManager.getIntInRange(
@@ -126,9 +126,5 @@ public class InitState extends GameState {
 
     public GameContext createGameContext() {
         return new GameContext(this.playerList, 0, startingIndex, deck, paradeBoard);
-    }
-
-    @Override
-    public void exit() {
     }
 }
