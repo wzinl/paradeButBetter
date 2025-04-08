@@ -3,7 +3,6 @@ package main.helpers.inputHandlers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 import org.fusesource.jansi.Ansi;
 import org.jline.keymap.BindingReader;
@@ -53,7 +52,7 @@ public class MenuInputHandler {
         }
     }
 
-    public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, Map<String, Character> actionMap) throws IOException {
+    public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, String[] actionStrings) throws IOException {
         flushStdin();
         BindingReader bindingReader = new BindingReader(terminal.reader());
         int selectedIndex = 0;
@@ -61,12 +60,11 @@ public class MenuInputHandler {
         List<Card> cardList = currHand.getCardList();
         int handSize = cardList.size();
 
-        String[] actionKeys = actionMap.keySet().toArray(String[]::new);
-        int actionKeyCount = actionKeys.length;
+        int actionStringsCount = actionStrings.length;
 
         boolean onCardRow = true;
         
-        UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionKeys, onCardRow);
+        UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionStrings, onCardRow);
         while (true) {
             String key = bindingReader.readBinding(keyMap);
 
@@ -89,14 +87,14 @@ public class MenuInputHandler {
                 }
                 case "RIGHT" -> {
                     selectedIndex++;
-                    int max = onCardRow ? handSize : actionKeyCount;
+                    int max = onCardRow ? handSize : actionStringsCount;
                     if (selectedIndex >= max) {
                         selectedIndex = 0;
                     }
                 }
                 case "LEFT" -> {
                     selectedIndex--;
-                    int max = onCardRow ? handSize : actionKeyCount;
+                    int max = onCardRow ? handSize : actionStringsCount;
                     if (selectedIndex < 0) {
                         selectedIndex = max - 1;
                     }
@@ -105,13 +103,13 @@ public class MenuInputHandler {
                     if (onCardRow) {
                         return new CardInput(selectedIndex);
                     } else {
-                        return new ActionInput(actionMap.get(actionKeys[selectedIndex]));
+                        return new ActionInput(actionStrings[selectedIndex].toUpperCase().charAt(0));
                     }
                 }
             }
 
             UIManager.clearScreen();
-            UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionKeys, onCardRow);
+            UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionStrings, onCardRow);
         }
     }
 

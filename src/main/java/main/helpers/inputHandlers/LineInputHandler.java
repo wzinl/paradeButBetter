@@ -1,11 +1,14 @@
 package main.helpers.inputHandlers;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import org.fusesource.jansi.Ansi;
 import org.jline.reader.EndOfFileException;
@@ -135,15 +138,19 @@ public class LineInputHandler {
         }
     } 
     
-    public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, Map<String, Character> actionMap) {
+    public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, String[] actionStrings) {
         int max = currentPlayer.getPlayerHand().getCardList().size();
         int min = 1;
         String prompt = "";
-        Collection<Character> actionChars = actionMap.values();
-        UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, actionMap.keySet().toArray(String[]::new));
+        Collection<Character> actionChars = Arrays.stream(actionStrings)
+                .map(action -> action.charAt(0))
+                .collect(Collectors.toSet());
+        UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, actionStrings);
 
-        for (String actionString : actionMap.keySet()) {
-            prompt += "Enter " + Ansi.ansi().bold().fg(Ansi.Color.GREEN).a(actionMap.get(actionString)).reset()
+        for (String actionString : actionStrings) {
+            prompt += "Enter " 
+                    + Ansi.ansi().bold().fg(Ansi.Color.GREEN)
+                      .a(actionString.toUpperCase().charAt(0)).reset()
                     + " to " + actionString + "\n";        
         }
         prompt += Ansi.ansi().bold().fg(Ansi.Color.CYAN).a("Select a card (1-" + max + "): ").reset();
@@ -155,7 +162,7 @@ public class LineInputHandler {
         while (true) {
             String input = waitForInput(repeatPrompt).trim();
             if (input.length() == 1 && actionChars.contains(input.toUpperCase().charAt(0))) {
-                return new ActionInput(input.charAt(0));
+                return new ActionInput(input.toUpperCase().charAt(0));
             }
     
             try {

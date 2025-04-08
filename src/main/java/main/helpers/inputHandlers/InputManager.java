@@ -1,8 +1,6 @@
 package main.helpers.inputHandlers;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
@@ -23,12 +21,11 @@ public class InputManager {
     Attributes lineReaderAttributes;
     boolean inLineInput;
 
-    private static final Map<String, Character> ACTION_MAP = new TreeMap<>(Map.of(
-        "Display Everybody's Boards", 'D',
-        "Exit Game", 'Q',
-        "Change Input Type", 'C'
-    ));
-
+    private static final String[] ACTIONS = {
+        "Change Input Type",
+        "Display Everybody's Boards",
+        "Exit Game"
+    };
 
     public InputManager() {
         try {
@@ -82,12 +79,12 @@ public class InputManager {
 
     public SelectionInput lineTurnSelect(ParadeBoard paradeBoard, Player currentPlayer) {
         ensureLineInput();
-        return lineHandler.turnSelect(paradeBoard, currentPlayer, ACTION_MAP);
+        return lineHandler.turnSelect(paradeBoard, currentPlayer, ACTIONS);
     }
 
     public SelectionInput menuturnSelect(ParadeBoard paradeBoard, Player currentPlayer) throws IOException{
         ensureMenuInput();
-        return menuHandler.turnSelect(paradeBoard, currentPlayer, ACTION_MAP);
+        return menuHandler.turnSelect(paradeBoard, currentPlayer, ACTIONS);
     }
 
     public void ensureLineInput() {

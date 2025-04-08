@@ -19,8 +19,6 @@ import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
 import main.models.player.bots.Bot;
-import main.models.player.bots.RandomBot;
-import main.models.player.bots.SmartBot;
 import main.models.selections.ActionSelection;
 import main.models.selections.CardSelection;
 import main.models.selections.TurnSelection;
@@ -61,16 +59,13 @@ public abstract class GameTurnState extends GamePlayState{
     }
 
     protected void playCard(Player current, int index) throws InvalidCardException{
+        UIManager.clearScreen();
         PlayerHand hand = current.getPlayerHand();
         List <Card> cardList = hand.getCardList();
         Card chosenCard = cardList.get(index);
         PlayerBoard playerBoard = current.getPlayerBoard();
-
-        
-
-        if (current instanceof RandomBot || current instanceof SmartBot) {
+        if (current instanceof Bot) {
             UIManager.displayBotAction(current, index);
-            UIManager.pauseExecution(3000);
         }
         
         int chosenValue = chosenCard.getValue();
@@ -83,7 +78,6 @@ public abstract class GameTurnState extends GamePlayState{
                 removedCards.add(currentCard);
             }
         }
-
         hand.removeCard(chosenCard);
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);
@@ -91,6 +85,7 @@ public abstract class GameTurnState extends GamePlayState{
         for (Card card : removedCards) {
             playerBoard.addCard(card);
         }
+
         UIManager.displayCardPlay(current,chosenCard, beforeRemovalParadeBoard, playerBoard, removedCards);
         for (Card card : removedCards) {
             paradeBoard.remove(card);

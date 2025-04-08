@@ -190,8 +190,10 @@ public class UIManager {
      * @param removedCards Any cards removed due to the play
      */
     public static void displayCardPlay(Player player, Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard, ArrayList<Card> removedCards) {
+        clearScreen();
         DisplayFactory.getCardPlayDisplay(player, chosenCard, paradeBoard, playerBoard, removedCards);
     }
+
     public static void typeWriter(String text, int delay) throws InterruptedException {
         for (char c : text.toCharArray()) {
             System.out.print(c);

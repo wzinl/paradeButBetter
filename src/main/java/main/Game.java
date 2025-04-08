@@ -10,7 +10,7 @@ import main.helpers.ui.UIManager;
 
 public class Game {
     private final GameStateManager gsm;
-    private final static String[] introActions = {"Start Game", "Game Rules", "Quit Game"};
+    private final static String[] introActions = {"Start Game", "Game Rules", "Exit Game"};
     private boolean isRunning; // Flag to control the game loop
     InputManager inputManager;
 

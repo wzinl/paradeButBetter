@@ -3,9 +3,7 @@ package main.helpers.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.helpers.ui.UIManager;
 import org.fusesource.jansi.Ansi;
-
 
 import main.models.ParadeBoard;
 import main.models.cards.Card;
@@ -172,7 +170,10 @@ public class DisplayFactory {
     public static String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, Boolean onCardRow) {
         StringBuilder result = new StringBuilder();
 
-        result.append("==========" + Ansi.ansi().bold().fg(Ansi.Color.GREEN).a(currentPlayer.getPlayerName() + "'s turn!").reset() + "==========\n\n");
+        result.append("==========")
+              .append(Ansi.ansi().bold().fg(Ansi.Color.GREEN)
+              .a(currentPlayer.getPlayerName() + "'s turn!").reset())
+              .append("==========\n\n");
 
         PlayerHand currHand = currentPlayer.getPlayerHand();
         List<Card> cardList = currHand.getCardList();
@@ -187,7 +188,12 @@ public class DisplayFactory {
         for (int i = 0; i < actionOptions.length; i++) {
             boolean isSelected = (i == selectedIndex);
             String option = actionOptions[i];
-            result.append(isSelected && !onCardRow ? String.format("[ %s ]", option) : String.format("  %s  ", option)).append("  ");
+
+            result.append(isSelected && !onCardRow ?
+                          Ansi.ansi().bold().fg(Ansi.Color.RED).a(
+                          String.format("[ %s ]", option)).reset() 
+                          : String.format("  %s  ", option))
+                  .append("  ");
         }
 
         result.append(Ansi.ansi().bold().a("\n\nUse arrow keys or WASD to navigate, and Enter to select.").reset());
