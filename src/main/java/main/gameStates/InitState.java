@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.fusesource.jansi.Ansi;
+
 import main.context.GameContext;
 import main.helpers.inputHandlers.InputManager;
 import main.helpers.ui.DisplayEffects;
@@ -28,29 +30,49 @@ public class InitState extends GameState {
     public void enter() {
 
         UIManager.clearScreen();
-        int numPlayers = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN
-                + "🎮Enter number of players: " + DisplayEffects.ANSI_RESET, 1, 6);
+        // int numPlayers = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN
+        //         + "🎮 Enter number of players: " + DisplayEffects.ANSI_RESET, 1, 6);
+        int numPlayers = inputManager.getIntInRange(
+        Ansi.ansi().bold().fg(Ansi.Color.CYAN).a("🎮 Enter number of players: ").reset().toString(), 1, 6);
         System.out.println();
         int numBots = 0;
         int difficulty = 0;
 
         if (numPlayers != 6 && numPlayers != 1) {
-            numBots = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE
-                    + "Enter number of bots: " + DisplayEffects.ANSI_RESET, 0, 6 - numPlayers);
+            numBots = inputManager.getIntInRange(
+                    Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a("🤖 Enter number of bots: ").reset().toString(), 0, 6 - numPlayers);
             System.out.println();
             if (numBots != 0) {
-                difficulty = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_RED
-                        + "Choose bot level (1-3): " + DisplayEffects.ANSI_RESET, 1, 3);
+                difficulty = inputManager.getIntInRange(
+                        Ansi.ansi().bold().fg(Ansi.Color.RED).a("Choose bot level (1-3): ").reset().toString(), 1, 3);
                 System.out.println();
             }
         } else if (numPlayers == 1) {
-            numBots = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE
-                    + "Enter number of bots: " + DisplayEffects.ANSI_RESET, 1, 5);
+            numBots = inputManager.getIntInRange(
+                    Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a("🤖 Enter number of bots: ").reset().toString(), 1, 5);
             System.out.println();
-            difficulty = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_RED
-                    + "Choose bot level (1-3): " + DisplayEffects.ANSI_RESET, 1, 3);
+            difficulty = inputManager.getIntInRange(
+                    Ansi.ansi().bold().fg(Ansi.Color.RED).a("Choose bot level (1-3): ").reset().toString(), 1, 3);
             System.out.println();
         }
+
+        // if (numPlayers != 6 && numPlayers != 1) {
+        //     numBots = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE
+        //             + "🤖 Enter number of bots: " + DisplayEffects.ANSI_RESET, 0, 6 - numPlayers);
+        //     System.out.println();
+        //     if (numBots != 0) {
+        //         difficulty = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_RED
+        //                 + "Choose bot level (1-3): " + DisplayEffects.ANSI_RESET, 1, 3);
+        //         System.out.println();
+        //     }
+        // } else if (numPlayers == 1) {
+        //     numBots = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE
+        //             + "🤖 Enter number of bots: " + DisplayEffects.ANSI_RESET, 1, 5);
+        //     System.out.println();
+        //     difficulty = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_RED
+        //             + "Choose bot level (1-3): " + DisplayEffects.ANSI_RESET, 1, 3);
+        //     System.out.println();
+        // }
 
         ArrayList<Player> createdPlayerList = new ArrayList<>();
         HashSet<String> playerNames = new HashSet<>();
