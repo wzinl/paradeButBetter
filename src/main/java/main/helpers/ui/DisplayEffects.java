@@ -28,7 +28,6 @@ public static final String BOLD = "\u001B[1m";
 public static final String ANSI_UNDERLINE = "\u001B[4m";
 public static final int BLINK_COUNT = 20;
 
-
     public static void typeWriter(String text, int delay) throws InterruptedException {
         for (char c : text.toCharArray()) {
             System.out.print(c);

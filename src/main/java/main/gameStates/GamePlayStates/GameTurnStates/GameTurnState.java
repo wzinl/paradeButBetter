@@ -14,6 +14,7 @@ import main.helpers.inputTypes.CardInput;
 import main.helpers.inputTypes.SelectionInput;
 import main.helpers.ui.DisplayEffects;
 import main.helpers.ui.UIManager;
+import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.Player;
 import main.models.player.PlayerBoard;
@@ -75,23 +76,25 @@ public abstract class GameTurnState extends GamePlayState{
         
         int chosenValue = chosenCard.getValue();
         ArrayList<Card> removedCards = new ArrayList<>();
-
+        ParadeBoard beforeRemovalParadeBoard = paradeBoard;
+        
         for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
             Card currentCard = paradeBoard.getCardList().get(i);
             if (currentCard.getValue() <= chosenValue || currentCard.getColor().equals(chosenCard.getColor())) {
                 removedCards.add(currentCard);
             }
         }
-        for (Card card : removedCards) {
-            paradeBoard.remove(card);
-            playerBoard.addCard(card);
-        }
 
         hand.removeCard(chosenCard);
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);
         }
-        UIManager.displayCardPlay(current,chosenCard, paradeBoard, playerBoard, removedCards);
+        
+        UIManager.displayCardPlay(current,chosenCard, beforeRemovalParadeBoard, playerBoard, removedCards);
+        for (Card card : removedCards) {
+            paradeBoard.remove(card);
+            playerBoard.addCard(card);
+        }
         paradeBoard.addToBoard(chosenCard);
 
     }
