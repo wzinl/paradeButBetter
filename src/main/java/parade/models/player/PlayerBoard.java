@@ -9,6 +9,7 @@ import java.util.Map;
 import parade.exceptions.InvalidCardException;
 import parade.models.cards.Card;
 import parade.models.cards.CardCollection;
+import parade.models.cards.CardColors;
 
 public class PlayerBoard implements CardCollection{
     HashMap<String, ArrayList<Card>> playerBoard;
@@ -101,9 +102,9 @@ public class PlayerBoard implements CardCollection{
     
         // Print centered colored headers
         for (String color : colors) {
-            String colorCode = getAnsiColorCode(color);
+            String colorCode = CardColors.getAnsiColorCode(color);
             int padding = (CARD_WIDTH - color.length()) / 2;
-            String centeredHeader = " ".repeat(padding) + colorCode + color + "\u001B[0m" + 
+            String centeredHeader = " ".repeat(padding) + colorCode + color + Card.ANSI_RESET + 
                                 " ".repeat(CARD_WIDTH - color.length() - padding);
             output.append(centeredHeader).append("  "); // 2 spaces between columns
         }
@@ -114,7 +115,7 @@ public class PlayerBoard implements CardCollection{
         for (int line = 0; line < maxStackHeight; line++) {
             for (String color : colors) {
                 List<String[]> stack = colorStacks.get(color);
-                String colorCode = getAnsiColorCode(color);
+                String colorCode = CardColors.getAnsiColorCode(color);
                 boolean linePrinted = false;
     
                 for (int cardIdx = 0; cardIdx < stack.size(); cardIdx++) {
@@ -123,7 +124,7 @@ public class PlayerBoard implements CardCollection{
                         String cardRow = stack.get(cardIdx)[cardLine];
                         
                         // Apply color to the entire card
-                        output.append(colorCode).append(cardRow).append("\u001B[0m");
+                        output.append(colorCode).append(cardRow).append(Card.ANSI_RESET);
                         linePrinted = true;
                         break; // Only show top most visible card for this line
                     }
@@ -138,18 +139,6 @@ public class PlayerBoard implements CardCollection{
         }
     
         return output.toString();
-    }
-
-    public String getAnsiColorCode(String color) {
-        return switch (color) {
-            case "Green" -> "\u001B[38;5;46m";
-            case "Purple" -> "\u001B[38;5;129m";
-            case "Red" -> "\u001B[38;5;196m";
-            case "Blue" -> "\u001B[38;5;39m";
-            case "Orange" -> "\u001B[38;5;208m";
-            case "Grey" -> "\u001B[38;5;245m";
-            default -> "\u001B[0m";
-        };
     }
 
     @Override

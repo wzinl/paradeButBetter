@@ -84,7 +84,7 @@ public class PlayerHand{
                 // Apply card's color, add line, then reset
                 result.append(colorCodes.get(i))
                     .append(cardLines.get(i)[line])
-                    .append("\u001B[0m  "); // Reset + double space between cards
+                    .append(Card.ANSI_RESET+"  "); // Reset + double space between cards
             }
             result.append("\n");
         }
