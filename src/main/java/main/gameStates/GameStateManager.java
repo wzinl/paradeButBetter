@@ -32,19 +32,15 @@ public class GameStateManager {
 
     public void init() {
         currentState = new InitState(this, inputManager);
-        currentState.enter();
+        currentState.run();
 
         this.currentContext = ((InitState)currentState).createGameContext();
     }
     
     public void setState(GameState newState) {
-        //exit the turn state 
-        if (currentState != null) {
-            currentState.exit();
-        } 
         //Set the new current state, then enter the next state of the game
         currentState = newState;
-        currentState.enter();
+        currentState.run();
     }
 
     public InputManager getInputManager() {

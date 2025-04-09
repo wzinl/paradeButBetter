@@ -34,7 +34,7 @@ public class GameEndState extends GamePlayState {
     }
 
     @Override
-    public void enter() {
+    public void run() {
         try {
             UIManager.clearScreen();
 
@@ -183,10 +183,5 @@ public class GameEndState extends GamePlayState {
                 }
             }
         }
-    }
-
-    @Override
-    public void exit() {
-        // Cleanup if needed
     }
 }

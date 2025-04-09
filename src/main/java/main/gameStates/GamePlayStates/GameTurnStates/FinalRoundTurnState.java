@@ -15,7 +15,7 @@ public class FinalRoundTurnState extends GameTurnState {
     }
 
     @Override
-    public void enter() {
+    public void run() {
         UIManager.displayFinalRoundMessage();
         inputManager.getEnter();
         UIManager.clearScreen();
@@ -33,11 +33,4 @@ public class FinalRoundTurnState extends GameTurnState {
         currentPlayerIndex = context.getCurrentPlayerIndex();
 
     }
-
-    @Override
-    public void exit() {
-        // Logic to clean up or transition out of the final round state
-        System.out.println("Exiting Final Round...");
-    }
-    
 }

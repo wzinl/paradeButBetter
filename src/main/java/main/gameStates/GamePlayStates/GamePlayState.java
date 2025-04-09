@@ -28,8 +28,8 @@ public abstract class GamePlayState extends GameState{
     
     private void initializeActionHandlers() {
         actionHandlers.put('C', this::changeInputType);
-        actionHandlers.put('Q', this::exitGame);
-        actionHandlers.put('D', this::viewAllPlayerBoards);
+        actionHandlers.put('E', this::exitGame);
+        actionHandlers.put('D', this::displayAllPlayerBoards);
     }
 
     protected void performAction(char action) {
@@ -45,7 +45,7 @@ public abstract class GamePlayState extends GameState{
         gsm.exitGame();
     }
 
-    public void viewAllPlayerBoards() {
+    public void displayAllPlayerBoards() {
         UIManager.displayBoardOverview(context.getPlayerList(), context.getParadeBoard());
         inputManager.getEnter();
     }
@@ -74,4 +74,5 @@ public abstract class GamePlayState extends GameState{
     protected SelectionInput getSelectionInput(Player current) {
         return inputManager.turnSelect(paradeBoard, current);
     }
+    
 }

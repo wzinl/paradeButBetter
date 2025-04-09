@@ -8,7 +8,6 @@ import org.fusesource.jansi.Ansi;
 
 import main.context.GameContext;
 import main.helpers.inputHandlers.InputManager;
-import main.helpers.ui.DisplayEffects;
 import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
 import main.models.cards.Deck;
@@ -27,11 +26,9 @@ public class InitState extends GameState {
     }
 
     @Override
-    public void enter() {
+    public void run() {
 
         UIManager.clearScreen();
-        // int numPlayers = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN
-        //         + "🎮 Enter number of players: " + DisplayEffects.ANSI_RESET, 1, 6);
         int numPlayers = inputManager.getIntInRange(
         Ansi.ansi().bold().fg(Ansi.Color.CYAN).a("🎮 Enter number of players: ").reset().toString(), 1, 6);
         System.out.println();
@@ -56,37 +53,23 @@ public class InitState extends GameState {
             System.out.println();
         }
 
-        // if (numPlayers != 6 && numPlayers != 1) {
-        //     numBots = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE
-        //             + "🤖 Enter number of bots: " + DisplayEffects.ANSI_RESET, 0, 6 - numPlayers);
-        //     System.out.println();
-        //     if (numBots != 0) {
-        //         difficulty = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_RED
-        //                 + "Choose bot level (1-3): " + DisplayEffects.ANSI_RESET, 1, 3);
-        //         System.out.println();
-        //     }
-        // } else if (numPlayers == 1) {
-        //     numBots = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_PURPLE
-        //             + "🤖 Enter number of bots: " + DisplayEffects.ANSI_RESET, 1, 5);
-        //     System.out.println();
-        //     difficulty = inputManager.getIntInRange(DisplayEffects.BOLD + DisplayEffects.ANSI_RED
-        //             + "Choose bot level (1-3): " + DisplayEffects.ANSI_RESET, 1, 3);
-        //     System.out.println();
-        // }
-
         ArrayList<Player> createdPlayerList = new ArrayList<>();
         HashSet<String> playerNames = new HashSet<>();
         UIManager.clearScreen();
 
         for (int i = 1; i <= numPlayers; i++) {
-            String playerName = inputManager.getString(DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN
-                    + "Enter name of Player " + i + ": " + DisplayEffects.ANSI_RESET);
-            while (playerNames.contains(playerName)) {
+            String playerName = inputManager.getString(
+                                             Ansi.ansi().bold().fg(Ansi.Color.GREEN).a(
+                                             "🤓 Enter name of Player " + i + ": ")
+                                             .reset().toString());
+            
+                while (playerNames.contains(playerName)) {
                 System.out.println();
-                System.out.println(DisplayEffects.BOLD + "Player name taken. Please choose another name."
-                        + DisplayEffects.ANSI_RESET);
-                playerName = inputManager.getString(DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN
-                        + "Enter name of Player " + i + ": " + DisplayEffects.ANSI_RESET);
+                System.out.println(Ansi.ansi().bold().a("Player name taken. Please choose another name.").reset());
+                playerName = inputManager.getString(
+                                          Ansi.ansi().bold().fg(Ansi.Color.GREEN).a(
+                                          "🤓 Enter name of Player " + i + ": "
+                                          ).reset().toString());
             }
             playerNames.add(playerName);
             Player player = new Player(playerName);
@@ -99,12 +82,13 @@ public class InitState extends GameState {
             for (int i = 1; i <= numBots; i++) {
                 String botName = "";
                 do {
-                    botName = inputManager.getString(DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN
-                            + "Enter name of Bot " + i + ": " + DisplayEffects.ANSI_RESET);
+                    botName = inputManager.getString(
+                            Ansi.ansi().bold().fg(Ansi.Color.GREEN).a("👾 Enter name of Bot " + i + ": ").reset().toString());
                     if (playerNames.contains(botName)) {
                         System.out.println();
-                        System.out.println(DisplayEffects.BOLD + "Bot name taken. Please choose another name."
-                                + DisplayEffects.ANSI_RESET);
+                        System.out.println(Ansi.ansi().bold().a(
+                                     "Bot name taken. Please choose another name.")
+                                           .reset());
                     }
                 } while (playerNames.contains(botName));
 
@@ -142,9 +126,5 @@ public class InitState extends GameState {
 
     public GameContext createGameContext() {
         return new GameContext(this.playerList, 0, startingIndex, deck, paradeBoard);
-    }
-
-    @Override
-    public void exit() {
     }
 }

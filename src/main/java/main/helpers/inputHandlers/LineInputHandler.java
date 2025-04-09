@@ -1,12 +1,14 @@
 package main.helpers.inputHandlers;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
+import org.fusesource.jansi.Ansi;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -16,7 +18,6 @@ import org.jline.terminal.Terminal;
 import main.helpers.inputTypes.ActionInput;
 import main.helpers.inputTypes.CardInput;
 import main.helpers.inputTypes.SelectionInput;
-import main.helpers.ui.DisplayEffects;
 import main.helpers.ui.UIManager;
 import main.models.ParadeBoard;
 import main.models.player.Player;
@@ -90,14 +91,17 @@ public class LineInputHandler {
             throw new RuntimeException("Input interrupted");
         }
     }
-    private void waitforEnter(String prompt) {
+    private void waitforEnter() {
+        String prompt = "Press Enter to continue...";
         flushQueue();
         Thread blinkingThread = new Thread(() -> {
             try {
-                DisplayEffects.blinkingEffect(DisplayEffects.BOLD + DisplayEffects.ANSI_RED + prompt + DisplayEffects.ANSI_RESET);
+                UIManager.blinkingEffect(
+                    Ansi.ansi().bold().fg(Ansi.Color.RED).a(prompt).reset().toString());
             } catch (InterruptedException e) {
-                System.out.println(DisplayEffects.BOLD + DisplayEffects.ANSI_RED + prompt + DisplayEffects.ANSI_RESET);
-            }
+                System.out.println(
+                    Ansi.ansi().bold().fg(Ansi.Color.RED).a(prompt).reset().toString());
+                }
         });
         blinkingThread.start();
     
@@ -134,17 +138,22 @@ public class LineInputHandler {
         }
     } 
     
-    public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, Map<String, Character> actionMap) {
+    public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, String[] actionStrings) {
         int max = currentPlayer.getPlayerHand().getCardList().size();
         int min = 1;
         String prompt = "";
-        Collection<Character> actionChars = actionMap.values();
-        UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, actionMap.keySet().toArray(String[]::new));
+        Collection<Character> actionChars = Arrays.stream(actionStrings)
+                .map(action -> action.charAt(0))
+                .collect(Collectors.toSet());
+        UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, actionStrings);
 
-        for (String actionString : actionMap.keySet()) {
-            prompt += "Enter " + DisplayEffects.BOLD + DisplayEffects.ANSI_GREEN +actionMap.get(actionString) + DisplayEffects.ANSI_RESET + " to " + actionString + "\n";
+        for (String actionString : actionStrings) {
+            prompt += "Enter " 
+                    + Ansi.ansi().bold().fg(Ansi.Color.GREEN)
+                      .a(actionString.toUpperCase().charAt(0)).reset()
+                    + " to " + actionString + "\n";        
         }
-        prompt += DisplayEffects.BOLD + DisplayEffects.ANSI_CYAN + "Select a card (1-" + max + "): " + DisplayEffects.ANSI_RESET;        
+        prompt += Ansi.ansi().bold().fg(Ansi.Color.CYAN).a("Select a card (1-" + max + "): ").reset();
 
         
         prompt = prompt.replaceAll(":$", ".");
@@ -154,7 +163,7 @@ public class LineInputHandler {
             
             String input = waitForInput("").trim();
             if (input.length() == 1 && actionChars.contains(input.toUpperCase().charAt(0))) {
-                return new ActionInput(input.charAt(0));
+                return new ActionInput(input.toUpperCase().charAt(0));
             }
             try {
                 int val = Integer.parseInt(input);
@@ -180,8 +189,8 @@ public class LineInputHandler {
         }
     }
 
-    public void getEnter(String prompt) {
-        waitforEnter(prompt);
+    public void getEnter() {
+        waitforEnter();
     }
 
     

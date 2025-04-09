@@ -12,15 +12,13 @@ import main.helpers.inputHandlers.InputManager;
 import main.helpers.inputTypes.ActionInput;
 import main.helpers.inputTypes.CardInput;
 import main.helpers.inputTypes.SelectionInput;
-import main.helpers.ui.DisplayEffects;
 import main.helpers.ui.UIManager;
+import main.models.ParadeBoard;
 import main.models.cards.Card;
 import main.models.player.Player;
 import main.models.player.PlayerBoard;
 import main.models.player.PlayerHand;
 import main.models.player.bots.Bot;
-import main.models.player.bots.RandomBot;
-import main.models.player.bots.SmartBot;
 import main.models.selections.ActionSelection;
 import main.models.selections.CardSelection;
 import main.models.selections.TurnSelection;
@@ -51,47 +49,47 @@ public abstract class GameTurnState extends GamePlayState{
                 }
                 UIManager.clearScreen();
             } catch (InvalidCardException e) {
-                System.out.println(DisplayEffects.BOLD+DisplayEffects.ANSI_BRIGHT_WHITE+DisplayEffects.RED_BG+"Invalid card. Please enter a valid card."+DisplayEffects.ANSI_RESET);
+                System.out.println("Invalid card. Please enter a valid card.");
             } catch(SelectionException e){
                 System.out.println(e.getMessage());
-                System.out.println(DisplayEffects.BOLD+"Trying Again..."+DisplayEffects.ANSI_RESET);
+                System.out.println("Trying Again...");
             }
         }
         
     }
 
     protected void playCard(Player current, int index) throws InvalidCardException{
+        UIManager.clearScreen();
         PlayerHand hand = current.getPlayerHand();
         List <Card> cardList = hand.getCardList();
         Card chosenCard = cardList.get(index);
         PlayerBoard playerBoard = current.getPlayerBoard();
-
-        
-
-        if (current instanceof RandomBot || current instanceof SmartBot) {
+        if (current instanceof Bot) {
             UIManager.displayBotAction(current, index);
-            UIManager.pauseExecution(3000);
         }
         
         int chosenValue = chosenCard.getValue();
         ArrayList<Card> removedCards = new ArrayList<>();
-
+        ParadeBoard beforeRemovalParadeBoard = paradeBoard;
+        
         for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
             Card currentCard = paradeBoard.getCardList().get(i);
             if (currentCard.getValue() <= chosenValue || currentCard.getColor().equals(chosenCard.getColor())) {
                 removedCards.add(currentCard);
             }
         }
-        for (Card card : removedCards) {
-            paradeBoard.remove(card);
-            playerBoard.addCard(card);
-        }
-
         hand.removeCard(chosenCard);
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);
         }
-        UIManager.displayCardPlay(current,chosenCard, paradeBoard, playerBoard, removedCards);
+        for (Card card : removedCards) {
+            playerBoard.addCard(card);
+        }
+
+        UIManager.displayCardPlay(current,chosenCard, beforeRemovalParadeBoard, playerBoard, removedCards);
+        for (Card card : removedCards) {
+            paradeBoard.remove(card);
+        }
         paradeBoard.addToBoard(chosenCard);
 
     }
@@ -105,6 +103,6 @@ public abstract class GameTurnState extends GamePlayState{
         if (input instanceof ActionInput action) {
             return new ActionSelection(() -> performAction(action.getActionChar()));
         }
-        throw new SelectionException(DisplayEffects.BOLD+DisplayEffects.RED_BG+DisplayEffects.ANSI_BRIGHT_WHITE+"Error with selection!"+DisplayEffects.ANSI_RESET);
+        throw new SelectionException("Error with selection!");
     }
 }

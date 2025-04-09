@@ -3,7 +3,6 @@ main/models/selections/ActionSelection.class
 main/helpers/inputTypes/SelectionInput.class
 main/exceptions/SelectionException.class
 main/helpers/ui/GameRulesDisplay.class
-main/helpers/ui/DisplayEffects.class
 main/helpers/ui/UIManager.class
 main/gameStates/GamePlayStates/GameTurnStates/FinalRoundTurnState.class
 main/gameStates/GamePlayStates/GameTurnStates/NotFinalRoundTurnState.class
