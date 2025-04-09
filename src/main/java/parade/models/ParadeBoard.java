@@ -30,38 +30,6 @@ public class ParadeBoard{
         cardList.remove(card);
     }
 
-    // // to check
-    // public ArrayList<Card> playCard(Card card) {
-    //     ArrayList<Card> selectedCards = new ArrayList<>();
-    //     // check if cards value is greater than board size
-    //     if (card.getValue() > cardList.size()) {
-    //         return selectedCards;
-    //     }
-    //     // Cards beyond playedCard's value index enter "removal mode"
-    //     int removalStartIndex = cardList.size() - card.getValue() - 1;
-
-    //     // "removal mode" cards
-    //     ArrayList<Card> remainingParade = new ArrayList<>();
-
-    //     // if not, the removal pile is no.of cards in board - card val
-    //     for (int i = cardList.size() - 1; i >= 0; i--) {
-    //         Card currentCard = cardList.get(i);
-
-    //         if (i >= removalStartIndex) {
-    //             // Remove if same colour or value less than or equal to the value of played card
-    //             if (currentCard.getColor().equals(card.getColor()) || currentCard.getValue() <= card.getValue()) {
-    //                 selectedCards.add(currentCard);
-    //             } else {
-    //                 remainingParade.add(currentCard);
-    //             }
-    //         }
-
-    //     }
-    //     // update the parade after removal
-    //     this.cardList = remainingParade;
-    //     return selectedCards;
-    // }
-
     public ArrayList<Card> getCardList() {
         return cardList;
     }
@@ -89,7 +57,8 @@ public class ParadeBoard{
                 // Apply card's color, add line, then reset
                 result.append(colorCodes.get(i))
                     .append(cardLines.get(i)[line])
-                    .append("\u001B[0m  "); // Reset + double space between cards
+                    .append(Card.ANSI_RESET) // Reset ANSI color;
+                    .append("  "); // Reset + double space between cards
             }
             result.append("\n");
         }
@@ -146,11 +115,11 @@ public class ParadeBoard{
                 for (int i = 0; i < cardList.size() - safeCardCount; i++) {
                     if (firstLine.get(i) != null) {
                         result.append(colorCodes.get(i))
-                            .append(firstLine.get(i)[line])
-                            .append("\u001B[0m  ");
+                              .append(firstLine.get(i)[line])
+                              .append(Card.ANSI_RESET + "  ");
                     } else {
                         result.append(" ".repeat(secondLine.get(i)[line].length()))
-                            .append("  ");
+                              .append("  ");
                     }
                 }
                 result.append("\n");
@@ -166,7 +135,7 @@ public class ParadeBoard{
                 if (secondLine.get(i) != null) {
                     result.append(colorCodes.get(i))
                           .append(secondLine.get(i)[line])
-                          .append("\u001B[0m  ");
+                          .append(Card.ANSI_RESET + "  ");
                 } else {
                     result.append(" ".repeat(firstLine.get(i)[line].length()))
                           .append("  ");
@@ -186,7 +155,7 @@ public class ParadeBoard{
             for (int i = cardList.size() - safeCardCount; i < cardList.size(); i++) {
                 result.append(colorCodes.get(i))
                       .append(secondLine.get(i)[line])
-                      .append("\u001B[0m  ");
+                      .append(Card.ANSI_RESET + "  ");
             }
     
             // Chosen card separator and card
@@ -197,7 +166,7 @@ public class ParadeBoard{
             }
             result.append(chosenColor)
                   .append(chosenCardLines[line])
-                  .append("\u001B[0m\n");
+                  .append(Card.ANSI_RESET +"\n");
         }
     
         return result.toString();

@@ -109,10 +109,10 @@ public class DisplayFactory {
     public static String getFormattedHandWithIndex(PlayerHand hand, Card selectedCard) {
         List<Card> cards = hand.getCardList();
         if (cards.isEmpty()) return "No cards in hand.\n";
-
+    
         List<String[]> cardLines = new ArrayList<>();
         List<String> colorCodes = new ArrayList<>();
-
+    
         // Generate ANSI-coded versions of each card line
         for (Card card : cards) {
             colorCodes.add(
@@ -122,20 +122,20 @@ public class DisplayFactory {
             );
             cardLines.add(card.toString().replaceAll("\\u001B\\[[;\\d]*m", "").split("\n"));
         }
-
+    
         StringBuilder result = new StringBuilder();
         int linesPerCard = cardLines.get(0).length;
-
+    
         // Build card rows line by line
         for (int line = 0; line < linesPerCard; line++) {
             for (int i = 0; i < cards.size(); i++) {
                 result.append(colorCodes.get(i))
                       .append(cardLines.get(i)[line])
-                      .append("\u001B[0m  ");
+                      .append(Card.ANSI_RESET + "  ");
             }
             result.append("\n");
         }
-
+    
         result.append(getIndexString(cards.size()));
         return result.toString();
     }
@@ -208,7 +208,8 @@ public class DisplayFactory {
     /** Displays full game state for one player (hand, board, parade). */
     private static String getPlayerDisplay(Player player, ParadeBoard paradeBoard, Card selectedCard) {
         StringBuilder result = new StringBuilder();
-        result.append("\u001B[0mParade:")
+        result.append(Card.ANSI_RESET);
+        result.append("Parade:")
               .append(paradeBoard.toString())
               .append("\n\n")
               .append(Ansi.ansi().bold().a(player.getPlayerName()));
@@ -357,7 +358,7 @@ public class DisplayFactory {
 
         System.out.println(player.getPlayerName() + " has played: ");
         System.out.println(chosenCard);
-        UIManager.pauseExecution(1000);
+        // UIManager.pauseExecution(1000);
 
         System.out.println("Updated Parade:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
@@ -373,7 +374,7 @@ public class DisplayFactory {
         System.out.println("Updated Hand:");
         System.out.println(player.getPlayerHand());
 
-        UIManager.pauseExecution(5000);
+        // UIManager.pauseExecution(5000);
         UIManager.clearScreen();
     }
     
