@@ -88,19 +88,20 @@ public class PlayerBoard implements CardCollection{
             cards.sort(Comparator.comparingInt(Card::getValue));
     
             List<String[]> stack = new ArrayList<>();
+
             for (Card card : cards) {
                 stack.add(card.toStringArray());
             }
+
             colorStacks.put(color, stack);
-            
             // Calculate stack height: (n-1 cards × overlap) + full card height
             maxStackHeight = Math.max(maxStackHeight, 
                 (stack.size() - 1) * OVERLAP + CARD_HEIGHT);
         }
     
         StringBuilder output = new StringBuilder("\n");
-    
-        // Print centered colored headers
+
+        // Add centered colored headers
         for (String color : colors) {
             String colorCode = CardColors.getAnsiColorCode(color);
             int padding = (CARD_WIDTH - color.length()) / 2;
@@ -110,7 +111,6 @@ public class PlayerBoard implements CardCollection{
         }
         output.append("\n");
 
-    
         // Print stacks
         for (int line = 0; line < maxStackHeight; line++) {
             for (String color : colors) {
@@ -140,6 +140,8 @@ public class PlayerBoard implements CardCollection{
     
         return output.toString();
     }
+
+   
 
     @Override
     public void removeCard(Card card) throws InvalidCardException {

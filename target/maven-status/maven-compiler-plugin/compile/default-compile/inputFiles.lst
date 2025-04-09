@@ -11,6 +11,7 @@
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/parade/gameStates/GameStateManager.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/parade/helpers/inputHandlers/LineInputHandler.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/parade/helpers/inputTypes/CardInput.java
+/Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/parade/models/cards/CardColors.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/parade/gameStates/InitState.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/parade/models/player/bots/Bot.java
 /Users/zin/SMU/y1s2/cs102/project/paradeButBetter/src/main/java/parade/helpers/inputHandlers/MenuInputHandler.java

@@ -161,7 +161,7 @@ public class ParadeBoard{
             }
             result.append(chosenColor)
                   .append(chosenCardLines[line])
-                  .append(Card.ANSI_RESET + "  ");
+                  .append(Card.ANSI_RESET +"\n");
         }
     
         return result.toString();
