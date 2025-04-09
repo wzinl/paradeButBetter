@@ -36,6 +36,7 @@ public class ParadeBoard{
 
     @Override
     public String toString() {
+        boolean useCompact = cardList.size() > 10;  // Use compact version if more than 10 cards
 
         // Prepare all card lines and color codes
         List<String[]> cardLines = new ArrayList<>();
@@ -43,7 +44,8 @@ public class ParadeBoard{
         
         for (Card card : cardList) {
             colorCodes.add(card.getAnsiColorCode());
-            cardLines.add(card.toString()
+            String cardString = useCompact ? card.toString(true) : card.toString();
+            cardLines.add(cardString 
                         .replaceAll("\u001B\\[[;\\d]*m", "") // Remove existing ANSI codes
                         .split("\n"));
         }

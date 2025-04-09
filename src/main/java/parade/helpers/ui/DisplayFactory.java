@@ -89,12 +89,6 @@ public class DisplayFactory {
                         String.format("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore()));
         }
     
-        if (players.get(0).getPlayerScore() == players.get(1).getPlayerScore()) {
-            finalScores.append("\nThe game is a tie!");
-        } else {
-            finalScores.append("\n").append(players.get(0).getPlayerName()).append(" wins!");
-        }
-
         return finalScores.toString();
     }
 
@@ -358,7 +352,7 @@ public class DisplayFactory {
 
         System.out.println(player.getPlayerName() + " has played: ");
         System.out.println(chosenCard);
-        // UIManager.pauseExecution(1000);
+        //UIManager.pauseExecution(1000);
 
         System.out.println("Updated Parade:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
@@ -374,7 +368,7 @@ public class DisplayFactory {
         System.out.println("Updated Hand:");
         System.out.println(player.getPlayerHand());
 
-        // UIManager.pauseExecution(5000);
+        //UIManager.pauseExecution(5000);
         UIManager.clearScreen();
     }
     
