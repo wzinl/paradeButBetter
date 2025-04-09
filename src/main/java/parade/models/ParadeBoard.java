@@ -106,10 +106,14 @@ public class ParadeBoard{
         List<String[]> firstLine = new ArrayList<>(); // Top row (cards to remove)
         List<String[]> secondLine = new ArrayList<>(); // Bottom row (kept + safe)
         List<String> colorCodes = new ArrayList<>();
-    
+        boolean useCompact = cardList.size() > 10; // Determine if we should use compact display
+
         for (Card card : cardList) {
             colorCodes.add(card.getAnsiColorCode());
-            String[] cardLines = card.toString()
+
+            // Use compactToString() if there are more than 10 cards
+            String cardString = useCompact ? card.toString(true) : card.toString();
+            String[] cardLines = cardString
                                      .replaceAll("\u001B\\[[;\\d]*m", "")
                                      .split("\n");
             if (toRemove.contains(card)) {
@@ -122,14 +126,15 @@ public class ParadeBoard{
         }
     
         // Prepare chosen card display
-        String[] chosenCardLines = chosenCard.toString()
+        String chosenCardString = useCompact ? chosenCard.toString(true) : chosenCard.toString();
+        String[] chosenCardLines = chosenCardString
                                              .replaceAll("\u001B\\[[;\\d]*m", "")
                                              .split("\n");
         String chosenColor = chosenCard.getAnsiColorCode();
     
         // Format first and second row
         StringBuilder result = new StringBuilder();
-        int linesPerCard = 8;
+        int linesPerCard = useCompact ? 5 : 8; // Compact cards have 4 lines, regular have 8
     
         // Check if firstLine contains only null
         boolean hasCardsToRemove = firstLine.stream().anyMatch(Objects::nonNull);

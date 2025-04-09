@@ -50,56 +50,82 @@ public class Card{
         };
     }
 
+    // Original version (larger card)
     @Override
-public String toString() {
-    String reset = "\u001B[0m";
-    final int CARD_WIDTH = 10;  // Fixed width 
-    final int TEXT_WIDTH = CARD_WIDTH - 4;  // Space between borders (after padding)
-
-    StringBuilder result = new StringBuilder();
-
-    // Top border
-    result.append("\n┌").append("─".repeat(CARD_WIDTH - 2)).append("┐\n");
-
-    // Top value (left-aligned or blank if not face-up)
-    if (isFaceUp) {
-        result.append("│ ")
-              .append(String.format("%-" + TEXT_WIDTH + "s", value))  // Left-align
-              .append(" │\n");
-    } else {
-        result.append("│ ")
-              .append(" ".repeat(TEXT_WIDTH))  // Blank space
-              .append(" │\n");
+    public String toString() {
+        return toString(false); // default to original style
     }
 
-    // Empty line
-    result.append("│").append(" ".repeat(CARD_WIDTH - 2)).append("│\n");
 
-    // Color (centered)
-    result.append("│ ")
-          .append(centerString(color, TEXT_WIDTH))  // Helper method below
-          .append(" │\n");
+    // Original card format (extracted to separate method)
+    public String toString(boolean compact) {
+        String reset = "\u001B[0m";
+        final int CARD_WIDTH = compact ? 8 : 10;  // Fixed width 
+        final int TEXT_WIDTH = CARD_WIDTH - (compact ? 2 : 4);  // Space between borders (after padding)
 
-    // Empty line
-    result.append("│").append(" ".repeat(CARD_WIDTH - 2)).append("│\n");
+        StringBuilder result = new StringBuilder();
 
-    // Bottom value (right-aligned or blank if not face-up)
-    if (isFaceUp) {
-        result.append("│ ")
-              .append(String.format("%" + TEXT_WIDTH + "s", value))  // Right-align
-              .append(" │\n");
-    } else {
-        result.append("│ ")
-              .append(" ".repeat(TEXT_WIDTH))  // Blank space
-              .append(" │\n");
-    }
+        // Top border
+        result.append("\n┌").append("─".repeat(CARD_WIDTH - 2)).append("┐\n");
 
-    // Bottom border
-    result.append("└").append("─".repeat(CARD_WIDTH - 2)).append("┘");
-
-    return getAnsiColorCode() + result.toString() + reset;
-}
+        if (compact) {
+            // Compact version - value and color on consecutive lines
+            if (isFaceUp) {
+                String numberString = Integer.toString(value);
+                result.append("│")
+                    .append(centerString(numberString, TEXT_WIDTH))
+                    .append("│\n");
+            } else {
+                result.append("│")
+                    .append(" ".repeat(CARD_WIDTH - 2))
+                    .append("│\n");
+            }
     
+            result.append("│")
+                .append(centerString(isFaceUp ? color : "", CARD_WIDTH - 2))
+                .append("│\n");
+        } else {
+            // Top value (left-aligned or blank if not face-up)
+            if (isFaceUp) {
+                result.append("│ ")
+                    .append(String.format("%-" + TEXT_WIDTH + "s", value))  // Left-align
+                    .append(" │\n");
+            } else {
+                result.append("│ ")
+                    .append(" ".repeat(TEXT_WIDTH))  // Blank space
+                    .append(" │\n");
+            }
+
+            // Empty line
+            result.append("│").append(" ".repeat(CARD_WIDTH - 2)).append("│\n");
+
+            // Color (centered)
+            result.append("│ ")
+                .append(centerString(color, TEXT_WIDTH))  // Helper method below
+                .append(" │\n");
+
+            // Empty line
+            result.append("│").append(" ".repeat(CARD_WIDTH - 2)).append("│\n");
+
+            // Bottom value (right-aligned or blank if not face-up)
+            if (isFaceUp) {
+                result.append("│ ")
+                    .append(String.format("%" + TEXT_WIDTH + "s", value))  // Right-align
+                    .append(" │\n");
+            } else {
+                result.append("│ ")
+                    .append(" ".repeat(TEXT_WIDTH))  // Blank space
+                    .append(" │\n");
+            }
+        }
+        
+        // Bottom border
+        result.append("└").append("─".repeat(CARD_WIDTH - 2)).append("┘");
+
+        return getAnsiColorCode() + result.toString() + reset;
+    }
+
+
     // Helper method to center text (add this to your class)
     private String centerString(String text, int width) {
         if (text.length() >= width) {
