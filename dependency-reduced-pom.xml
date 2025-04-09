@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>main.Game</mainClass>
+                  <mainClass>parade.Game</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -35,7 +35,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>main.Game</mainClass>
+              <mainClass>parade.Game</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -45,7 +45,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
-          <mainClass>main.Game</mainClass>
+          <mainClass>parade.Game</mainClass>
         </configuration>
       </plugin>
     </plugins>
