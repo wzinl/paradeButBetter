@@ -149,12 +149,15 @@ public class GameEndState extends GamePlayState {
     }
 
     private void announceWinner(List<Player> winners) {
+        winners.sort((p1, p2) -> Integer.compare(p1.getPlayerScore(), p2.getPlayerScore()));
+    
         if (winners.size() > 1 && winners.get(0).getPlayerScore() == winners.get(1).getPlayerScore()) {
             UIManager.displayTieResults(winners);
         } else {
             UIManager.displayWinner(winners.get(0));
         }
     }
+    
 
     private void discardTwoCards(Player player) throws InvalidCardException {
         if (player instanceof Bot bot) {
