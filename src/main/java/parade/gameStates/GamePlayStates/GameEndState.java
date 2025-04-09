@@ -168,6 +168,7 @@ public class GameEndState extends GamePlayState {
 
                 UIManager.displayBotDiscard(player, discarded);
                 UIManager.pauseExecution(3000);
+                UIManager.clearScreen();
             }
         } else {
             for (int i = 0; i < 2; i++) {
@@ -176,7 +177,9 @@ public class GameEndState extends GamePlayState {
                     try {
                         TurnSelection selection = getDiscardSelection(player);
                         selection.execute();
-                        discardCompleted = true;
+                        if(selection instanceof CardSelection) {
+                            discardCompleted = true;
+                        }
                     } catch (InvalidCardException e) {
                         UIManager.displayErrorMessage("Invalid card. Please enter a valid card.");
                     } catch (SelectionException e) {
