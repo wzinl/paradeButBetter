@@ -8,7 +8,7 @@ import parade.models.cards.Card;
 import parade.models.cards.Deck;
 
 public class ParadeBoard{
-    private ArrayList<Card> cardList;
+    private final ArrayList<Card> cardList;
 
     // makes the board on its own using the deck and drawing the top 5 cards
     public ParadeBoard(Deck deck) {

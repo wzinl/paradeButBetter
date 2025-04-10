@@ -2,6 +2,10 @@ package parade.helpers.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.fusesource.jansi.Ansi;
 
@@ -151,24 +155,21 @@ public class UIManager {
         DisplayFactory.displayTieResults(tiedPlayers);
     }
     
-    public static void displayFinalRoundMessage() {
-        clearScreen();
-        System.out.println(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a(
-                           "Each player gets one final turn! No more cards will be drawn!").reset());
-    }
-
     /**
      * Announces the condition that triggered the final round.
      * @param deckEmpty Whether the final round was triggered by the deck running out
      */
-    public static void displayFinalRoundTrigger(Boolean deckEmpty) {
+    public static void displayFinalRoundMessage(Boolean deckEmpty) {
+        clearScreen();
         if (deckEmpty) {
             System.out.println("The last card has been drawn");
         } else {
             System.out.println("One player has collected all 6 colours in their board!");
         }
-        System.out.println(Ansi.ansi().bold().bg(Ansi.Color.YELLOW).fg(Ansi.Color.BLACK).a(
+        System.out.println(Ansi.ansi().bold().fg(Ansi.Color.YELLOW).a(
                 "Moving on to the final round! 🙀🙀🙀").reset());
+        System.out.println(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a(
+                           "Each player gets one final turn! No more cards will be drawn!").reset());
     }
 
     /*
@@ -195,22 +196,37 @@ public class UIManager {
     }
 
     public static void typeWriter(String text, int delay) throws InterruptedException {
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        try {
         for (char c : text.toCharArray()) {
             System.out.print(c);
-            Thread.sleep(delay);
+            executor.schedule(() -> {}, delay, TimeUnit.MILLISECONDS).get();
+
         }
         System.out.println();
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Error during typewriter effect", e);
+        } finally {
+            executor.shutdown();
+        }
     }
 
     public static void blinkingEffect(String text) throws InterruptedException {
-        for (int i = 0; i < BLINK_COUNT; i++) {
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Blinking effect interrupted");
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        try {
+            for (int i = 0; i < BLINK_COUNT; i++) {
+                if (Thread.currentThread().isInterrupted()) {
+                    throw new InterruptedException("Blinking effect interrupted");
+                }
+                System.out.print("\r" + text);
+                executor.schedule(() -> {}, 300, TimeUnit.MILLISECONDS).get();
+                System.out.print("\r" + " ".repeat(text.length()));
+                executor.schedule(() -> {}, 300, TimeUnit.MILLISECONDS).get();
             }
-            System.out.print("\r" + text);
-            Thread.sleep(300);
-            System.out.print("\r" + " ".repeat(text.length()));
-            Thread.sleep(300);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Error during blinking effect", e);
+        } finally {
+            executor.shutdown();
         }
         System.out.println("\r" + text);
     }

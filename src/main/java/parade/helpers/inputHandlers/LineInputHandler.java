@@ -13,6 +13,7 @@ import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.UserInterruptException;
+import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 
 import parade.helpers.inputTypes.ActionInput;
@@ -23,33 +24,35 @@ import parade.models.ParadeBoard;
 import parade.models.player.Player;
 
 
-public class LineInputHandler {
+public class LineInputHandler extends InputHandler {
 
-
-    protected final Terminal terminal;
     protected LineReader reader;
     private final BlockingQueue<String> inputQueue;
     private final AtomicBoolean running;
     private Thread inputThread;
+    private final Attributes lineReaderAttributes;
+
 
     public LineInputHandler(Terminal terminal) throws IOException{
-        this.terminal = terminal;
+        super(terminal);
         this.inputQueue = new LinkedBlockingQueue<>();
         this.running = new AtomicBoolean(true);
+        this.lineReaderAttributes = terminal.getAttributes();
     }
-    protected void resume() {
+
+    @Override
+    public void startInput() {
+        flush();
+        terminal.setAttributes(lineReaderAttributes); // Restore original attributes
         running.set(true);
-    }
-    protected  void startInputThread() {
         this.reader = LineReaderBuilder.builder().terminal(terminal).build();
-        flushQueue();
         inputThread = new Thread(() -> {
             while (running.get()) {
                 try {
                     String line = this.reader.readLine().trim();
                     inputQueue.offer(line);
                 } catch (UserInterruptException | EndOfFileException e) {
-                    running.set(false); // exit gracefully on known exit events
+                    running.set(false);
                 } catch (Exception e) {
                     System.err.println("Unexpected error in input thread: " + e.getMessage());
                     running.set(false); // catch all
@@ -59,9 +62,9 @@ public class LineInputHandler {
         inputThread.setDaemon(true);
         inputThread.start();
     }
-
-    protected void stopInputThread() {
-        running.set(false);   
+    @Override
+    public void stopInput() {
+        running.set(false);
         if (inputThread != null && inputThread.isAlive()) {
             inputThread.interrupt(); 
             try {
@@ -70,74 +73,11 @@ public class LineInputHandler {
                 Thread.currentThread().interrupt();
             }
         }
-        flushQueue(); 
-    }
-    
-
-    private void flushQueue() {
-        inputQueue.clear();
+        flush(); 
     }
 
-    private String waitForInput(String prompt) {
-        flushQueue();
-        try {
-            if(prompt != null && !prompt.equals(""))  {
-                System.out.println(prompt);
-            }
-            // System.out.print("> ");
-            return inputQueue.take();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Input interrupted");
-        }
-    }
-    private void waitforEnter() {
-        String prompt = "Press Enter to continue...";
-        flushQueue();
-        Thread blinkingThread = new Thread(() -> {
-            try {
-                UIManager.blinkingEffect(
-                    Ansi.ansi().bold().fg(Ansi.Color.RED).a(prompt).reset().toString());
-            } catch (InterruptedException e) {
-                System.out.println(
-                    Ansi.ansi().bold().fg(Ansi.Color.RED).a(prompt).reset().toString());
-                }
-        });
-        blinkingThread.start();
-    
-        try {
-            inputQueue.take(); // Wait for Enter key press
-            blinkingThread.interrupt(); // Stop the blinking effect
-            blinkingThread.join(); // Ensure blinking thread finishes
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore interrupt status
-            throw new RuntimeException("Input interrupted");
-        }
-    }
 
-    public int getInt(String prompt) {
-        while (true) {
-            String input = waitForInput(prompt);
-            try {
-                return Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid integer.\n");
-            }
-        }
-    }
-    
-    public int getIntInRange(String prompt, int min, int max) {
-        String repeatPrompt = "Value out of range. Please enter a number between " + min + " and " + max + ".\n";
-        while (true) {
-            int val = getInt(prompt);
-            if (val >= min && val <= max) {
-                return val;
-            } else {
-                System.out.println(repeatPrompt);
-            }
-        }
-    } 
-    
+    @Override
     public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, String[] actionStrings) {
         int max = currentPlayer.getPlayerHand().getCardList().size();
         int min = 1;
@@ -177,6 +117,50 @@ public class LineInputHandler {
             }
         }
     }
+
+
+    @Override
+    protected void flush() {
+        inputQueue.clear();
+    }
+
+    private String waitForInput(String prompt) {
+        flush();
+        try {
+            if(prompt != null && !prompt.equals(""))  {
+                System.out.println(prompt);
+            }
+            // System.out.print("> ");
+            return inputQueue.take();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Input interrupted");
+        }
+    }
+
+    public int getInt(String prompt) {
+        while (true) {
+            String input = waitForInput(prompt);
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid integer.\n");
+            }
+        }
+    }
+    
+    public int getIntInRange(String prompt, int min, int max) {
+        String repeatPrompt = "Value out of range. Please enter a number between " + min + " and " + max + ".\n";
+        while (true) {
+            int val = getInt(prompt);
+            if (val >= min && val <= max) {
+                return val;
+            } else {
+                System.out.println(repeatPrompt);
+            }
+        }
+    } 
+
     
     public String getString(String prompt) {
         while (true) {
@@ -189,10 +173,6 @@ public class LineInputHandler {
         }
     }
 
-    public void getEnter() {
-        waitforEnter();
-    }
-
     
     public boolean getYesNo(String prompt) {
         while (true) {
@@ -201,6 +181,30 @@ public class LineInputHandler {
             if (input.equals("N")) return false;
     
             System.out.println("Invalid input. Please type 'Y' or 'N'.\n");
+        }
+    }
+
+    public void getEnter() {
+        String prompt = "Press Enter to continue...";
+        flush();
+        Thread blinkingThread = new Thread(() -> {
+            try {
+                UIManager.blinkingEffect(
+                    Ansi.ansi().bold().fg(Ansi.Color.RED).a(prompt).reset().toString());
+            } catch (InterruptedException e) {
+                System.out.println(
+                    Ansi.ansi().bold().fg(Ansi.Color.RED).a(prompt).reset().toString());
+                }
+        });
+        blinkingThread.start();
+    
+        try {
+            inputQueue.take(); // Wait for Enter key press
+            blinkingThread.interrupt(); // Stop the blinking effect
+            blinkingThread.join(); // Ensure blinking thread finishes
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore interrupt status
+            throw new RuntimeException("Input interrupted");
         }
     }
 

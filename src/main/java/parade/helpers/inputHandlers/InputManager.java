@@ -2,7 +2,6 @@ package parade.helpers.inputHandlers;
 
 import java.io.IOException;
 
-import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -16,10 +15,9 @@ public class InputManager {
 
     protected Terminal terminal;
     protected LineInputHandler lineHandler;
-    
     protected MenuInputHandler menuHandler;
-    Attributes lineReaderAttributes;
-    boolean inLineInput;
+    protected InputHandler currentHandler;
+    // Attributes lineReaderAttributes;
 
     private static final String[] ACTIONS = {
         "Change Input Type",
@@ -32,81 +30,63 @@ public class InputManager {
             this.terminal = TerminalBuilder.builder().system(true).build();
             this.lineHandler = new LineInputHandler(terminal);
             this.menuHandler = new MenuInputHandler(terminal);
-            inLineInput = false;
-            startLineInput();
+            currentHandler = lineHandler;
+            lineHandler.startInput();
 
-            lineReaderAttributes = terminal.getAttributes();
-            terminal.setAttributes(lineReaderAttributes);
+            // lineReaderAttributes = terminal.getAttributes();
+            // terminal.setAttributes(lineReaderAttributes);
         } catch (IOException e) {
             throw new RuntimeException("Failed to initialize terminal input", e);
         }
     }
 
-    public void startLineInput() {
-            this.lineHandler.resume();
-            this.lineHandler.startInputThread();
-            inLineInput = true; 
-    }
-
-    public void stopLineInput() {
-        lineHandler.stopInputThread();
-        lineReaderAttributes = terminal.getAttributes();
-        inLineInput = false;
-        menuHandler.flushStdin();
-    }
-
-
-    public void startMenuInput() {
-        terminal.enterRawMode();
-}
-    public void stopSelectInput() {
-        terminal.setAttributes(lineReaderAttributes); // Restore original attributes
-        menuHandler.flushStdin();
-    }
-
-
     public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer) {
-        if(currentPlayer.getPreferMenu()){
-            try{
-                return menuturnSelect(paradeBoard, currentPlayer);
-            }
-            catch (IOException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
+        try {
+            ensureCorrectInputHandler(currentPlayer.getPreferMenu());
+            return currentHandler.turnSelect(paradeBoard, currentPlayer, ACTIONS);
+        } catch (IOException e) {            
+            throw new RuntimeException("Error during turn selection", e);
         }
-        return lineTurnSelect(paradeBoard, currentPlayer);
     }
 
-    public SelectionInput lineTurnSelect(ParadeBoard paradeBoard, Player currentPlayer) {
-        ensureLineInput();
-        return lineHandler.turnSelect(paradeBoard, currentPlayer, ACTIONS);
-    }
-
-    public SelectionInput menuturnSelect(ParadeBoard paradeBoard, Player currentPlayer) throws IOException{
-        ensureMenuInput();
-        return menuHandler.turnSelect(paradeBoard, currentPlayer, ACTIONS);
+    private void ensureCorrectInputHandler(boolean preferMenu) throws IOException {
+        if (preferMenu) {
+            ensureMenuInput();
+        } else {
+            ensureLineInput();
+        }
     }
 
     public void ensureLineInput() {
-        if(!inLineInput){
-            stopSelectInput();
-            startLineInput();
+        try {
+            switchInputHandler(lineHandler);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to switch to LineInputHandler", e);
         }
     }
+    
     public void ensureMenuInput() {
-        if(inLineInput){
-            stopLineInput();
-            startMenuInput();
+        try {
+            switchInputHandler(menuHandler);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to switch to MenuInputHandler", e);
         }
     }
+
+    private void switchInputHandler(InputHandler newHandler) throws IOException {
+        if (currentHandler != newHandler) {
+            currentHandler.stopInput();
+            newHandler.startInput();
+            currentHandler = newHandler;
+        }
+    }
+    
 
 
     public ActionInput getIntroInput(String[] intoActions) throws IOException{
         ensureMenuInput();
         return menuHandler.introSelect(intoActions);
     }
-
-
     
 
     public int getInt(String prompt) {

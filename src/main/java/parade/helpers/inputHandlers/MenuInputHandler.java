@@ -19,8 +19,8 @@ import parade.models.cards.Card;
 import parade.models.player.Player;
 import parade.models.player.PlayerHand;
 
-public class MenuInputHandler {
-    private final Terminal terminal;
+public class MenuInputHandler extends InputHandler {
+
     private static final KeyMap<String> keyMap = new KeyMap<>();
     static {
         keyMap.bind("UP", "w", "W", "\u001B[A");
@@ -37,9 +37,10 @@ public class MenuInputHandler {
 
 
     public MenuInputHandler(Terminal terminal) throws IOException{
-        this.terminal = terminal;
+        super(terminal);
     }
-    public void flushStdin() {
+    @Override
+    public void flush() {
         try {
             InputStream in = System.in;
             while (in.available() > 0) {
@@ -51,9 +52,21 @@ public class MenuInputHandler {
             // Ignore or log
         }
     }
+    @Override
+    public void startInput() throws IOException {
+        flush();
+        terminal.enterRawMode();
+    }
 
+    @Override
+    public void stopInput() {
+        flush();
+    }
+
+
+    @Override
     public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, String[] actionStrings) throws IOException {
-        flushStdin();
+        flush();
         BindingReader bindingReader = new BindingReader(terminal.reader());
         int selectedIndex = 0;
         PlayerHand currHand = currentPlayer.getPlayerHand();
@@ -114,7 +127,7 @@ public class MenuInputHandler {
     }
 
     public ActionInput introSelect(String[] actions) throws IOException {
-        flushStdin();
+        flush();
         String titleCard = DisplayFactory.getTitleCard();
         BindingReader bindingReader = new BindingReader(terminal.reader());
         int selectedIndex = 0;
