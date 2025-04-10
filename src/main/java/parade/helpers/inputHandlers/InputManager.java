@@ -17,7 +17,6 @@ public class InputManager {
     protected LineInputHandler lineHandler;
     protected MenuInputHandler menuHandler;
     protected InputHandler currentHandler;
-    // Attributes lineReaderAttributes;
 
     private static final String[] ACTIONS = {
         "Change Input Type",
@@ -33,8 +32,6 @@ public class InputManager {
             currentHandler = lineHandler;
             lineHandler.startInput();
 
-            // lineReaderAttributes = terminal.getAttributes();
-            // terminal.setAttributes(lineReaderAttributes);
         } catch (IOException e) {
             throw new RuntimeException("Failed to initialize terminal input", e);
         }
