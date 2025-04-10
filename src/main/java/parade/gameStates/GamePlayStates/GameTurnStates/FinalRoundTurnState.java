@@ -18,19 +18,20 @@ public class FinalRoundTurnState extends GameTurnState {
     public void run() {
         UIManager.displayFinalRoundMessage();
         inputManager.getEnter();
-        UIManager.clearScreen();
         while (this.currentPlayerIndex != finalPlayerIndex) {
+            UIManager.clearScreen();
+
             Player currentPlayer = playerList.get(currentPlayerIndex);
             playTurn(currentPlayer);
     
             this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
             context.setCurrentPlayerIndex(currentPlayerIndex);
-
         }
-
+        UIManager.clearScreen();
         playTurn(playerList.get(finalPlayerIndex));
         this.currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         currentPlayerIndex = context.getCurrentPlayerIndex();
+        UIManager.clearScreen();
 
     }
 }

@@ -36,7 +36,6 @@ public class GameEndState extends GamePlayState {
     @Override
     public void run() {
         try {
-            UIManager.clearScreen();
 
             performFinalDiscardPhase();
             handleCardFlipping();
@@ -48,14 +47,16 @@ public class GameEndState extends GamePlayState {
     }
 
     private void performFinalDiscardPhase() throws InvalidCardException {
+        UIManager.clearScreen();
         UIManager.displayDiscardPrompt();
         inputManager.getEnter();
         for (int i = 0; i < playerList.size(); i++) {
+            UIManager.clearScreen();
             int index = (finalPlayerIndex + i + 1) % playerList.size();
             performDiscardPhase(playerList.get(index));
-            UIManager.clearScreen();
-
         }
+        UIManager.clearScreen();
+
     }
 
     private void performDiscardPhase(Player player) throws InvalidCardException {

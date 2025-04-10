@@ -76,6 +76,7 @@ public class InitState extends GameState {
             player.getPlayerHand().initHand(deck);
             createdPlayerList.add(player);
             UIManager.clearScreen();
+
         }
 
         if (numBots != 0) {
