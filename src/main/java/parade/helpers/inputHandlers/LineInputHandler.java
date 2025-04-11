@@ -75,7 +75,7 @@ public class LineInputHandler extends InputHandler {
                     inputQueue.offer(line);
                 } catch (UserInterruptException | EndOfFileException e) {
                     running.set(false);
-                } catch (Exception e) {
+                } catch (IllegalArgumentException | IllegalStateException e) {
                     System.err.println("Unexpected error in input thread: " + e.getMessage());
                     running.set(false);
                 }
