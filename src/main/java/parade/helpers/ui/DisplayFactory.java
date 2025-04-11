@@ -371,6 +371,14 @@ public class DisplayFactory {
         UIManager.pauseExecution(5000);
         UIManager.clearScreen();
     }
+
+    public static String getNamePrompt(boolean isBot, int index) {
+        if(isBot){
+            return Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a("🤖 Enter name of Bot " + index + ": ").reset().toString();
+        }
+        return Ansi.ansi().bold().fg(Ansi.Color.GREEN).a("🤓 Enter name of Player " + index + ": ").reset().toString();
+    }
     
+
     
 }

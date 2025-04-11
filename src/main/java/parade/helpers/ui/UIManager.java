@@ -229,5 +229,10 @@ public class UIManager {
             executor.shutdown();
         }
         System.out.println("\r" + text);
+    }   
+
+    public static String getNamePrompt(boolean isBot, int index) {
+        return DisplayFactory.getNamePrompt(isBot, index);
     }
+
 }

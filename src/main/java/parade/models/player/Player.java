@@ -1,7 +1,6 @@
 package parade.models.player;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import parade.models.cards.Card;
 
@@ -10,13 +9,6 @@ import parade.models.cards.Card;
  * Each player has a name, a unique ID, a hand, a board, a score, and a UI preference.
  */
 public class Player {
-
-    /** A unique identifier for the player. */
-    private final String playerID;
-
-    /** Global counter for tracking how many Player instances have been created. */
-    static int current_id = 0;
-
     /** The display name of the player. */
     private final String playerName;
 
@@ -39,8 +31,6 @@ public class Player {
      */
     public Player(String playerName) {
         this.playerName = playerName;
-        this.playerID = UUID.randomUUID().toString();
-        current_id++;
         this.playerhand = new PlayerHand();
         this.playerBoard = new PlayerBoard();
         this.preferMenu = true;

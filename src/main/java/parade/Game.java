@@ -96,6 +96,7 @@ public class Game {
      * uninstalling the Jansi console handler, and exiting the JVM.
      */
     public void exit() {
+        UIManager.clearScreen();
         System.out.println("Game has stopped. Thank you for playing!");
         isRunning = false;
         AnsiConsole.systemUninstall();

@@ -88,14 +88,12 @@ public class InitState extends GameState {
 
         // Prompt for human player names
         for (int i = 1; i <= numPlayers; i++) {
-            String playerName = inputManager.getString(
-                Ansi.ansi().bold().fg(Ansi.Color.GREEN).a("🤓 Enter name of Player " + i + ": ").reset().toString());
-
+            String namePrompt = UIManager.getNamePrompt(false, i);
+            String playerName = inputManager.getString(namePrompt);
             while (playerNames.contains(playerName)) {
                 System.out.println();
-                System.out.println(Ansi.ansi().bold().a("Player name taken. Please choose another name.").reset());
-                playerName = inputManager.getString(
-                    Ansi.ansi().bold().fg(Ansi.Color.GREEN).a("🤓 Enter name of Player " + i + ": ").reset().toString());
+                System.out.println(Ansi.ansi().bold().a("Name taken. Please choose another name.").reset());
+                playerName = inputManager.getString(namePrompt);
             }
 
             playerNames.add(playerName);
@@ -110,12 +108,11 @@ public class InitState extends GameState {
             for (int i = 1; i <= numBots; i++) {
                 String botName;
                 do {
-                    botName = inputManager.getString(
-                        Ansi.ansi().bold().fg(Ansi.Color.GREEN).a("👾 Enter name of Bot " + i + ": ").reset().toString());
-
+                    String namePrompt = UIManager.getNamePrompt(true, i);
+                    botName = inputManager.getString(namePrompt);
                     if (playerNames.contains(botName)) {
                         System.out.println();
-                        System.out.println(Ansi.ansi().bold().a("Bot name taken. Please choose another name.").reset());
+                        System.out.println(Ansi.ansi().bold().a("Name taken. Please choose another name.").reset());
                     }
                 } while (playerNames.contains(botName));
 

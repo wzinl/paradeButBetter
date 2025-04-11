@@ -2,7 +2,6 @@ package parade.gameStates;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import parade.Game;
 import parade.context.GameContext;
@@ -20,9 +19,6 @@ public class GameStateManager {
 
     /** Reference to the main game instance. */
     private final Game game;
-
-    /** Unique identifier for the current game session. */
-    private final String gameStateID;
 
     /** The currently active game state. */
     private GameState currentState;
@@ -43,7 +39,6 @@ public class GameStateManager {
      * @param game         the Game instance controlling this session
      */
     public GameStateManager(InputManager inputManager, Game game) {
-        gameStateID = UUID.randomUUID().toString();
         this.inputManager = inputManager;
         this.game = game;
 
