@@ -9,7 +9,7 @@ import parade.models.player.Player;
 
 /**
  * A simple bot that chooses moves randomly from its available cards.
- * Implements the {@link Bot} interface and extends {@link Player}.
+ * Extends {@link Bot}.
  */
 public class RandomBot extends Bot {
 

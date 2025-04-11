@@ -4,12 +4,11 @@ import java.util.List;
 
 import parade.models.ParadeBoard;
 import parade.models.cards.Card;
-import parade.models.player.Player;
 
 /**
  * A more advanced bot that not only minimizes the number of kicked cards,
  * but also considers the total score of those cards to make better decisions.
- * Implements the {@link Bot} interface and extends {@link Player}.
+ * Extends {@link Bot}.
  */
 public class SmarterBot extends Bot {
 

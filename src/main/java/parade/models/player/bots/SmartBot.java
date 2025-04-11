@@ -4,12 +4,11 @@ import java.util.List;
 
 import parade.models.ParadeBoard;
 import parade.models.cards.Card;
-import parade.models.player.Player;
 
 /**
  * A smarter bot that chooses the card with the least number of kicks (removed cards)
  * based on a simulation of the parade rules.
- * Implements the {@link Bot} interface and extends {@link Player}.
+ * Extends {@link Bot}.
  */
 public class SmartBot extends Bot {
 
