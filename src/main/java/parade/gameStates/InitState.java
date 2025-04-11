@@ -86,13 +86,14 @@ public class InitState extends GameState {
         HashSet<String> playerNames = new HashSet<>();
         UIManager.clearScreen();
 
+        String repeatPrompt = "Name taken. Please choose another name.";
         // Prompt for human player names
         for (int i = 1; i <= numPlayers; i++) {
             String namePrompt = UIManager.getNamePrompt(false, i);
             String playerName = inputManager.getString(namePrompt);
             while (playerNames.contains(playerName)) {
                 System.out.println();
-                System.out.println(Ansi.ansi().bold().a("Name taken. Please choose another name.").reset());
+                System.out.println(Ansi.ansi().bold().a(repeatPrompt).reset());
                 playerName = inputManager.getString(namePrompt);
             }
 
@@ -112,7 +113,7 @@ public class InitState extends GameState {
                     botName = inputManager.getString(namePrompt);
                     if (playerNames.contains(botName)) {
                         System.out.println();
-                        System.out.println(Ansi.ansi().bold().a("Name taken. Please choose another name.").reset());
+                        System.out.println(Ansi.ansi().bold().a(repeatPrompt).reset());
                     }
                 } while (playerNames.contains(botName));
 

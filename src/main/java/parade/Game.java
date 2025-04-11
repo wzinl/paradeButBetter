@@ -54,6 +54,7 @@ public class Game {
                     case 'g' -> gameRules();
                     case 'q' -> {
                         validInput = true;
+                        UIManager.clearScreen();
                         exit();
                     }
                     default -> UIManager.displayMessage("Invalid input. Please try again.");
@@ -87,7 +88,6 @@ public class Game {
         while (isRunning) {
             gsm.nextState();
         }
-
         exit();
     }
 
@@ -96,7 +96,6 @@ public class Game {
      * uninstalling the Jansi console handler, and exiting the JVM.
      */
     public void exit() {
-        UIManager.clearScreen();
         System.out.println("Game has stopped. Thank you for playing!");
         isRunning = false;
         AnsiConsole.systemUninstall();

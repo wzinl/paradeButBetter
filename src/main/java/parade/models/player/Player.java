@@ -96,13 +96,13 @@ public class Player {
      * @return the newly calculated score
      */
     public int calculateScore() {
-        if (playerBoard == null || playerBoard.getPlayerBoardHash() == null) {
+        if (playerBoard == null || playerBoard.getPlayerBoardMap() == null) {
             return 0;
         }
 
         playerScore = 0;
 
-        for (ArrayList<Card> playerCards : playerBoard.getPlayerBoardHash().values()) {
+        for (ArrayList<Card> playerCards : playerBoard.getPlayerBoardMap().values()) {
             if (playerCards == null) continue;
 
             for (Card card : playerCards) {
@@ -119,6 +119,6 @@ public class Player {
      * @return true if all colors are present, false otherwise
      */
     public boolean hasCollectedAllColours() {
-        return playerBoard.getPlayerBoardHash().keySet().size() == 6;
+        return playerBoard.getPlayerBoardMap().keySet().size() == 6;
     }
 }

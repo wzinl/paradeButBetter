@@ -75,8 +75,7 @@ public class UIManager {
      * @param board The final game board state
      */
     public static void displayFinalScores(List<Player> players, ParadeBoard board) {
-        displayBoardOverview(players, board);
-        System.out.println(DisplayFactory.showFinalScores(players, board));
+        displayPlayerBoardOverview(players);
     }
 
     /** Displays a prompt for a discard action. */
@@ -111,6 +110,15 @@ public class UIManager {
         System.out.println();
         System.out.println(Ansi.ansi().bold().fg(Ansi.Color.CYAN).a("Here are all of the players' boards:").reset());
         System.out.println(DisplayFactory.getDisplayBoardOverview(playerlist, paradeBoard));
+        System.out.println();
+    }
+
+    public static void displayPlayerBoardOverview(List<Player> playerlist) {
+        UIManager.clearScreen();
+        System.out.println();
+        System.out.println(Ansi.ansi().bold().fg(Ansi.Color.CYAN).a("Here are all of the players' boards:").reset());
+        System.out.println(DisplayFactory.getPlayerBoardOverview(playerlist));
+        System.out.println();
     }
 
     /**
@@ -141,6 +149,7 @@ public class UIManager {
      */
     public static void displayScoreboard(List<Player> winners) {
         System.out.println(DisplayFactory.getScoreboard(winners));
+        
     }
 
     /**

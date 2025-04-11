@@ -12,10 +12,10 @@ import parade.models.cards.CardCollection;
 import parade.models.cards.CardColors;
 
 public class PlayerBoard implements CardCollection{
-    HashMap<String, ArrayList<Card>> playerBoard;
+    HashMap<String, ArrayList<Card>> playerBoardMap;
 
     public PlayerBoard() {
-        this.playerBoard = new HashMap<>();
+        this.playerBoardMap = new HashMap<>();
     }
 
     // From parade board add to playerboard
@@ -28,10 +28,10 @@ public class PlayerBoard implements CardCollection{
 
             // if player doesn't currently have this color, create new (key, value) map of
             // said color
-            playerBoard.putIfAbsent(curCardColor, new ArrayList<>());
+            playerBoardMap.putIfAbsent(curCardColor, new ArrayList<>());
 
             // puts the new card into the arraylist with specified color
-            playerBoard.get(curCardColor).add(curCard);
+            playerBoardMap.get(curCardColor).add(curCard);
         }
     }
 
@@ -41,16 +41,16 @@ public class PlayerBoard implements CardCollection{
 
         // if player doesn't currently have this color, create new (key, value) map of
         // said color
-        playerBoard.putIfAbsent(cardToAddColor, new ArrayList<>());
+        playerBoardMap.putIfAbsent(cardToAddColor, new ArrayList<>());
 
         // puts the new card into the arraylist with specified color
-        playerBoard.get(cardToAddColor).add(cardToAdd);
+        playerBoardMap.get(cardToAddColor).add(cardToAdd);
     }
 
     // get how many cards of a certain color a player has. if a player has 3 black
     // cards, return 3 when black is put in
     public int getCardNumberByColor(String color) {
-        ArrayList<Card> value = playerBoard.get(color);
+        ArrayList<Card> value = playerBoardMap.get(color);
         if (value == null) {
             return 0;
         } else {
@@ -59,20 +59,20 @@ public class PlayerBoard implements CardCollection{
         
     }
         
-    public HashMap<String, ArrayList<Card>> getPlayerBoardHash() {
-        return playerBoard;
+    public HashMap<String, ArrayList<Card>> getPlayerBoardMap() {
+        return playerBoardMap;
     }
     // public void sortByQuantity() {
     // }
 
     public boolean isEmpty(){
-        return playerBoard.isEmpty();
+        return playerBoardMap.isEmpty();
     }
 
 
     @Override
     public String toString() {
-        List<String> colors = new ArrayList<>(playerBoard.keySet());
+        List<String> colors = new ArrayList<>(playerBoardMap.keySet());
         colors.sort(Comparator.naturalOrder());
     
         // Card dimensions
@@ -84,7 +84,7 @@ public class PlayerBoard implements CardCollection{
         int maxStackHeight = 0;
     
         for (String color : colors) {
-            List<Card> cards = new ArrayList<>(playerBoard.get(color));
+            List<Card> cards = new ArrayList<>(playerBoardMap.get(color));
             cards.sort(Comparator.comparingInt(Card::getValue));
     
             List<String[]> stack = new ArrayList<>();
@@ -143,8 +143,4 @@ public class PlayerBoard implements CardCollection{
 
    
 
-    @Override
-    public void removeCard(Card card) throws InvalidCardException {
-        throw new UnsupportedOperationException("Unimplemented method 'removeCard'");
-    }
 }

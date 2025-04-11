@@ -2,7 +2,6 @@ package parade.gameStates.GamePlayStates;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -170,7 +169,7 @@ public class GameEndState extends GamePlayState {
 
         if (Math.abs(p1Count - p2Count) >= 2) {
             PlayerBoard boardToFlip = (p1Count > p2Count ? p1 : p2).getPlayerBoard();
-            for (Card card : boardToFlip.getPlayerBoardHash().get(color)) {
+            for (Card card : boardToFlip.getPlayerBoardMap().get(color)) {
                 card.setIsFaceUp(false);
             }
         }
@@ -183,7 +182,7 @@ public class GameEndState extends GamePlayState {
      * @param color  The color of the cards to flip.
      */
     private void flipCards(Player player, String color) {
-        for (Card card : player.getPlayerBoard().getPlayerBoardHash().get(color)) {
+        for (Card card : player.getPlayerBoard().getPlayerBoardMap().get(color)) {
             card.setIsFaceUp(false);
         }
     }
@@ -195,7 +194,7 @@ public class GameEndState extends GamePlayState {
         ArrayList<Player> winners = new ArrayList<>(playerList);
         winners.sort(Comparator.comparing(Player::calculateScore));
 
-        UIManager.displayFinalScores(playerList, paradeBoard);
+        UIManager.displayFinalScores(winners, paradeBoard);
         UIManager.displayScoreboard(winners);
         announceWinner(winners);
     }
@@ -220,7 +219,7 @@ public class GameEndState extends GamePlayState {
         if (topPlayers.size() > 1 ) {
 
             int minCards = topPlayers.stream()
-            .mapToInt(p -> p.getPlayerBoard().values().stream()
+            .mapToInt(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
                            .mapToInt(List::size)
                            .sum())
                             .min()
@@ -228,7 +227,7 @@ public class GameEndState extends GamePlayState {
 
             // Get players with minimum cards
             List<Player> finalWinners = topPlayers.stream()
-            .filter(p -> p.getPlayerBoard().values().stream()
+            .filter(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
                         .mapToInt(List::size)
                         .sum() == minCards)
                         .collect(Collectors.toList());

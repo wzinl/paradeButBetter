@@ -74,24 +74,6 @@ public class DisplayFactory {
             ).reset().toString(), 1, handSize);
     }
 
-    /** Builds the final scores display with winner or tie result. */
-    public static String showFinalScores(List<Player> players, ParadeBoard paradeBoard) {
-        StringBuilder finalScores = new StringBuilder();
-
-        finalScores.append(
-                    Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
-                        "=========== FINAL SCORES ==========="
-                        ).reset())
-                    .append("\n");
-
-        for (Player player : players) {
-            finalScores.append(
-                        String.format("%s has scored: %d%n", player.getPlayerName(), player.getPlayerScore()));
-        }
-    
-        return finalScores.toString();
-    }
-
     /** Returns formatted bot action announcement. */
     public static String getBotAction(String botName, int cardIndex) {
         return String.format(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a("%s is going to play Card %d").reset().toString() + "\n", botName, cardIndex);
@@ -227,7 +209,11 @@ public class DisplayFactory {
     public static String getScoreboard(List<Player> winners) {
         StringBuilder scoreboard = new StringBuilder();
 
-        scoreboard.append("\n=========== FINAL SCORES ===========\n\n");
+        scoreboard.append(
+                    Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
+                        "=========== FINAL SCORES ==========="
+                        ).reset())
+                    .append("\n");
 
         int maxNameLength = winners.stream()
                 .mapToInt(p -> p.getPlayerName().length())
@@ -321,6 +307,14 @@ public class DisplayFactory {
     /** Displays all player boards and current parade. */
     public static String getDisplayBoardOverview(List<Player> playerlist, ParadeBoard paradeBoard) {
         String result = "";
+        result += getPlayerBoardOverview(playerlist);
+        result += "Parade:\n";
+        result += paradeBoard + "\n";
+        return result;
+    }
+
+    public static String getPlayerBoardOverview(List<Player> playerlist) {
+        String result = "";
         for (Player player : playerlist) {
             PlayerBoard board = player.getPlayerBoard();
             String boardString = "";
@@ -333,8 +327,6 @@ public class DisplayFactory {
             }
             result += boardString + "\n";
         }
-        result += "Parade:\n";
-        result += paradeBoard + "\n";
         return result;
     }
 
@@ -352,7 +344,7 @@ public class DisplayFactory {
 
         System.out.println(player.getPlayerName() + " has played: ");
         System.out.println(chosenCard);
-        UIManager.pauseExecution(1000);
+        // UIManager.pauseExecution(1000);
 
         System.out.println("Updated Parade:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
@@ -368,7 +360,7 @@ public class DisplayFactory {
         System.out.println("Updated Hand:");
         System.out.println(player.getPlayerHand());
 
-        UIManager.pauseExecution(5000);
+        // UIManager.pauseExecution(5000);
         UIManager.clearScreen();
     }
 

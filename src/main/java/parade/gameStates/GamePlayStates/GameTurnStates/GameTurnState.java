@@ -7,6 +7,7 @@ import parade.context.GameContext;
 import parade.exceptions.InvalidCardException;
 import parade.exceptions.SelectionException;
 import parade.gameStates.GamePlayStates.GamePlayState;
+import parade.gameStates.GameStateManager;
 import parade.helpers.inputHandlers.InputManager;
 import parade.helpers.inputTypes.ActionInput;
 import parade.helpers.inputTypes.CardInput;
@@ -21,7 +22,6 @@ import parade.models.player.bots.Bot;
 import parade.models.selections.ActionSelection;
 import parade.models.selections.CardSelection;
 import parade.models.selections.TurnSelection;
-import parade.gameStates.GameStateManager;
 
 /**
  * Abstract class for handling turn-based gameplay logic during normal and final rounds.
@@ -62,13 +62,13 @@ public abstract class GameTurnState extends GamePlayState {
                         turnCompleted = true;
                     }
                 }
-                UIManager.clearScreen();
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
             } catch (SelectionException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Trying Again...");
             }
+            UIManager.clearScreen();
         }
     }
 

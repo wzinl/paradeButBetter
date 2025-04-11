@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import parade.context.GameContext;
+import parade.gameStates.GameState;
+import parade.gameStates.GameStateManager;
 import parade.helpers.inputHandlers.InputManager;
 import parade.helpers.inputTypes.SelectionInput;
 import parade.helpers.ui.UIManager;
 import parade.models.player.Player;
-import parade.gameStates.GameState;
-import parade.gameStates.GameStateManager;
 
 /**
  * Abstract superclass for game states that involve actual gameplay.
