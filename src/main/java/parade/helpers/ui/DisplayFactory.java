@@ -2,6 +2,7 @@ package parade.helpers.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.fusesource.jansi.Ansi;
 
@@ -235,9 +236,16 @@ public class DisplayFactory {
         for (int i = 0; i < winners.size(); i++) {
             Player player = winners.get(i);
             String position;
+            int playerCardCount = player.getPlayerBoard().getPlayerBoardMap().values().stream()
+                             .mapToInt(List::size)
+                             .sum();
 
-            if (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore()) {
-                position = "";
+            // Check if this player has the same score AND same card count as previous player
+            if (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore() && 
+            playerCardCount == winners.get(i - 1).getPlayerBoard().getPlayerBoardMap().values().stream()
+                                    .mapToInt(List::size)
+                                    .sum()) {
+            position = "";  // Same position as previous player
             } else {
                 position = switch (displayRank) {
                     case 1 -> "1st";
@@ -276,15 +284,44 @@ public class DisplayFactory {
     }
 
     /** Displays tie results among top players. */
-    public static void displayTieResults(List<Player> winners) {
-        int nameWidth = Math.max(
-                winners.stream().mapToInt(p -> p.getPlayerName().length()).max().orElse(10) + 2,
+    public static void displayTieResults(List<Player> tiedPlayers) {
+
+        // Check if there is a clear winner after applying the card count tiebreaker
+        int minCards = tiedPlayers.stream()
+                        .mapToInt(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
+                                    .mapToInt(List::size)
+                                    .sum())
+                        .min()
+                        .orElse(0);
+
+        // Get players same score & same number of cards in playerboard
+        List<Player> finalWinners = tiedPlayers.stream()
+                        .filter(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
+                            .mapToInt(List::size)
+                            .sum() == minCards)
+                        .collect(Collectors.toList());
+
+        // Clear Winner
+        if (finalWinners.size() == 1){
+            Player winner = finalWinners.get(0);
+            System.out.println("TIEBREAKER: All had same score, but " + winner.getPlayerName()
+            + " had the fewest cards on their board.");
+            displayWinner(winner);
+        } else { // Same score, same number of cards in parade
+            System.out.println("TIED RESULTS (same score and same number of cards)");
+            int nameWidth = Math.max(
+                finalWinners.stream().mapToInt(p -> p.getPlayerName().length()).max().orElse(10) + 2,
                 12);
 
-        System.out.println("TIED RESULTS");
-        for (Player p : winners) {
-            System.out.printf("• %-" + (nameWidth - 2) + "s - %d points%n", p.getPlayerName(), p.getPlayerScore());
+            for (Player p : finalWinners) {
+                int totalCards = p.getPlayerBoard().getPlayerBoardMap().values().stream()
+                                    .mapToInt(List::size)
+                                    .sum();
+                System.out.printf("• %-" + (nameWidth - 2) + "s - %d points, %d cards%n", p.getPlayerName(), p.getPlayerScore(), totalCards);
+            }
         }
+
+        
     }
 
     /** Formats a centered line inside a decorated box. */

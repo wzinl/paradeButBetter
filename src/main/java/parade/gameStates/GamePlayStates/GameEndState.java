@@ -192,8 +192,14 @@ public class GameEndState extends GamePlayState {
         UIManager.displayLoadingMessage("Calculating score", 3);
 
         ArrayList<Player> winners = new ArrayList<>(playerList);
-        winners.sort(Comparator.comparing(Player::calculateScore));
-
+        
+        // Sort by score first, then by total cards in playerboard(fewer is better) in case of ties
+        winners.sort(
+            Comparator.comparing(Player::calculateScore)
+            .thenComparing(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
+                       .mapToInt(List::size)
+                       .sum())
+        );
         UIManager.displayFinalScores(winners, paradeBoard);
         UIManager.displayScoreboard(winners);
         announceWinner(winners);
@@ -205,38 +211,17 @@ public class GameEndState extends GamePlayState {
      * @param winners A sorted list of players by score.
      */
     private void announceWinner(List<Player> winners) {
-        winners.sort((p1, p2) -> Integer.compare(p1.getPlayerScore(), p2.getPlayerScore()));
-        
-        // Get the highest score
-        int highestScore = winners.get(0).getPlayerScore();
+        // Get the lowest score
+        int lowestScore = winners.get(0).getPlayerScore();
 
-        // Filter players with the highest score
-        List<Player> topPlayers = winners.stream()
-                                .filter(p -> p.getPlayerScore() == highestScore)
+        // Filter players with the lowest score
+        List<Player> tiedPlayers = winners.stream()
+                                .filter(p -> p.getPlayerScore() == lowestScore)
                                 .collect(Collectors.toList());
         
         // Check for ties
-        if (topPlayers.size() > 1 ) {
-
-            int minCards = topPlayers.stream()
-            .mapToInt(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
-                           .mapToInt(List::size)
-                           .sum())
-                            .min()
-                            .orElse(0);
-
-            // Get players with minimum cards
-            List<Player> finalWinners = topPlayers.stream()
-            .filter(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
-                        .mapToInt(List::size)
-                        .sum() == minCards)
-                        .collect(Collectors.toList());
-
-            if (finalWinners.size() == 1){
-                UIManager.displayWinner(finalWinners.get(0));
-            } else {
-                UIManager.displayTieResults(finalWinners);
-            }   
+        if (tiedPlayers.size() > 1 ) {
+            UIManager.displayTieResults(tiedPlayers);
         } else {
             UIManager.displayWinner(winners.get(0));
         }
