@@ -251,11 +251,11 @@ public class GameEndState extends GamePlayState {
     private void discardTwoCards(Player player) throws InvalidCardException {
         if (player instanceof Bot bot) {
             for (int i = 0; i < 2; i++) {
-                int discardIndex = bot.discardCardEndgame(player.getPlayerHand(), paradeBoard);
-                Card discarded = player.getPlayerHand().getCardList().get(discardIndex);
-                player.getPlayerHand().removeCard(discarded);
+                int discardIndex = bot.discardCardEndgame(context.getPlayerList());
+                Card toDiscard = player.getPlayerHand().getCardList().get(discardIndex);
+                player.getPlayerHand().removeCard(toDiscard);
 
-                UIManager.displayBotDiscard(player, discarded);
+                UIManager.displayBotDiscard(player, toDiscard);
                 UIManager.pauseExecution(3000);
                 UIManager.clearScreen();
             }

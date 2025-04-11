@@ -45,14 +45,12 @@ public abstract class GameTurnState extends GamePlayState {
      * @param current The player taking the turn.
      */
     protected void playTurn(Player current) {
-        PlayerHand hand = current.getPlayerHand();
-        List<Card> cardList = hand.getCardList();
         boolean turnCompleted = false;
 
         while (!turnCompleted) {
             try {
                 if (current instanceof Bot currBot) {
-                    int index = currBot.getNextCardIndex(cardList, paradeBoard);
+                    int index = currBot.getNextCardIndex(paradeBoard);
                     playCard(current, index);
                     turnCompleted = true;
                 } else {

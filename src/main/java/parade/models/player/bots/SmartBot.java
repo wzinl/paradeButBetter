@@ -5,14 +5,13 @@ import java.util.List;
 import parade.models.ParadeBoard;
 import parade.models.cards.Card;
 import parade.models.player.Player;
-import parade.models.player.PlayerHand;
 
 /**
  * A smarter bot that chooses the card with the least number of kicks (removed cards)
  * based on a simulation of the parade rules.
  * Implements the {@link Bot} interface and extends {@link Player}.
  */
-public class SmartBot extends Player implements Bot {
+public class SmartBot extends Bot {
 
     /**
      * Constructs a SmartBot with the specified name.
@@ -31,38 +30,14 @@ public class SmartBot extends Player implements Bot {
      * @return the index of the card that results in the least kicks
      */
     @Override
-    public int getNextCardIndex(List<Card> hand, ParadeBoard paradeBoard) {
+    public int getNextCardIndex(ParadeBoard paradeBoard) {
+        List<Card> cardList = getPlayerHand().getCardList();
         int bestIndex = 0;
         int leastKicked = Integer.MAX_VALUE;
 
-        for (int i = 0; i < hand.size(); i++) {
-            Card card = hand.get(i);
-            int kicked = simulate(card, paradeBoard);
-            if (kicked < leastKicked) {
-                leastKicked = kicked;
-                bestIndex = i;
-            }
-        }
-
-        return bestIndex;
-    }
-
-    /**
-     * Selects the best card to discard during endgame based on a similar simulation.
-     *
-     * @param hand         the bot's hand
-     * @param paradeBoard  the current state of the parade board
-     * @return the index of the card to discard with the least kick impact
-     */
-    @Override
-    public int discardCardEndgame(PlayerHand hand, ParadeBoard paradeBoard) {
-        List<Card> list = hand.getCardList();
-        int bestIndex = 0;
-        int leastKicked = Integer.MAX_VALUE;
-
-        for (int i = 0; i < list.size(); i++) {
-            Card card = list.get(i);
-            int kicked = simulate(card, paradeBoard);
+        for (int i = 0; i < cardList.size(); i++) {
+            Card card = cardList.get(i);
+            int kicked = simulateTurn(card, paradeBoard);
             if (kicked < leastKicked) {
                 leastKicked = kicked;
                 bestIndex = i;
@@ -80,7 +55,7 @@ public class SmartBot extends Player implements Bot {
      * @param paradeBoard  the current state of the parade board
      * @return the number of cards that would be removed
      */
-    public static int simulate(Card chosenCard, ParadeBoard paradeBoard) {
+    public static int simulateTurn(Card chosenCard, ParadeBoard paradeBoard) {
         int count = 0;
         int chosenValue = chosenCard.getValue();
         for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {

@@ -5,14 +5,13 @@ import java.util.List;
 import parade.models.ParadeBoard;
 import parade.models.cards.Card;
 import parade.models.player.Player;
-import parade.models.player.PlayerHand;
 
 /**
  * A more advanced bot that not only minimizes the number of kicked cards,
  * but also considers the total score of those cards to make better decisions.
  * Implements the {@link Bot} interface and extends {@link Player}.
  */
-public class SmarterBot extends Player implements Bot {
+public class SmarterBot extends Bot {
 
     /**
      * Constructs a SmarterBot with the specified name.
@@ -32,41 +31,14 @@ public class SmarterBot extends Player implements Bot {
      * @return the index of the best card to play
      */
     @Override
-    public int getNextCardIndex(List<Card> hand, ParadeBoard paradeBoard) {
+    public int getNextCardIndex(ParadeBoard paradeBoard) {
+        List<Card> cardList = getPlayerHand().getCardList();
         int bestIndex = 0;
         int leastKicked = Integer.MAX_VALUE;
         int lowestScore = Integer.MAX_VALUE;
 
-        for (int i = 0; i < hand.size(); i++) {
-            Card card = hand.get(i);
-            int[] kicked = smarterSimulation(card, paradeBoard);
-            if (kicked[0] < leastKicked && kicked[1] <= lowestScore) {
-                leastKicked = kicked[0];
-                lowestScore = kicked[1];
-                bestIndex = i;
-            }
-        }
-
-        return bestIndex;
-    }
-
-    /**
-     * Selects the best card to discard during the endgame using the same
-     * smarter simulation logic (minimizing kicks and score).
-     *
-     * @param hand         the bot's hand
-     * @param paradeBoard  the current state of the parade board
-     * @return the index of the card to discard
-     */
-    @Override
-    public int discardCardEndgame(PlayerHand hand, ParadeBoard paradeBoard) {
-        List<Card> list = hand.getCardList();
-        int bestIndex = 0;
-        int leastKicked = Integer.MAX_VALUE;
-        int lowestScore = Integer.MAX_VALUE;
-
-        for (int i = 0; i < list.size(); i++) {
-            Card card = list.get(i);
+        for (int i = 0; i < cardList.size(); i++) {
+            Card card = cardList.get(i);
             int[] kicked = smarterSimulation(card, paradeBoard);
             if (kicked[0] < leastKicked && kicked[1] <= lowestScore) {
                 leastKicked = kicked[0];
