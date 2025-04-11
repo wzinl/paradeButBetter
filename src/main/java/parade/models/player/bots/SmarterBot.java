@@ -7,13 +7,30 @@ import parade.models.cards.Card;
 import parade.models.player.Player;
 import parade.models.player.PlayerHand;
 
+/**
+ * A more advanced bot that not only minimizes the number of kicked cards,
+ * but also considers the total score of those cards to make better decisions.
+ * Implements the {@link Bot} interface and extends {@link Player}.
+ */
+public class SmarterBot extends Player implements Bot {
 
-public class SmarterBot extends Player implements Bot{
-
+    /**
+     * Constructs a SmarterBot with the specified name.
+     *
+     * @param name the name of the bot
+     */
     public SmarterBot(String name) {
         super(name);
     }
 
+    /**
+     * Chooses the best card to play by simulating each option and selecting
+     * the one that results in the least number of kicks and lowest score impact.
+     *
+     * @param hand         the list of cards in the bot's hand
+     * @param paradeBoard  the current state of the parade board
+     * @return the index of the best card to play
+     */
     @Override
     public int getNextCardIndex(List<Card> hand, ParadeBoard paradeBoard) {
         int bestIndex = 0;
@@ -33,9 +50,16 @@ public class SmarterBot extends Player implements Bot{
         return bestIndex;
     }
 
-    
+    /**
+     * Selects the best card to discard during the endgame using the same
+     * smarter simulation logic (minimizing kicks and score).
+     *
+     * @param hand         the bot's hand
+     * @param paradeBoard  the current state of the parade board
+     * @return the index of the card to discard
+     */
     @Override
-    public int discardCardEndgame(PlayerHand hand, ParadeBoard paradeBoard){
+    public int discardCardEndgame(PlayerHand hand, ParadeBoard paradeBoard) {
         List<Card> list = hand.getCardList();
         int bestIndex = 0;
         int leastKicked = Integer.MAX_VALUE;
@@ -54,6 +78,14 @@ public class SmarterBot extends Player implements Bot{
         return bestIndex;
     }
 
+    /**
+     * Simulates how many cards would be kicked and the total score of those cards
+     * if the given card were played.
+     *
+     * @param chosenCard   the card to evaluate
+     * @param paradeBoard  the current state of the parade board
+     * @return an array of size 2: [number of kicked cards, total score of kicked cards]
+     */
     public int[] smarterSimulation(Card chosenCard, ParadeBoard paradeBoard) {
         int count = 0;
         int score = 0;
@@ -66,7 +98,7 @@ public class SmarterBot extends Player implements Bot{
                 score += current.getValue();
             }
         }
-        int[] ret = {count, score};
-        return ret;
+
+        return new int[] {count, score};
     }
 }

@@ -1,0 +1,24 @@
+-classpath
+'/Users/christencheng/.m2/repository/org/jline/jline/3.29.0/jline-3.29.0.jar:/Users/christencheng/.m2/repository/org/fusesource/jansi/jansi/2.4.1/jansi-2.4.1.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'17'
+-sourcepath
+'/Users/christencheng/Desktop/Y1S2/CS102/paradeButBetter/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/christencheng/Desktop/Y1S2/CS102/paradeButBetter/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'paradeButBetter 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'paradeButBetter 1.0-SNAPSHOT API'

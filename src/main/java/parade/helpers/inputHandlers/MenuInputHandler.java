@@ -19,9 +19,17 @@ import parade.models.cards.Card;
 import parade.models.player.Player;
 import parade.models.player.PlayerHand;
 
+/**
+ * Handles menu-based input using arrow key navigation and ENTER key selection.
+ * Supports two menu modes:
+ * - In-turn card/action selection
+ * - Intro menu action selection
+ */
 public class MenuInputHandler extends InputHandler {
 
+    /** Key bindings for arrow and enter keys. */
     private static final KeyMap<String> keyMap = new KeyMap<>();
+
     static {
         keyMap.bind("UP", "w", "W", "\u001B[A");
         keyMap.bind("DOWN", "s", "S", "\u001B[B");
@@ -30,15 +38,20 @@ public class MenuInputHandler extends InputHandler {
         keyMap.bind("ENTER", "\r", "\n", "\r\n");
     }
 
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
-
-    public MenuInputHandler(Terminal terminal) throws IOException{
+    /**
+     * Constructs a MenuInputHandler using the given terminal.
+     *
+     * @param terminal the terminal used to read raw key bindings
+     * @throws IOException if terminal setup fails
+     */
+    public MenuInputHandler(Terminal terminal) throws IOException {
         super(terminal);
     }
+
+    /**
+     * Flushes any buffered characters from stdin before reading new input.
+     * Prevents unintentional keystroke carryover.
+     */
     @Override
     public void flush() {
         try {
@@ -46,24 +59,40 @@ public class MenuInputHandler extends InputHandler {
             while (in.available() > 0) {
                 in.read(); // discard input
             }
-
         } catch (IOException e) {
             System.out.println("Error flushing stdin: " + e.getMessage());
-            // Ignore or log
         }
     }
+
+    /**
+     * Enables raw input mode on the terminal to allow real-time key reading.
+     *
+     * @throws IOException if the terminal cannot be set to raw mode
+     */
     @Override
     public void startInput() throws IOException {
         flush();
         terminal.enterRawMode();
     }
 
+    /**
+     * Stops the menu input session by flushing any remaining input.
+     */
     @Override
     public void stopInput() {
         flush();
     }
 
-
+    /**
+     * Displays an interactive menu where the player can use arrow keys to
+     * navigate between cards and actions, and press Enter to select.
+     *
+     * @param paradeBoard     the current state of the parade board
+     * @param currentPlayer   the player taking their turn
+     * @param actionStrings   a list of available action commands (e.g., "End Turn", "Exit")
+     * @return a {@link SelectionInput} representing either a card or an action
+     * @throws IOException if reading terminal input fails
+     */
     @Override
     public SelectionInput turnSelect(ParadeBoard paradeBoard, Player currentPlayer, String[] actionStrings) throws IOException {
         flush();
@@ -72,12 +101,12 @@ public class MenuInputHandler extends InputHandler {
         PlayerHand currHand = currentPlayer.getPlayerHand();
         List<Card> cardList = currHand.getCardList();
         int handSize = cardList.size();
-
         int actionStringsCount = actionStrings.length;
 
         boolean onCardRow = true;
-        
+
         UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionStrings, onCardRow);
+
         while (true) {
             String key = bindingReader.readBinding(keyMap);
 
@@ -126,18 +155,27 @@ public class MenuInputHandler extends InputHandler {
         }
     }
 
+    /**
+     * Displays an interactive intro menu for the game, where the user selects from options like
+     * "Start Game", "Game Rules", or "Exit Game".
+     *
+     * @param actions the list of menu options to display
+     * @return the {@link ActionInput} corresponding to the selected menu option
+     * @throws IOException if reading key input fails
+     */
     public ActionInput introSelect(String[] actions) throws IOException {
         flush();
         String titleCard = DisplayFactory.getTitleCard();
         BindingReader bindingReader = new BindingReader(terminal.reader());
         int selectedIndex = 0;
         int actionCount = actions.length;
-    
+
         UIManager.clearScreen();
 
         while (true) {
-            UIManager.displayMessage(titleCard); // Print the title card
-            // Display the menu with the current selection highlighted
+            UIManager.displayMessage(titleCard); // Show title
+
+            // Render action menu with current selection highlighted
             for (int i = 0; i < actionCount; i++) {
                 if (i == selectedIndex) {
                     System.out.println(Ansi.ansi().bold().fg(Ansi.Color.RED).a("> " + actions[i]).reset());
@@ -145,33 +183,26 @@ public class MenuInputHandler extends InputHandler {
                     System.out.println("  " + actions[i]);
                 }
             }
-    
-            // Read user input
+
             String key = bindingReader.readBinding(keyMap);
-    
-            if (key == null) {
-                continue;
-            }
+
+            if (key == null) continue;
 
             switch (key) {
                 case "UP" -> {
                     selectedIndex--;
-                    if (selectedIndex < 0) {
-                        selectedIndex = actionCount - 1; // Wrap around to the last option
-                    }
+                    if (selectedIndex < 0) selectedIndex = actionCount - 1;
                 }
                 case "DOWN" -> {
                     selectedIndex++;
-                    if (selectedIndex >= actionCount) {
-                        selectedIndex = 0; // Wrap around to the first option
-                    }
+                    if (selectedIndex >= actionCount) selectedIndex = 0;
                 }
                 case "ENTER" -> {
-                    return new ActionInput(actions[selectedIndex].toUpperCase().charAt(0)); // Return the selected action
+                    return new ActionInput(actions[selectedIndex].toUpperCase().charAt(0));
                 }
             }
-            UIManager.clearScreen();
 
+            UIManager.clearScreen();
         }
     }
 }

@@ -7,10 +7,20 @@ import java.util.Objects;
 import parade.models.cards.Card;
 import parade.models.cards.Deck;
 
-public class ParadeBoard{
+/**
+ * Represents the Parade Board in the game, which holds a row of cards
+ * and provides methods for displaying and manipulating them.
+ */
+public class ParadeBoard {
+
+    /** The list of cards currently on the parade board. */
     private final ArrayList<Card> cardList;
 
-    // makes the board on its own using the deck and drawing the top 5 cards
+    /**
+     * Constructs a ParadeBoard by drawing the first 6 cards from the deck.
+     *
+     * @param deck the deck to draw cards from
+     */
     public ParadeBoard(Deck deck) {
         this.cardList = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
@@ -18,49 +28,72 @@ public class ParadeBoard{
         }
     }
 
+    /**
+     * Returns the number of cards currently on the parade board.
+     *
+     * @return the number of cards on the board
+     */
     public int getNumberOfCards() {
         return cardList.size();
     }
 
+    /**
+     * Adds a card to the end of the parade board.
+     *
+     * @param card the card to be added
+     */
     public void addToBoard(Card card) {
         cardList.add(card);
     }
 
+    /**
+     * Removes a specific card from the parade board.
+     *
+     * @param card the card to remove
+     */
     public void remove(Card card) {
         cardList.remove(card);
     }
 
+    /**
+     * Returns the list of cards currently on the parade board.
+     *
+     * @return the list of cards on the board
+     */
     public ArrayList<Card> getCardList() {
         return cardList;
     }
 
+    /**
+     * Generates a string representation of the board for display,
+     * using compact formatting if there are more than 10 cards.
+     *
+     * @return the formatted string representation of the board
+     */
     @Override
     public String toString() {
-        boolean useCompact = cardList.size() > 10;  // Use compact version if more than 10 cards
+        boolean useCompact = cardList.size() > 10;
 
-        // Prepare all card lines and color codes
         List<String[]> cardLines = new ArrayList<>();
         List<String> colorCodes = new ArrayList<>();
         
         for (Card card : cardList) {
             colorCodes.add(card.getAnsiColorCode());
             String cardString = useCompact ? card.toString(true) : card.toString();
-            cardLines.add(cardString 
-                        .replaceAll("\u001B\\[[;\\d]*m", "") // Remove existing ANSI codes
+            cardLines.add(cardString
+                        .replaceAll("\u001B\\[[;\\d]*m", "")
                         .split("\n"));
         }
 
-        // Build horizontal display
         StringBuilder result = new StringBuilder();
         int linesPerCard = cardLines.get(0).length;
-        
+
         for (int line = 0; line < linesPerCard; line++) {
             for (int i = 0; i < cardList.size(); i++) {
-                // Apply card's color, add line, then reset
                 result.append(colorCodes.get(i))
-                    .append(cardLines.get(i)[line])
-                    .append(Card.ANSI_RESET) // Reset ANSI color;
-                    .append("  "); // Reset + double space between cards
+                      .append(cardLines.get(i)[line])
+                      .append(Card.ANSI_RESET)
+                      .append("  ");
             }
             result.append("\n");
         }
@@ -68,51 +101,55 @@ public class ParadeBoard{
         return result.toString();
     }
 
-    // used in player turn when you want to display the cards that will be removed
-    // from the parade board
+    /**
+     * Generates a detailed string representation of the board showing:
+     * - Which cards will be removed
+     * - Which cards are kept
+     * - The chosen card
+     *
+     * This view is used during a player's turn when calculating card removal.
+     *
+     * @param toRemove    the list of cards that will be removed from the board
+     * @param chosenCard  the card the player has chosen to play
+     * @return the formatted string representation of the board with visual indicators
+     */
     public String toString(ArrayList<Card> toRemove, Card chosenCard) {
         int safeCardCount = Math.min(chosenCard.getValue(), cardList.size());
-    
-        // Prepare data for display
-        List<String[]> firstLine = new ArrayList<>(); // Top row (cards to remove)
-        List<String[]> secondLine = new ArrayList<>(); // Bottom row (kept + safe)
+
+        List<String[]> firstLine = new ArrayList<>();
+        List<String[]> secondLine = new ArrayList<>();
         List<String> colorCodes = new ArrayList<>();
-        boolean useCompact = cardList.size() > 10; // Determine if we should use compact display
+        boolean useCompact = cardList.size() > 10;
 
         for (Card card : cardList) {
             colorCodes.add(card.getAnsiColorCode());
-
-            // Use compactToString() if there are more than 10 cards
             String cardString = useCompact ? card.toString(true) : card.toString();
             String[] cardLines = cardString
-                                     .replaceAll("\u001B\\[[;\\d]*m", "")
-                                     .split("\n");
+                                    .replaceAll("\u001B\\[[;\\d]*m", "")
+                                    .split("\n");
+
             if (toRemove.contains(card)) {
-                firstLine.add(cardLines); // Card appears in first row
-                secondLine.add(null); // Leave blank in second row
+                firstLine.add(cardLines);
+                secondLine.add(null);
             } else {
-                firstLine.add(null); // Leave blank in first row
-                secondLine.add(cardLines); // Card appears in second row
+                firstLine.add(null);
+                secondLine.add(cardLines);
             }
         }
-    
-        // Prepare chosen card display
+
         String chosenCardString = useCompact ? chosenCard.toString(true) : chosenCard.toString();
         String[] chosenCardLines = chosenCardString
-                                             .replaceAll("\u001B\\[[;\\d]*m", "")
-                                             .split("\n");
+                                        .replaceAll("\u001B\\[[;\\d]*m", "")
+                                        .split("\n");
         String chosenColor = chosenCard.getAnsiColorCode();
-    
-        // Format first and second row
+
         StringBuilder result = new StringBuilder();
-        int linesPerCard = useCompact ? 5 : 8; // Compact cards have 4 lines, regular have 8
-    
-        // Check if firstLine contains only null
+        int linesPerCard = useCompact ? 5 : 8;
+
         boolean hasCardsToRemove = firstLine.stream().anyMatch(Objects::nonNull);
 
-        // Format first row (only if there are cards to remove)
-        if (hasCardsToRemove){ 
-            // First row (Cards to remove)
+        // First row (cards to remove)
+        if (hasCardsToRemove) {
             for (int line = 0; line < linesPerCard; line++) {
                 for (int i = 0; i < cardList.size() - safeCardCount; i++) {
                     if (firstLine.get(i) != null) {
@@ -126,13 +163,11 @@ public class ParadeBoard{
                 }
                 result.append("\n");
             }
-            result.append("\n"); // Space between rows
+            result.append("\n");
         }
-        
-    
-        // Second row (Kept cards + safe cards + chosen card)
+
+        // Second row (kept cards + safe cards + chosen card)
         for (int line = 0; line < linesPerCard; line++) {
-            // Kept cards
             for (int i = 0; i < cardList.size() - safeCardCount; i++) {
                 if (secondLine.get(i) != null) {
                     result.append(colorCodes.get(i))
@@ -143,8 +178,8 @@ public class ParadeBoard{
                           .append("  ");
                 }
             }
-    
-            // Safe cards separator
+
+            // Safe card separator
             if (safeCardCount > 0) {
                 if (line == linesPerCard / 2) {
                     result.append(":  ");
@@ -152,15 +187,15 @@ public class ParadeBoard{
                     result.append("   ");
                 }
             }
-    
-            // Safe cards (leftovers)
+
+            // Safe cards
             for (int i = cardList.size() - safeCardCount; i < cardList.size(); i++) {
                 result.append(colorCodes.get(i))
                       .append(secondLine.get(i)[line])
                       .append(Card.ANSI_RESET + "  ");
             }
-    
-            // Chosen card separator and card
+
+            // Chosen card
             if (line == linesPerCard / 2) {
                 result.append("|  ");
             } else {
@@ -168,11 +203,9 @@ public class ParadeBoard{
             }
             result.append(chosenColor)
                   .append(chosenCardLines[line])
-                  .append(Card.ANSI_RESET +"\n");
+                  .append(Card.ANSI_RESET + "\n");
         }
-    
+
         return result.toString();
     }
-    
-    
 }

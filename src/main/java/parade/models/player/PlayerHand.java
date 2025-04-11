@@ -7,17 +7,31 @@ import parade.exceptions.InvalidCardException;
 import parade.models.cards.Card;
 import parade.models.cards.Deck;
 
-public class PlayerHand{
-    private final ArrayList<Card> cardList;
-    // to double check
+/**
+ * Represents a player's hand in the Parade game.
+ * A hand holds up to a fixed number of cards and supports operations like drawing, removing, and displaying cards.
+ */
+public class PlayerHand {
+
+    /** The maximum number of cards a player can hold in hand. */
     public static final int MAXHANDCOUNT = 5;
 
+    /** The list of cards currently in the player's hand. */
+    private final ArrayList<Card> cardList;
+
+    /**
+     * Constructs an empty PlayerHand.
+     */
     public PlayerHand() {
-        this.cardList = new ArrayList<>(); // in GameManager class need to draw card from the deck and add cards to
-                                           // empty hand
+        this.cardList = new ArrayList<>();
     }
 
-    // this method not needed right...
+    /**
+     * Adds a card to the hand if it is not full.
+     *
+     * @param card the card to add
+     * @throws IllegalStateException if the hand already has {@code MAXHANDCOUNT} cards
+     */
     public void addCard(Card card) {
         if (cardList.size() < MAXHANDCOUNT) {
             cardList.add(card);
@@ -26,65 +40,70 @@ public class PlayerHand{
         }
     }
 
-    // Implements removeCard from CardCollection interface
-
+    /**
+     * Removes a card from the hand.
+     *
+     * @param card the card to remove
+     * @throws InvalidCardException if the card is not in the hand
+     */
     public void removeCard(Card card) throws InvalidCardException {
-        // If hand does not have that card
         if (!cardList.contains(card)) {
             throw new InvalidCardException("Card not in hand!");
-
         }
-        // else remove card from hand
         cardList.remove(card);
-
     }
-    // from the board
 
-    // can do custom error to make it final round if deck is empty?
+    /**
+     * Draws one card from the given deck and adds it to the hand.
+     * Prints a message if the deck is empty.
+     *
+     * @param deck the deck to draw from
+     */
     public void drawCard(Deck deck) {
-        // first, check if drawing a card is possible
         if (deck.isEmpty()) {
             System.out.println("Cannot draw, deck empty");
-
         } else {
-            // if not, draw from the top of the deck
             Card drawnCard = deck.getDeck().remove(deck.getDeckSize() - 1);
-
-            // Add the drawn card to the player's hand
             addCard(drawnCard);
         }
     }
 
+    /**
+     * Initializes the player's hand by drawing 5 cards from the deck.
+     *
+     * @param deck the deck to draw from
+     */
     public void initHand(Deck deck) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < MAXHANDCOUNT; i++) {
             drawCard(deck);
         }
     }
 
+    /**
+     * Returns a visual string representation of the hand, with cards displayed horizontally.
+     *
+     * @return formatted string representing the hand
+     */
     @Override
     public String toString() {
-
-        // Prepare all card lines and color codes
         List<String[]> cardLines = new ArrayList<>();
         List<String> colorCodes = new ArrayList<>();
         
         for (Card card : cardList) {
             colorCodes.add(card.getAnsiColorCode());
             cardLines.add(card.toString()
-                        .replaceAll("\u001B\\[[;\\d]*m", "") // Remove existing ANSI codes
+                        .replaceAll("\u001B\\[[;\\d]*m", "")
                         .split("\n"));
         }
 
-        // Build horizontal display
         StringBuilder result = new StringBuilder();
         int linesPerCard = cardLines.get(0).length;
-        
+
         for (int line = 0; line < linesPerCard; line++) {
             for (int i = 0; i < cardList.size(); i++) {
-                // Apply card's color, add line, then reset
                 result.append(colorCodes.get(i))
-                    .append(cardLines.get(i)[line])
-                    .append(Card.ANSI_RESET+"  "); // Reset + double space between cards
+                      .append(cardLines.get(i)[line])
+                      .append(Card.ANSI_RESET + "  ");
             }
             result.append("\n");
         }
@@ -92,12 +111,13 @@ public class PlayerHand{
         return result.toString();
     }
 
+    /**
+     * Returns the list of cards in the hand.
+     *
+     * @return the card list
+     */
     public ArrayList<Card> getCardList() {
         return cardList;
-    }
-
-    public int getHandSize() { 
-        return this.getCardList().size();
     }
 
 }

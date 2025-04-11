@@ -23,86 +23,121 @@ import parade.models.selections.CardSelection;
 import parade.models.selections.TurnSelection;
 import parade.gameStates.GameStateManager;
 
-public abstract class GameTurnState extends GamePlayState{
+/**
+ * Abstract class for handling turn-based gameplay logic during normal and final rounds.
+ */
+public abstract class GameTurnState extends GamePlayState {
+
+    /**
+     * Constructs a GameTurnState.
+     *
+     * @param gsm            The GameStateManager handling the game flow.
+     * @param context        The shared GameContext.
+     * @param inputManager   The input handler for this state.
+     */
     public GameTurnState(GameStateManager gsm, GameContext context, InputManager inputManager) {
         super(gsm, context, inputManager);
     }
 
+    /**
+     * Executes a single turn for the given player, including input handling and card playing.
+     *
+     * @param current The player taking the turn.
+     */
     protected void playTurn(Player current) {
         PlayerHand hand = current.getPlayerHand();
-        List <Card> cardList = hand.getCardList();
+        List<Card> cardList = hand.getCardList();
         boolean turnCompleted = false;
+
         while (!turnCompleted) {
             try {
-                if(current instanceof Bot currBot){
+                if (current instanceof Bot currBot) {
                     int index = currBot.getNextCardIndex(cardList, paradeBoard);
                     playCard(current, index);
                     turnCompleted = true;
-                }
-                // if Human player
-                 else {
+                } else {
                     TurnSelection selection = getTurnSelection(current);
                     selection.execute();
-                    if(selection instanceof CardSelection){
+                    if (selection instanceof CardSelection) {
                         turnCompleted = true;
                     }
                 }
                 UIManager.clearScreen();
             } catch (InvalidCardException e) {
                 System.out.println("Invalid card. Please enter a valid card.");
-            } catch(SelectionException e){
+            } catch (SelectionException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Trying Again...");
             }
         }
-        
     }
 
-    protected void playCard(Player current, int index) throws InvalidCardException{
+    /**
+     * Plays the selected card from the player's hand and updates all relevant game state.
+     *
+     * @param current The player playing the card.
+     * @param index   The index of the card in the player's hand.
+     * @throws InvalidCardException If the card cannot be legally played.
+     */
+    protected void playCard(Player current, int index) throws InvalidCardException {
         UIManager.clearScreen();
         PlayerHand hand = current.getPlayerHand();
-        List <Card> cardList = hand.getCardList();
+        List<Card> cardList = hand.getCardList();
         Card chosenCard = cardList.get(index);
         PlayerBoard playerBoard = current.getPlayerBoard();
+
         if (current instanceof Bot) {
             UIManager.displayBotAction(current, index);
         }
-        
+
         int chosenValue = chosenCard.getValue();
         ArrayList<Card> removedCards = new ArrayList<>();
         ParadeBoard beforeRemovalParadeBoard = paradeBoard;
-        
+
         for (int i = 0; i < paradeBoard.getCardList().size() - chosenValue; i++) {
             Card currentCard = paradeBoard.getCardList().get(i);
             if (currentCard.getValue() <= chosenValue || currentCard.getColor().equals(chosenCard.getColor())) {
                 removedCards.add(currentCard);
             }
         }
+
         hand.removeCard(chosenCard);
+
         if (this instanceof NotFinalRoundTurnState) {
             hand.drawCard(deck);
         }
+
         for (Card card : removedCards) {
             playerBoard.addCard(card);
         }
 
-        UIManager.displayCardPlay(current,chosenCard, beforeRemovalParadeBoard, playerBoard, removedCards);
+        UIManager.displayCardPlay(current, chosenCard, beforeRemovalParadeBoard, playerBoard, removedCards);
+
         for (Card card : removedCards) {
             paradeBoard.remove(card);
         }
-        paradeBoard.addToBoard(chosenCard);
 
+        paradeBoard.addToBoard(chosenCard);
     }
 
+    /**
+     * Processes and returns the next user selection input for the current player.
+     *
+     * @param current The player whose input is being processed.
+     * @return A TurnSelection representing the selected action or card.
+     * @throws SelectionException If input is invalid or cannot be converted to a valid selection.
+     */
     protected TurnSelection getTurnSelection(Player current) throws SelectionException {
         SelectionInput input = getSelectionInput(current);
-    
+
         if (input instanceof CardInput card) {
             return new CardSelection(() -> playCard(current, card.getCardIndex()));
         }
+
         if (input instanceof ActionInput action) {
             return new ActionSelection(() -> performAction(action.getActionChar()));
         }
+
         throw new SelectionException("Error with selection!");
     }
 }
