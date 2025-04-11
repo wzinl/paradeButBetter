@@ -277,14 +277,12 @@ public class DisplayFactory {
 
     /** Displays tie results among top players. */
     public static void displayTieResults(List<Player> winners) {
-        int topScore = winners.get(0).getPlayerScore();
         int nameWidth = Math.max(
-                winners.stream().filter(p -> p.getPlayerScore() == topScore).mapToInt(p -> p.getPlayerName().length()).max().orElse(10) + 2,
+                winners.stream().mapToInt(p -> p.getPlayerName().length()).max().orElse(10) + 2,
                 12);
 
         System.out.println("TIED RESULTS");
         for (Player p : winners) {
-            if (p.getPlayerScore() != topScore) break;
             System.out.printf("• %-" + (nameWidth - 2) + "s - %d points%n", p.getPlayerName(), p.getPlayerScore());
         }
     }
