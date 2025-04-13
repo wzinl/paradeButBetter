@@ -18,9 +18,6 @@ public class GameContext {
     /** Index of the player who triggered the final round. Default is -1 if not triggered. */
     private int finalRoundStarterIndex;
 
-    /** Index representing the current game state phase (used for transitions). */
-    private int currentStateIdx;
-
     /** List of players participating in the game. */
     private final ArrayList<Player> playerList;
 
@@ -37,14 +34,12 @@ public class GameContext {
      * Constructs a GameContext object with all the essential information to run the game.
      *
      * @param playerList         the list of players
-     * @param currentStateIdx    the index representing the current state
      * @param currentPlayerIndex the index of the current player
      * @param deck               the deck used for drawing cards
      * @param paradeBoard        the active parade board
      */
-    public GameContext(ArrayList<Player> playerList, int currentStateIdx, int currentPlayerIndex, Deck deck, ParadeBoard paradeBoard) {
+    public GameContext(ArrayList<Player> playerList, int currentPlayerIndex, Deck deck, ParadeBoard paradeBoard) {
         this.currentPlayerIndex = currentPlayerIndex;
-        this.currentStateIdx = currentStateIdx;
         this.deck = deck;
         this.paradeBoard = paradeBoard;
         this.finalRoundStarterIndex = -1;
@@ -57,15 +52,6 @@ public class GameContext {
      */
     public void setFinalRoundStarterIndex(int index) {
         this.finalRoundStarterIndex = index;
-    }
-
-    /**
-     * Gets the current game state index.
-     *
-     * @return the current state index
-     */
-    public int getCurentStateIndex() {
-        return this.currentStateIdx;
     }
 
     /**

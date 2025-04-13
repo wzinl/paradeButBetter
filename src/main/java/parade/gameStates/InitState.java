@@ -152,6 +152,6 @@ public class InitState extends GameState {
      * @return the initialized game context
      */
     public GameContext createGameContext() {
-        return new GameContext(this.playerList, 0, startingIndex, deck, paradeBoard);
+        return new GameContext(this.playerList, startingIndex, deck, paradeBoard);
     }
 }

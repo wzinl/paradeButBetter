@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import parade.exceptions.InvalidCardException;
 import parade.models.cards.Card;
 import parade.models.cards.CardCollection;
 import parade.models.cards.CardColors;
