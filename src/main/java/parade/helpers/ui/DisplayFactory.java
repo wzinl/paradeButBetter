@@ -11,6 +11,7 @@ import parade.models.cards.Card;
 import parade.models.player.Player;
 import parade.models.player.PlayerBoard;
 import parade.models.player.PlayerHand;
+import parade.models.player.bots.Bot;
 
 /**
  * DisplayFactory handles all low-level formatting and UI presentation logic.
@@ -392,8 +393,10 @@ public class DisplayFactory {
             System.out.println(playerBoard);
         }
 
-        System.out.println("Updated Hand:");
-        System.out.println(player.getPlayerHand());
+        if(!(player instanceof Bot)){
+            System.out.println("Updated Hand:");
+            System.out.println(player.getPlayerHand());
+        }
 
         UIManager.pauseExecution(5000);
         UIManager.clearScreen();
