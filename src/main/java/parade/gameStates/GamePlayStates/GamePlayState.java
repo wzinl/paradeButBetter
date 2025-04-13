@@ -52,7 +52,6 @@ public abstract class GamePlayState extends GameState {
      * @param action The character representing the player's chosen action.
      */
     protected void performAction(char action) {
-        // UIManager.clearScreen();
         Runnable actionHandler = actionHandlers.get(action);
         if (actionHandler != null) {
             actionHandler.run();
