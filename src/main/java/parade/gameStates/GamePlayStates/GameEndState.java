@@ -69,8 +69,8 @@ public class GameEndState extends GamePlayState {
 
         for (int i = 0; i < playerList.size(); i++) {
             UIManager.clearScreen();
-            int index = (finalPlayerIndex + i + 1) % playerList.size();
-            performDiscardPhase(playerList.get(index));
+            context.setCurrentPlayerIndex((finalPlayerIndex + i + 1) % playerList.size());
+            performDiscardPhase();
         }
 
         UIManager.clearScreen();
@@ -82,9 +82,9 @@ public class GameEndState extends GamePlayState {
      * @param player The player to process.
      * @throws InvalidCardException if card discard is invalid.
      */
-    private void performDiscardPhase(Player player) throws InvalidCardException {
-        discardTwoCards(player);
-
+    private void performDiscardPhase() throws InvalidCardException {
+        discardTwoCards();
+        Player player = playerList.get(super.currentPlayerIndex);
         PlayerHand hand = player.getPlayerHand();
         PlayerBoard board = player.getPlayerBoard();
 
@@ -233,34 +233,34 @@ public class GameEndState extends GamePlayState {
      * @param player The player discarding.
      * @throws InvalidCardException if a card discard is invalid.
      */
-    private void discardTwoCards(Player player) throws InvalidCardException {
-        if (player instanceof Bot bot) {
-            for (int i = 0; i < 2; i++) {
+    private void discardTwoCards() throws InvalidCardException {
+        Player player = context.getPlayerList().get(context.getCurrentPlayerIndex());
+        for (int i = 0; i < 2; i++) {
+            if (player instanceof Bot bot) {
                 int discardIndex = bot.discardCardEndgame(context.getPlayerList());
-                Card toDiscard = player.getPlayerHand().getCardList().get(discardIndex);
-                player.getPlayerHand().removeCard(toDiscard);
+                Card toDiscard = bot.getPlayerHand().getCardList().get(discardIndex);
+                bot.getPlayerHand().removeCard(toDiscard);
 
-                UIManager.displayBotDiscard(player, toDiscard);
+                UIManager.displayBotDiscard(bot, toDiscard);
                 UIManager.pauseExecution(3000);
                 UIManager.clearScreen();
-            }
-        } else {
-            for (int i = 0; i < 2; i++) {
-                boolean discardCompleted = false;
-                while (!discardCompleted) {
-                    try {
-                        TurnSelection selection = getDiscardSelection(player);
-                        selection.execute();
-                        if (selection instanceof CardSelection) {
-                            discardCompleted = true;
+            } else {
+                    boolean discardCompleted = false;
+                    
+                    while (!discardCompleted) {
+                        try {
+                            TurnSelection selection = getDiscardSelection(player);
+                            selection.execute();
+                            if (selection instanceof CardSelection) {
+                                discardCompleted = true;
+                            }
+                        } catch (InvalidCardException e) {
+                            UIManager.displayErrorMessage("Invalid card. Please enter a valid card.");
+                        } catch (SelectionException e) {
+                            UIManager.displayErrorMessage(e.getMessage());
+                            System.out.println("Trying Again...");
                         }
-                    } catch (InvalidCardException e) {
-                        UIManager.displayErrorMessage("Invalid card. Please enter a valid card.");
-                    } catch (SelectionException e) {
-                        UIManager.displayErrorMessage(e.getMessage());
-                        System.out.println("Trying Again...");
                     }
-                }
             }
         }
     }

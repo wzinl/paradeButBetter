@@ -102,7 +102,6 @@ public class Card {
      * @return the formatted string
      */
     public String toString(boolean compact) {
-        String reset = ANSI_RESET;
         final int CARD_WIDTH = compact ? 8 : 10;
         final int TEXT_WIDTH = CARD_WIDTH - (compact ? 2 : 4);
 
@@ -129,8 +128,7 @@ public class Card {
 
         } else {
             // Top value (left-aligned)
-            // if (isFaceUp) {
-            if (true) {
+            if (isFaceUp) {
                 result.append("│ ")
                 .append(String.format("%-" + TEXT_WIDTH + "s", value))
                 .append(" │\n");
@@ -151,8 +149,7 @@ public class Card {
             result.append("│").append(" ".repeat(CARD_WIDTH - 2)).append("│\n");
 
             // Bottom value (right-aligned)
-            // if (isFaceUp) {
-            if (true) {
+            if (isFaceUp) {
                 result.append("│ ")
                     .append(String.format("%" + TEXT_WIDTH + "s", value))
                     .append(" │\n");
@@ -166,7 +163,7 @@ public class Card {
         // Bottom border
         result.append("└").append("─".repeat(CARD_WIDTH - 2)).append("┘");
 
-        return getAnsiColorCode() + result.toString() + reset;
+        return getAnsiColorCode() + result.toString() + ANSI_RESET;
     }
 
     /**

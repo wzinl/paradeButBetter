@@ -379,7 +379,7 @@ public class DisplayFactory {
 
         System.out.println(player.getPlayerName() + " has played: ");
         System.out.println(chosenCard);
-        // UIManager.pauseExecution(1000);
+        UIManager.pauseExecution(1000);
 
         System.out.println("Updated Parade:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
@@ -395,7 +395,7 @@ public class DisplayFactory {
         System.out.println("Updated Hand:");
         System.out.println(player.getPlayerHand());
 
-        // UIManager.pauseExecution(5000);
+        UIManager.pauseExecution(5000);
         UIManager.clearScreen();
     }
 
