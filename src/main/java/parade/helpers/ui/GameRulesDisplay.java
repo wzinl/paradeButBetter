@@ -70,7 +70,8 @@ public class GameRulesDisplay {
                     .append("2. Color Majority Bonus:\n")
                     .append("   • If you have the most cards of a color, all of them = 1 point each\n")
                     .append("   • Ties don't count\n")
-                    .append("3. Add up your total points\n")
+                    .append("   • FOR TWO PLAYERS: If the difference in the number of cards of the same colour is more than one, the player with the higher number of cards will place their cards face down\n")                    
+                    .append("3. Add up the number of all face down cards, and the value of all face up cards\n")
                     .append("4. Lowest score wins\n\n\n");
 
         String scoreString = scoreBuilder.toString();
