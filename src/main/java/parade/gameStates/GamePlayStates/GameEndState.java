@@ -79,12 +79,15 @@ public class GameEndState extends GamePlayState {
     /**
      * Handles discarding 2 cards and moving the rest to the board for a single player.
      *
-     * @param player The player to process.
+     * @param player The player to process.759a99c
+
      * @throws InvalidCardException if card discard is invalid.
      */
     private void performDiscardPhase() throws InvalidCardException {
         discardTwoCards();
-        Player player = playerList.get(super.currentPlayerIndex);
+        // Player player = playerList.get(super.currentPlayerIndex);
+        Player player = playerList.get(context.getCurrentPlayerIndex());
+
         PlayerHand hand = player.getPlayerHand();
         PlayerBoard board = player.getPlayerBoard();
 
