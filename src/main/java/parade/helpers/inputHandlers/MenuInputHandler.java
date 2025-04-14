@@ -104,7 +104,6 @@ public class MenuInputHandler extends InputHandler {
         int actionStringsCount = actionStrings.length;
 
         boolean onCardRow = true;
-
         UIManager.printFormattedTurnDisplay(currentPlayer, paradeBoard, selectedIndex, actionStrings, onCardRow);
 
         while (true) {

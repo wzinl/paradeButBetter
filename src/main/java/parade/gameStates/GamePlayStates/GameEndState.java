@@ -84,7 +84,7 @@ public class GameEndState extends GamePlayState {
      */
     private void performDiscardPhase() throws InvalidCardException {
         discardTwoCards();
-        Player player = playerList.get(super.currentPlayerIndex);
+        Player player = playerList.get(context.getCurrentPlayerIndex());
         PlayerHand hand = player.getPlayerHand();
         PlayerBoard board = player.getPlayerBoard();
 
@@ -241,8 +241,6 @@ public class GameEndState extends GamePlayState {
                 Card toDiscard = bot.getPlayerHand().getCardList().get(discardIndex);
                 bot.getPlayerHand().removeCard(toDiscard);
 
-                UIManager.displayBotDiscard(bot, toDiscard);
-                UIManager.pauseExecution(3000);
                 UIManager.clearScreen();
             } else {
                     boolean discardCompleted = false;
