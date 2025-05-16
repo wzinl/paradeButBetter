@@ -20,18 +20,17 @@ import parade.models.player.bots.Bot;
  */
 public class DisplayFactory {
 
-
     private static final String TITLE_CARD = """
-              ██████╗ ██████╗ ██████╗ █████╗  ██████╗ ███████╗
-              ██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝
-              ██████╔╝███████║██████╔╝███████║██║  ██║███████╗ 
-              ██╔═══╝ ██╔══██║██╔══██╝██╔══██║██║  ██║██╔════╝  
-              ██║     ██║  ██║██║  ██║██║  ██║██████╔╝███████╗
-              ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚════╝  ╚═════╝
-        """;
-        private static final String TOP_BORDER ="------------------------Welcome To-------------------------\n\n";
-        private static final String BOTTOM_BORDER ="\n-----------------------------------------------------------\n";
-        private static final String FULL_TITLE_CARD =  TOP_BORDER + TITLE_CARD +BOTTOM_BORDER;
+                  ██████╗ ██████╗ ██████╗ █████╗  ██████╗ ███████╗
+                  ██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝
+                  ██████╔╝███████║██████╔╝███████║██║  ██║███████╗
+                  ██╔═══╝ ██╔══██║██╔══██╝██╔══██║██║  ██║██╔════╝
+                  ██║     ██║  ██║██║  ██║██║  ██║██████╔╝███████╗
+                  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚════╝  ╚═════╝
+            """;
+    private static final String TOP_BORDER = "------------------------Welcome To-------------------------\n\n";
+    private static final String BOTTOM_BORDER = "\n-----------------------------------------------------------\n";
+    private static final String FULL_TITLE_CARD = TOP_BORDER + TITLE_CARD + BOTTOM_BORDER;
 
     public static String getTitleCard() {
         return FULL_TITLE_CARD;
@@ -51,18 +50,15 @@ public class DisplayFactory {
         }
     }
 
-
     /** Shows the stylized ASCII game introduction splash screen. */
     public static void showIntroduction() {
         try {
             // System.out.printf("\n\n");
             System.out.print(Ansi.ansi().bold().a(
-                            TOP_BORDER
-                            ).reset());
+                    TOP_BORDER).reset());
             UIManager.typeWriter(TITLE_CARD, 6);
             System.out.print(Ansi.ansi().bold().a(
-                BOTTOM_BORDER
-                ).reset());
+                    BOTTOM_BORDER).reset());
 
         } catch (InterruptedException e) {
             System.out.println("An error has occurred trying to create introduction display!");
@@ -72,13 +68,15 @@ public class DisplayFactory {
     /** Generates a card selection prompt based on hand size. */
     public static String getCardSelectionPrompt(int handSize) {
         return String.format(Ansi.ansi().bold().fg(Ansi.Color.GREEN).a(
-            "Which card would you like to play? (%d to %d): "
-            ).reset().toString(), 1, handSize);
+                "Which card would you like to play? (%d to %d): ").reset().toString(), 1, handSize);
     }
 
     /** Returns formatted bot action announcement. */
     public static String getBotAction(String botName, int cardIndex) {
-        return String.format(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a("%s is going to play Card %d").reset().toString() + "\n", botName, cardIndex);
+        return String.format(
+                Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a("%s is going to play Card %d").reset().toString()
+                        + "\n",
+                botName, cardIndex);
     }
 
     /**
@@ -86,34 +84,34 @@ public class DisplayFactory {
      */
     public static String getFormattedHandWithIndex(PlayerHand hand, Card selectedCard) {
         List<Card> cards = hand.getCardList();
-        if (cards.isEmpty()) return "No cards in hand.\n";
-    
+        if (cards.isEmpty())
+            return "No cards in hand.\n";
+
         List<String[]> cardLines = new ArrayList<>();
         List<String> colorCodes = new ArrayList<>();
-    
+
         // Generate ANSI-coded versions of each card line
         for (Card card : cards) {
             colorCodes.add(
-                selectedCard != null && card.equals(selectedCard)
-                    ? card.getHighlightedAnsiColorCode()
-                    : card.getAnsiColorCode()
-            );
+                    selectedCard != null && card.equals(selectedCard)
+                            ? card.getHighlightedAnsiColorCode()
+                            : card.getAnsiColorCode());
             cardLines.add(card.toString().replaceAll("\\u001B\\[[;\\d]*m", "").split("\n"));
         }
-    
+
         StringBuilder result = new StringBuilder();
         int linesPerCard = cardLines.get(0).length;
-    
+
         // Build card rows line by line
         for (int line = 0; line < linesPerCard; line++) {
             for (int i = 0; i < cards.size(); i++) {
                 result.append(colorCodes.get(i))
-                      .append(cardLines.get(i)[line])
-                      .append(Card.ANSI_RESET + "  ");
+                        .append(cardLines.get(i)[line])
+                        .append(Card.ANSI_RESET + "  ");
             }
             result.append("\n");
         }
-    
+
         result.append(getIndexString(cards.size()));
         return result.toString();
     }
@@ -145,33 +143,33 @@ public class DisplayFactory {
     /**
      * Displays a fully formatted turn view with highlighted card or action.
      */
-    public static String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex, String[] actionOptions, Boolean onCardRow) {
+    public static String getTurnDisplay(Player currentPlayer, ParadeBoard paradeBoard, int selectedIndex,
+            String[] actionOptions, Boolean onCardRow) {
         StringBuilder result = new StringBuilder();
 
         result.append("==========")
-              .append(Ansi.ansi().bold().fg(Ansi.Color.GREEN)
-              .a(currentPlayer.getPlayerName() + "'s turn!").reset())
-              .append("==========\n\n");
+                .append(Ansi.ansi().bold().fg(Ansi.Color.GREEN)
+                        .a(currentPlayer.getPlayerName() + "'s turn!").reset())
+                .append("==========\n\n");
 
         PlayerHand currHand = currentPlayer.getPlayerHand();
         List<Card> cardList = currHand.getCardList();
 
         result.append(
-            onCardRow
-                ? getPlayerDisplay(currentPlayer, paradeBoard, cardList.get(selectedIndex))
-                : getPlayerDisplay(currentPlayer, paradeBoard)
-        ).append("\n\n");
+                onCardRow
+                        ? getPlayerDisplay(currentPlayer, paradeBoard, cardList.get(selectedIndex))
+                        : getPlayerDisplay(currentPlayer, paradeBoard))
+                .append("\n\n");
 
         // Format action options (highlight selection if applicable)
         for (int i = 0; i < actionOptions.length; i++) {
             boolean isSelected = (i == selectedIndex);
             String option = actionOptions[i];
 
-            result.append(isSelected && !onCardRow ?
-                          Ansi.ansi().bold().fg(Ansi.Color.RED).a(
-                          String.format("[ %s ]", option)).reset() 
-                          : String.format("  %s  ", option))
-                  .append("  ");
+            result.append(isSelected && !onCardRow ? Ansi.ansi().bold().fg(Ansi.Color.RED).a(
+                    String.format("[ %s ]", option)).reset()
+                    : String.format("  %s  ", option))
+                    .append("  ");
         }
 
         result.append(Ansi.ansi().bold().a("\n\nUse arrow keys or WASD to navigate, and Enter to select.").reset());
@@ -188,21 +186,21 @@ public class DisplayFactory {
         StringBuilder result = new StringBuilder();
         result.append(Card.ANSI_RESET);
         result.append("Parade:")
-              .append(paradeBoard.toString())
-              .append("\n\n")
-              .append(Ansi.ansi().bold().a(player.getPlayerName()));
+                .append(paradeBoard.toString())
+                .append("\n\n")
+                .append(Ansi.ansi().bold().a(player.getPlayerName()));
 
         if (player.getPlayerBoard().isEmpty()) {
             result.append("'s board is empty.").append(Ansi.ansi().reset());
         } else {
             result.append("'s board").append(Ansi.ansi().reset()).append("\n")
-                  .append(player.getPlayerBoard().toString());
+                    .append(player.getPlayerBoard().toString());
         }
 
         result.append("\n\n")
-              .append(Ansi.ansi().bold().a(player.getPlayerName() + "'s hand").reset())
-              .append("\n\n")
-              .append(getFormattedHandWithIndex(player.getPlayerHand(), selectedCard));
+                .append(Ansi.ansi().bold().a(player.getPlayerName() + "'s hand").reset())
+                .append("\n\n")
+                .append(getFormattedHandWithIndex(player.getPlayerHand(), selectedCard));
 
         return result.toString();
     }
@@ -212,10 +210,9 @@ public class DisplayFactory {
         StringBuilder scoreboard = new StringBuilder();
 
         scoreboard.append(
-                    Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
-                        "=========== FINAL SCORES ==========="
-                        ).reset())
-                    .append("\n");
+                Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
+                        "=========== FINAL SCORES ===========").reset())
+                .append("\n");
 
         int maxNameLength = winners.stream()
                 .mapToInt(p -> p.getPlayerName().length())
@@ -238,15 +235,16 @@ public class DisplayFactory {
             Player player = winners.get(i);
             String position;
             int playerCardCount = player.getPlayerBoard().getPlayerBoardMap().values().stream()
-                             .mapToInt(List::size)
-                             .sum();
+                    .mapToInt(List::size)
+                    .sum();
 
-            // Check if this player has the same score AND same card count as previous player
-            if (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore() && 
-            playerCardCount == winners.get(i - 1).getPlayerBoard().getPlayerBoardMap().values().stream()
-                                    .mapToInt(List::size)
-                                    .sum()) {
-            position = "";  // Same position as previous player
+            // Check if this player has the same score AND same card count as previous
+            // player
+            if (i > 0 && player.getPlayerScore() == winners.get(i - 1).getPlayerScore() &&
+                    playerCardCount == winners.get(i - 1).getPlayerBoard().getPlayerBoardMap().values().stream()
+                            .mapToInt(List::size)
+                            .sum()) {
+                position = ""; // Same position as previous player
             } else {
                 position = switch (displayRank) {
                     case 1 -> "1st";
@@ -289,40 +287,40 @@ public class DisplayFactory {
 
         // Check if there is a clear winner after applying the card count tiebreaker
         int minCards = tiedPlayers.stream()
-                        .mapToInt(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
-                                    .mapToInt(List::size)
-                                    .sum())
-                        .min()
-                        .orElse(0);
+                .mapToInt(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
+                        .mapToInt(List::size)
+                        .sum())
+                .min()
+                .orElse(0);
 
         // Get players same score & same number of cards in playerboard
         List<Player> finalWinners = tiedPlayers.stream()
-                        .filter(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
-                            .mapToInt(List::size)
-                            .sum() == minCards)
-                        .collect(Collectors.toList());
+                .filter(p -> p.getPlayerBoard().getPlayerBoardMap().values().stream()
+                        .mapToInt(List::size)
+                        .sum() == minCards)
+                .collect(Collectors.toList());
 
         // Clear Winner
-        if (finalWinners.size() == 1){
+        if (finalWinners.size() == 1) {
             Player winner = finalWinners.get(0);
             System.out.println("TIEBREAKER: All had same score, but " + winner.getPlayerName()
-            + " had the fewest cards on their board.");
+                    + " had the fewest cards on their board.");
             displayWinner(winner);
         } else { // Same score, same number of cards in parade
             System.out.println("TIED RESULTS (same score and same number of cards)");
             int nameWidth = Math.max(
-                finalWinners.stream().mapToInt(p -> p.getPlayerName().length()).max().orElse(10) + 2,
-                12);
+                    finalWinners.stream().mapToInt(p -> p.getPlayerName().length()).max().orElse(10) + 2,
+                    12);
 
             for (Player p : finalWinners) {
                 int totalCards = p.getPlayerBoard().getPlayerBoardMap().values().stream()
-                                    .mapToInt(List::size)
-                                    .sum();
-                System.out.printf("• %-" + (nameWidth - 2) + "s - %d points, %d cards%n", p.getPlayerName(), p.getPlayerScore(), totalCards);
+                        .mapToInt(List::size)
+                        .sum();
+                System.out.printf("• %-" + (nameWidth - 2) + "s - %d points, %d cards%n", p.getPlayerName(),
+                        p.getPlayerScore(), totalCards);
             }
         }
 
-        
     }
 
     /** Formats a centered line inside a decorated box. */
@@ -358,7 +356,7 @@ public class DisplayFactory {
             if (board.isEmpty()) {
                 boardString += "'s Player Board is empty.";
             } else {
-                boardString += "'s Player Board:";  
+                boardString += "'s Player Board:";
                 boardString += board;
             }
             result += boardString + "\n";
@@ -368,15 +366,16 @@ public class DisplayFactory {
 
     /** Prints the discard action of a bot. */
     public static void getBotDiscardDisplay(Player bot, Card discardedCard) {
-        System.out.println(Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a(bot.getPlayerName() + " discarded:").reset());
+        System.out.println(
+                Ansi.ansi().bold().fgBright(Ansi.Color.MAGENTA).a(bot.getPlayerName() + " discarded:").reset());
         System.out.println(discardedCard);
         System.out.println("Updated hand:");
         System.out.println(getFormattedHandWithIndex(bot.getPlayerHand(), null));
     }
 
     /** Displays a detailed breakdown when a card is played. */
-    public static void getCardPlayDisplay(Player player, Card chosenCard, ParadeBoard paradeBoard, PlayerBoard playerBoard, ArrayList<Card> removedCards) {
-
+    public static void getCardPlayDisplay(Player player, Card chosenCard, ParadeBoard paradeBoard,
+            PlayerBoard playerBoard, ArrayList<Card> removedCards) {
 
         System.out.println(player.getPlayerName() + " has played: ");
         System.out.println(chosenCard);
@@ -385,7 +384,7 @@ public class DisplayFactory {
         System.out.println("Updated Parade:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();
-
+        System.out.println("Monkey");
         if (playerBoard.isEmpty()) {
             System.out.println(player.getPlayerName() + "'s Playerboard is empty.");
         } else {
@@ -393,7 +392,7 @@ public class DisplayFactory {
             System.out.println(playerBoard);
         }
 
-        if(!(player instanceof Bot)){
+        if (!(player instanceof Bot)) {
             System.out.println("Updated Hand:");
             System.out.println(player.getPlayerHand());
         }
@@ -403,12 +402,11 @@ public class DisplayFactory {
     }
 
     public static String getNamePrompt(boolean isBot, int index) {
-        if(isBot){
-            return Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a("🤖 Enter name of Bot " + index + ": ").reset().toString();
+        if (isBot) {
+            return Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a("🤖 Enter name of Bot " + index + ": ").reset()
+                    .toString();
         }
         return Ansi.ansi().bold().fg(Ansi.Color.GREEN).a("🤓 Enter name of Player " + index + ": ").reset().toString();
     }
-    
 
-    
 }
