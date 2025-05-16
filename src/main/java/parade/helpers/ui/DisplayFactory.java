@@ -384,7 +384,6 @@ public class DisplayFactory {
         System.out.println("Updated Parade:");
         System.out.println(paradeBoard.toString(removedCards, chosenCard));
         System.out.println();
-        System.out.println("Monkey");
         if (playerBoard.isEmpty()) {
             System.out.println(player.getPlayerName() + "'s Playerboard is empty.");
         } else {
