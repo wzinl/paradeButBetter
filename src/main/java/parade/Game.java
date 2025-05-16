@@ -52,7 +52,7 @@ public class Game {
                 switch (Character.toLowerCase(introInput)) {
                     case 's' -> validInput = true;
                     case 'g' -> gameRules();
-                    case 'q' -> {
+                    case 'e' -> {
                         validInput = true;
                         UIManager.clearScreen();
                         exit();
